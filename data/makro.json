@@ -324,7 +324,6 @@
   "eur_huf_havi": {
     "source": "https://statisztika.mnb.hu/timeseries/hu0301_arfolyam.xls",
     "months": [
-      "Egység",
       "2007. január",
       "2007. február",
       "2007. március",
@@ -563,7 +562,6 @@
       "2026. augusztus"
     ],
     "values": [
-      1.0,
       253.83,
       253.4,
       249.81,

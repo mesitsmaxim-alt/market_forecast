@@ -4,8 +4,8 @@
 
 ## Legfontosabb pontok
 
-- A legerősebb hajtóerővel bíró hajtástípus: **Tisztán elektromos** (Erős növekedés, pontszám +37.0%).
-- Legerősebb nyertes szegmens: **Tisztán elektromos / Prémium (pl. BMW, Mercedes, Audi) / Új (0-2 év)** (Erős növekedés, +63.8%).
+- A legerősebb hajtóerővel bíró hajtástípus: **Tisztán elektromos** (Erős növekedés, pontszám +37.0 pont).
+- Legerősebb nyertes szegmens: **Tisztán elektromos / Prémium (pl. BMW, Mercedes, Audi) / Új (0-2 év)** (Erős növekedés, +63.8 pont).
 - Üzemanyagár (HU): benzin 636 Ft/l, dízel 709 Ft/l (2026. szeptember 28. állapot).
 - Jegybanki alapkamat: 5.5% (2026-08-26 óta hatályos).
 - Nyilvános töltőpontok (AC+DC): 5,001 db (2026 Q3).

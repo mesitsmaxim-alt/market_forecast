@@ -38,7 +38,7 @@
     {
       "key": "ev_tariffs",
       "label": "EV importvámok (elsősorban kínai gyártmányú BEV-ekre)",
-      "unit": "%",
+      "unit": "pp",
       "calibrated": "manual",
       "pesszimista": 9.0,
       "alap": -1.0,
@@ -47,7 +47,7 @@
     {
       "key": "co2_regulation",
       "label": "EU CO2-szabályozás szigorodása / ICE-tiltás közeledése",
-      "unit": "index",
+      "unit": "%/év",
       "calibrated": "manual",
       "pesszimista": 10.4,
       "alap": 14.4,
@@ -408,84 +408,84 @@
       },
       "fuel_share_forecast": {
         "benzin": {
-          "horizon_label": "2 év múlva (becsült)",
+          "horizon_label": "2 év múlva (becsült, az utolsó 6 év trendje alapján)",
           "points": [
-            57.694,
-            56.418
+            58.043,
+            56.805
           ],
           "lower": [
-            57.168,
-            55.893
+            57.899,
+            56.661
           ],
           "upper": [
-            58.219,
-            56.944
+            58.187,
+            56.949
           ],
-          "slope": -1.2755
+          "slope": -1.2386
         },
         "dizel": {
-          "horizon_label": "2 év múlva (becsült)",
+          "horizon_label": "2 év múlva (becsült, az utolsó 6 év trendje alapján)",
           "points": [
-            36.33,
-            37.296
+            31.187,
+            31.094
           ],
           "lower": [
-            34.604,
-            35.57
+            31.126,
+            31.033
           ],
           "upper": [
-            38.057,
-            39.023
+            31.249,
+            31.156
           ],
-          "slope": 0.966
+          "slope": -0.0931
         },
         "hibrid": {
-          "horizon_label": "2 év múlva (becsült)",
+          "horizon_label": "2 év múlva (becsült, az utolsó 6 év trendje alapján)",
           "points": [
-            4.171,
-            4.401
+            7.969,
+            8.988
           ],
           "lower": [
-            2.938,
-            3.169
+            7.871,
+            8.89
           ],
           "upper": [
-            5.404,
-            5.634
+            8.067,
+            9.086
           ],
-          "slope": 0.2306
+          "slope": 1.0189
         },
         "elektromos": {
-          "horizon_label": "2 év múlva (becsült)",
+          "horizon_label": "2 év múlva (becsült, az utolsó 6 év trendje alapján)",
           "points": [
-            0.91,
-            0.961
+            2.128,
+            2.457
           ],
           "lower": [
-            0.556,
-            0.608
+            2.014,
+            2.343
           ],
           "upper": [
-            1.263,
-            1.315
+            2.242,
+            2.572
           ],
-          "slope": 0.0518
+          "slope": 0.3294
         },
         "egyeb": {
-          "horizon_label": "2 év múlva (becsült)",
+          "horizon_label": "2 év múlva (becsült, az utolsó 6 év trendje alapján)",
           "points": [
-            0.897,
-            0.924
+            0.667,
+            0.648
           ],
           "lower": [
-            0.701,
-            0.728
+            0.663,
+            0.644
           ],
           "upper": [
-            1.093,
-            1.12
+            0.672,
+            0.653
           ],
-          "slope": 0.0272
+          "slope": -0.0189
         }
       }
     },
@@ -679,17 +679,17 @@
         5.5
       ],
       "alapkamat_forecast": {
-        "horizon_label": "következő kamatdöntés (irányjelzés)",
+        "horizon_label": "következő kamatdöntés (irányjelzés, az utolsó 8 döntés trendje alapján)",
         "points": [
-          1.127
+          5.25
         ],
         "lower": [
-          -3.117
+          5.25
         ],
         "upper": [
-          5.372
+          5.25
         ],
-        "slope": -0.099
+        "slope": -0.25
       },
       "eurhuf_last": 363.69,
       "eurhuf_month": "2026. augusztus",
@@ -720,7 +720,6 @@
         363.69
       ],
       "eurhuf_series_full": [
-        1.0,
         253.83,
         253.4,
         249.81,
@@ -959,32 +958,32 @@
         363.69
       ],
       "eurhuf_forecast": {
-        "horizon_label": "6 hónap múlva (becsült)",
+        "horizon_label": "6 hónap múlva (becsült, az utolsó 24 hónap trendje alapján)",
         "points": [
-          400.966,
-          401.642,
-          402.318,
-          402.994,
-          403.67,
-          404.346
+          361.835,
+          359.62,
+          357.404,
+          355.189,
+          352.974,
+          350.759
         ],
         "lower": [
-          379.672,
-          380.348,
-          381.024,
-          381.7,
-          382.376,
-          383.052
+          353.988,
+          351.773,
+          349.557,
+          347.342,
+          345.127,
+          342.912
         ],
         "upper": [
-          422.26,
-          422.936,
-          423.612,
-          424.288,
-          424.964,
-          425.64
+          369.682,
+          367.467,
+          365.252,
+          363.036,
+          360.821,
+          358.606
         ],
-        "slope": 0.6761
+        "slope": -2.2152
       }
     },
     "toltoinfra": {
@@ -1063,26 +1062,26 @@
         5001.0
       ],
       "forecast": {
-        "horizon_label": "4 negyedév múlva (becsült)",
+        "horizon_label": "4 negyedév múlva (becsült, az utolsó 8 negyedév trendje alapján)",
         "points": [
-          5903.67,
-          6091.723,
-          6279.776,
-          6467.829
+          5559.0,
+          5673.167,
+          5787.333,
+          5901.5
         ],
         "lower": [
-          5559.65,
-          5747.703,
-          5935.756,
-          6123.81
+          5280.407,
+          5394.574,
+          5508.74,
+          5622.907
         ],
         "upper": [
-          6247.689,
-          6435.742,
-          6623.795,
-          6811.848
+          5837.593,
+          5951.76,
+          6065.926,
+          6180.093
         ],
-        "slope": 188.0531
+        "slope": 114.1667
       }
     },
     "forgalomba": {
@@ -1120,26 +1119,26 @@
       ],
       "total_yoy": 21.4558910413881,
       "forecast": {
-        "horizon_label": "4 negyedév múlva (becsült)",
+        "horizon_label": "4 negyedév múlva (becsült, az utolsó 8 negyedév trendje alapján)",
         "points": [
-          68523.261,
-          69351.511,
-          70179.761,
-          71008.011
+          77884.107,
+          80648.548,
+          83412.988,
+          86177.429
         ],
         "lower": [
-          63030.647,
-          63858.896,
-          64687.146,
-          65515.396
+          75424.429,
+          78188.87,
+          80953.31,
+          83717.751
         ],
         "upper": [
-          74015.876,
-          74844.126,
-          75672.376,
-          76500.625
+          80343.785,
+          83108.226,
+          85872.666,
+          88637.106
         ],
-        "slope": 828.2497
+        "slope": 2764.4405
       }
     },
     "szentiment": {
@@ -1734,32 +1733,32 @@
         -11.8
       ],
       "mp_forecast": {
-        "horizon_label": "6 hónap múlva (becsült)",
+        "horizon_label": "6 hónap múlva (becsült, az utolsó 36 hónap trendje alapján)",
         "points": [
-          -18.841,
-          -18.773,
-          -18.705,
-          -18.637,
-          -18.569,
-          -18.5
+          -15.994,
+          -15.633,
+          -15.273,
+          -14.912,
+          -14.551,
+          -14.191
         ],
         "lower": [
-          -31.965,
-          -31.896,
-          -31.828,
-          -31.76,
-          -31.692,
-          -31.624
+          -19.493,
+          -19.132,
+          -18.772,
+          -18.411,
+          -18.051,
+          -17.69
         ],
         "upper": [
-          -5.718,
-          -5.65,
-          -5.582,
-          -5.513,
-          -5.445,
-          -5.377
+          -12.495,
+          -12.134,
+          -11.773,
+          -11.413,
+          -11.052,
+          -10.692
         ],
-        "slope": 0.0682
+        "slope": 0.3606
       },
       "cc_last": -3.1,
       "cc_series": [
@@ -2351,32 +2350,32 @@
         -3.1
       ],
       "cc_forecast": {
-        "horizon_label": "6 hónap múlva (becsült)",
+        "horizon_label": "6 hónap múlva (becsült, az utolsó 36 hónap trendje alapján)",
         "points": [
-          -16.776,
-          -16.736,
-          -16.696,
-          -16.655,
-          -16.615,
-          -16.574
+          -11.982,
+          -11.41,
+          -10.839,
+          -10.267,
+          -9.696,
+          -9.125
         ],
         "lower": [
-          -31.523,
-          -31.483,
-          -31.442,
-          -31.402,
-          -31.361,
-          -31.321
+          -18.109,
+          -17.538,
+          -16.966,
+          -16.395,
+          -15.824,
+          -15.252
         ],
         "upper": [
-          -2.03,
-          -1.989,
-          -1.949,
-          -1.908,
-          -1.868,
-          -1.828
+          -5.854,
+          -5.282,
+          -4.711,
+          -4.14,
+          -3.568,
+          -2.997
         ],
-        "slope": 0.0404
+        "slope": 0.5714
       }
     },
     "realjovedelem": {
@@ -2534,36 +2533,36 @@
         null
       ],
       "wage_forecast": {
-        "horizon_label": "2 év múlva (becsült)",
+        "horizon_label": "2 év múlva (becsült, az utolsó 10 év trendje alapján)",
         "points": [
-          6.254,
-          6.457
+          2.139,
+          1.489
         ],
         "lower": [
-          1.268,
-          1.471
+          -1.081,
+          -1.731
         ],
         "upper": [
-          11.24,
-          11.443
+          5.36,
+          4.71
         ],
-        "slope": 0.2034
+        "slope": -0.6501
       },
       "income_forecast": {
-        "horizon_label": "2 év múlva (becsült)",
+        "horizon_label": "2 év múlva (becsült, az utolsó 10 év trendje alapján)",
         "points": [
-          5.476,
-          5.678
+          4.493,
+          4.416
         ],
         "lower": [
-          2.05,
-          2.252
+          1.649,
+          1.571
         ],
         "upper": [
-          8.903,
-          9.105
+          7.338,
+          7.26
         ],
-        "slope": 0.2018
+        "slope": -0.0776
       }
     }
   },
@@ -2966,6 +2965,122 @@
       ],
       "real_headline": {
         "benzin": 635,
+        "dizel": 709,
+        "alapkamat": 5.5,
+        "eurhuf": 363.69,
+        "forgalomba_total": 78118,
+        "sentiment_mp": -11.8,
+        "wage_yoy": 4.8
+      }
+    },
+    {
+      "date": "2026-09-28",
+      "factors": {
+        "oil_price": 12.9,
+        "battery_cost": -8.0,
+        "charging_infra": -2.6,
+        "ev_tariffs": -1.0,
+        "co2_regulation": 14.4,
+        "financing_cost": -1.0,
+        "consumer_sentiment": 13.5,
+        "purchasing_power": 4.8
+      },
+      "drivetrain_summary": [
+        {
+          "key": "BEV",
+          "score": 0.3698
+        },
+        {
+          "key": "PHEV",
+          "score": 0.2264
+        },
+        {
+          "key": "HEV",
+          "score": 0.1915
+        },
+        {
+          "key": "ICE",
+          "score": -0.0583
+        }
+      ],
+      "brand_summary": [
+        {
+          "key": "premium",
+          "score": 0.2104
+        },
+        {
+          "key": "kinai_belepo",
+          "score": 0.2021
+        },
+        {
+          "key": "tomeggyarto",
+          "score": 0.1959
+        },
+        {
+          "key": "budget",
+          "score": 0.121
+        }
+      ],
+      "real_headline": {
+        "benzin": 636,
+        "dizel": 709,
+        "alapkamat": 5.5,
+        "eurhuf": 363.69,
+        "forgalomba_total": 78118,
+        "sentiment_mp": -11.8,
+        "wage_yoy": 4.8
+      }
+    },
+    {
+      "date": "2026-09-28",
+      "factors": {
+        "oil_price": 12.9,
+        "battery_cost": -8.0,
+        "charging_infra": -2.6,
+        "ev_tariffs": -1.0,
+        "co2_regulation": 14.4,
+        "financing_cost": -1.0,
+        "consumer_sentiment": 13.5,
+        "purchasing_power": 4.8
+      },
+      "drivetrain_summary": [
+        {
+          "key": "BEV",
+          "score": 0.3698
+        },
+        {
+          "key": "PHEV",
+          "score": 0.2264
+        },
+        {
+          "key": "HEV",
+          "score": 0.1915
+        },
+        {
+          "key": "ICE",
+          "score": -0.0583
+        }
+      ],
+      "brand_summary": [
+        {
+          "key": "premium",
+          "score": 0.2104
+        },
+        {
+          "key": "kinai_belepo",
+          "score": 0.2021
+        },
+        {
+          "key": "tomeggyarto",
+          "score": 0.1959
+        },
+        {
+          "key": "budget",
+          "score": 0.121
+        }
+      ],
+      "real_headline": {
+        "benzin": 636,
         "dizel": 709,
         "alapkamat": 5.5,
         "eurhuf": 363.69,

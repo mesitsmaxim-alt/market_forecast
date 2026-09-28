@@ -23,8 +23,10 @@ from engine import SCENARIOS, classify, compute_segments
 REPORTS_DIR = Path(__file__).parent / "reports"
 
 
-def fmt_pct(x: float) -> str:
-    return f"{x * 100:+.1f}%"
+def fmt_pont(x: float) -> str:
+    # A kitettségi pontszám relatív index, NEM százalékos változás - ezért
+    # "pont", nem "%" (a %-jel eladásnövekedésnek volt olvasható).
+    return f"{x * 100:+.1f} pont"
 
 
 def aggregate(results, scenario: str, key_fn, label_fn):
@@ -90,7 +92,7 @@ def build_report(scenario: str) -> str:
             r.drivetrain_label for r in results if r.drivetrain == k
         )
     ):
-        lines.append(f"| {label} | {fmt_pct(avg)} | {classify(avg)} |")
+        lines.append(f"| {label} | {fmt_pont(avg)} | {classify(avg)} |")
     lines.append("")
 
     lines.append("## 3. Összegzés márkakategória szerint")
@@ -102,7 +104,7 @@ def build_report(scenario: str) -> str:
             r.brand_tier_label for r in results if r.brand_tier == k
         )
     ):
-        lines.append(f"| {label} | {fmt_pct(avg)} | {classify(avg)} |")
+        lines.append(f"| {label} | {fmt_pont(avg)} | {classify(avg)} |")
     lines.append("")
 
     lines.append("## 4. Összegzés évjárat-sáv szerint")
@@ -114,18 +116,18 @@ def build_report(scenario: str) -> str:
             r.year_bucket_label for r in results if r.year_bucket == k
         )
     ):
-        lines.append(f"| {label} | {fmt_pct(avg)} | {classify(avg)} |")
+        lines.append(f"| {label} | {fmt_pont(avg)} | {classify(avg)} |")
     lines.append("")
 
     lines.append("## 5. Legerősebb nyertes szegmensek")
     lines.append("")
     for r in results_sorted[:5]:
         top_drivers = ", ".join(
-            f"{name} ({fmt_pct(val)})" for name, val in r.drivers[scenario][:2]
+            f"{name} ({fmt_pont(val)})" for name, val in r.drivers[scenario][:2]
         )
         lines.append(
             f"- **{r.drivetrain_label} / {r.brand_tier_label} / {r.year_bucket_label}** "
-            f"— {classify(r.scores[scenario])} ({fmt_pct(r.scores[scenario])}). "
+            f"— {classify(r.scores[scenario])} ({fmt_pont(r.scores[scenario])}). "
             f"Fő hajtóerő: {top_drivers}."
         )
     lines.append("")
@@ -134,11 +136,11 @@ def build_report(scenario: str) -> str:
     lines.append("")
     for r in results_sorted[-5:][::-1]:
         top_drivers = ", ".join(
-            f"{name} ({fmt_pct(val)})" for name, val in r.drivers[scenario][:2]
+            f"{name} ({fmt_pont(val)})" for name, val in r.drivers[scenario][:2]
         )
         lines.append(
             f"- **{r.drivetrain_label} / {r.brand_tier_label} / {r.year_bucket_label}** "
-            f"— {classify(r.scores[scenario])} ({fmt_pct(r.scores[scenario])}). "
+            f"— {classify(r.scores[scenario])} ({fmt_pont(r.scores[scenario])}). "
             f"Fő hajtóerő: {top_drivers}."
         )
     lines.append("")
@@ -150,7 +152,7 @@ def build_report(scenario: str) -> str:
     for r in results_sorted:
         lines.append(
             f"| {r.drivetrain_label} | {r.brand_tier_label} | {r.year_bucket_label} "
-            f"| {fmt_pct(r.scores[scenario])} | {classify(r.scores[scenario])} |"
+            f"| {fmt_pont(r.scores[scenario])} | {classify(r.scores[scenario])} |"
         )
     lines.append("")
 

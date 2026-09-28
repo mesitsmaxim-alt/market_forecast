@@ -34,7 +34,7 @@
     },
     "ev_tariffs": {
       "label": "EV importvámok (elsősorban kínai gyártmányú BEV-ekre)",
-      "unit": "%",
+      "unit": "pp",
       "note": "Kalibrálva: EU kiegyenlítő vámok kínai BEV-ekre (DG TRADE) alapján — az effektív átlagvám becsült változása a ±12 hónapos ablakba eső hatályos eseményekből (2026-01-12: +0.0 pp; 2026-02-10: -1.0 pp; összesen -1.0 pp). Pozitív delta = vámemelés. Forrás: data/ev_vamok.json (kézi adatbevitel, az eseményenkénti hatás durva becslés — ld. impact_basis).",
       "scenarios": {
         "pesszimista": 9.0,
@@ -44,7 +44,7 @@
     },
     "co2_regulation": {
       "label": "EU CO2-szabályozás szigorodása / ICE-tiltás közeledése",
-      "unit": "index",
+      "unit": "%/év",
       "note": "Kalibrálva: EU flotta-CO2 célok (2019/631 rendelet) alapján — a jelenlegi 93.6 g/km célról a 2030-es 49.5 g/km-re 3.3 év alatt szükséges 47.1%-os csökkentés, évesítve (14.4%/év) mint szabályozási nyomás. Függőben lévő javaslatok (nem számolva): 1 db. Forrás: data/co2_szabalyozas.json (kézi adatbevitel).",
       "scenarios": {
         "pesszimista": 10.4,

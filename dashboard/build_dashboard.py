@@ -150,7 +150,8 @@ def build_real_snapshot() -> dict:
         "fuel_share_forecast": {
             k: forecast_card(
                 [round(v[i] / total[i] * 100, 2) for i in range(len(total))],
-                steps=2, horizon_label="2 év múlva (becsült)",
+                steps=2, horizon_label="2 év múlva (becsült, az utolsó 6 év trendje alapján)",
+                window=6,
             )
             for k, v in fuel.items()
         },
@@ -176,12 +177,12 @@ def build_real_snapshot() -> dict:
         "alapkamat_date": m["alapkamat"]["dates"][-1],
         "alapkamat_series": m["alapkamat"]["values"][-10:],
         "alapkamat_series_full": m["alapkamat"]["values"],
-        "alapkamat_forecast": forecast_card(m["alapkamat"]["values"], steps=1, horizon_label="következő kamatdöntés (irányjelzés)"),
+        "alapkamat_forecast": forecast_card(m["alapkamat"]["values"], steps=1, horizon_label="következő kamatdöntés (irányjelzés, az utolsó 8 döntés trendje alapján)", window=8),
         "eurhuf_last": m["eur_huf_havi"]["values"][-1],
         "eurhuf_month": m["eur_huf_havi"]["months"][-1],
         "eurhuf_series": m["eur_huf_havi"]["values"][-24:],
         "eurhuf_series_full": m["eur_huf_havi"]["values"],
-        "eurhuf_forecast": forecast_card(m["eur_huf_havi"]["values"], steps=6, horizon_label="6 hónap múlva (becsült)"),
+        "eurhuf_forecast": forecast_card(m["eur_huf_havi"]["values"], steps=6, horizon_label="6 hónap múlva (becsült, az utolsó 24 hónap trendje alapján)", window=24),
     }
 
     t = load_json("toltoinfra.json")
@@ -195,7 +196,7 @@ def build_real_snapshot() -> dict:
         "ac_series": qc["ac"][-12:],
         "dc_series": qc["dc"][-12:],
         "total_series_full": total_toltoinfra,
-        "forecast": forecast_card(total_toltoinfra, steps=4, horizon_label="4 negyedév múlva (becsült)"),
+        "forecast": forecast_card(total_toltoinfra, steps=4, horizon_label="4 negyedév múlva (becsült, az utolsó 8 negyedév trendje alapján)", window=8),
     }
 
     f = load_json("forgalomba.json")
@@ -205,7 +206,7 @@ def build_real_snapshot() -> dict:
         "total_series": f["total"][-8:],
         "total_series_full": f["total"],
         "total_yoy": (f["total"][-1] / f["total"][-5] - 1) * 100 if len(f["total"]) >= 5 else None,
-        "forecast": forecast_card(f["total"], steps=4, horizon_label="4 negyedév múlva (becsült)"),
+        "forecast": forecast_card(f["total"], steps=4, horizon_label="4 negyedév múlva (becsült, az utolsó 8 negyedév trendje alapján)", window=8),
     }
 
     s = load_json("szentiment.json")
@@ -214,11 +215,11 @@ def build_real_snapshot() -> dict:
         "mp_last": s["major_purchases_intention"][-1],
         "mp_series": s["major_purchases_intention"][-24:],
         "mp_series_full": s["major_purchases_intention"],
-        "mp_forecast": forecast_card(s["major_purchases_intention"], steps=6, horizon_label="6 hónap múlva (becsült)"),
+        "mp_forecast": forecast_card(s["major_purchases_intention"], steps=6, horizon_label="6 hónap múlva (becsült, az utolsó 36 hónap trendje alapján)", window=36),
         "cc_last": s["consumer_confidence"][-1],
         "cc_series": s["consumer_confidence"][-24:],
         "cc_series_full": s["consumer_confidence"],
-        "cc_forecast": forecast_card(s["consumer_confidence"], steps=6, horizon_label="6 hónap múlva (becsült)"),
+        "cc_forecast": forecast_card(s["consumer_confidence"], steps=6, horizon_label="6 hónap múlva (becsült, az utolsó 36 hónap trendje alapján)", window=36),
     }
 
     r = load_json("realjovedelem.json")
@@ -229,8 +230,8 @@ def build_real_snapshot() -> dict:
         "years_full": r["years"],
         "wage_series_full": r["real_wage_yoy_pct"],
         "income_series_full": r["real_income_yoy_pct"],
-        "wage_forecast": forecast_card(r["real_wage_yoy_pct"], steps=2, horizon_label="2 év múlva (becsült)"),
-        "income_forecast": forecast_card(r["real_income_yoy_pct"], steps=2, horizon_label="2 év múlva (becsült)"),
+        "wage_forecast": forecast_card(r["real_wage_yoy_pct"], steps=2, horizon_label="2 év múlva (becsült, az utolsó 10 év trendje alapján)", window=10),
+        "income_forecast": forecast_card(r["real_income_yoy_pct"], steps=2, horizon_label="2 év múlva (becsült, az utolsó 10 év trendje alapján)", window=10),
     }
 
     return out

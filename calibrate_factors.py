@@ -330,6 +330,7 @@ def main():
     tariff_pp, tariff_note, w = compute_ev_tariffs_trend()
     warnings.append(w)
     tariffs = config["factors"]["ev_tariffs"]
+    tariffs["unit"] = "pp"  # effektív átlagvám változása, százalékpontban
     tariffs["note"] = tariff_note
     tariffs["scenarios"] = {
         "pesszimista": round(tariff_pp + TARIFF_SPREAD_PP, 1),
@@ -340,6 +341,7 @@ def main():
     co2_pressure, co2_note, w = compute_co2_regulation_trend()
     warnings.append(w)
     co2 = config["factors"]["co2_regulation"]
+    co2["unit"] = "%/év"  # évesített szükséges flotta-CO2 csökkentés
     co2["note"] = co2_note
     co2["scenarios"] = {
         "pesszimista": round(co2_pressure - CO2_SPREAD, 1),

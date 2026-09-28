@@ -345,7 +345,7 @@
 <section id="segments">
   <div class="section-head">
     <h2>2. Szegmens-pontszámok (alap forgatókönyv)</h2>
-    <span class="section-note">Relatív kitettségi pontszám — nem abszolút eladás-előrejelzés.</span>
+    <span class="section-note">Relatív kitettségi pontszám <b>pontban, nem százalékban</b> — azt mutatja, mennyire segítik (+) vagy hátráltatják (−) a tényezők az adott szegmenst. 0 = semleges, ±5 pont fölött növekedés/visszaesés, ±15 fölött erős. Nem eladás-előrejelzés.</span>
   </div>
   <div class="segment-filters" id="segment-filters"></div>
   <div class="bar-groups" id="bar-groups"></div>
@@ -406,7 +406,7 @@
 <section id="forecast-real">
   <div class="section-head">
     <h2>Trendvetítés — valós mutatók</h2>
-    <span class="section-note">Egyszerű lineáris trend-extrapoláció (nem statisztikai előrejelző modell) a meglévő idősorokra, ±1 szórás sávval.</span>
+    <span class="section-note">Egyszerű lineáris trend-extrapoláció (nem statisztikai előrejelző modell) az idősorok friss szakaszára (az ablak kártyánként jelölve), ±1 szórás sávval. A görbe a teljes múltat mutatja, a vetítés csak a jelenlegi trendet viszi tovább.</span>
   </div>
   <div class="real-grid" id="forecast-real-grid"></div>
 </section>
@@ -414,7 +414,7 @@
 <section id="forecast-scenario">
   <div class="section-head">
     <h2>Forgatókönyv-sáv szegmensenként (hajtástípus)</h2>
-    <span class="section-note">Ez a forgatókönyv-modell pesszimista/alap/optimista kimenete, mint előrejelzési tartomány — nem statisztikai extrapoláció.</span>
+    <span class="section-note">Ez a forgatókönyv-modell pesszimista/alap/optimista kimenete (kitettségi pontszám, pontban), mint előrejelzési tartomány — nem statisztikai extrapoláció.</span>
   </div>
   <div class="scenario-fan" id="scenario-fan"></div>
 </section>
@@ -531,7 +531,7 @@ __DASHBOARD_DATA__
         <div class="bar-row">
           <div class="rowtop">
             <span class="lbl">${r.label}</span>
-            <span class="val tnum">${fmt(r.score * 100, 1)}%</span>
+            <span class="val tnum">${fmt(r.score * 100, 1)} pont</span>
           </div>
           <div class="bar-track">
             <div class="bar-zero"></div>
@@ -553,13 +553,13 @@ __DASHBOARD_DATA__
     const items = rows.map(r => `
       <div class="wl-item">
         <span class="name">${r.label}</span>
-        <span class="sc tnum" style="color:${cls==='winners' ? 'var(--pos)' : 'var(--text-muted)'}">${fmt(r.score*100,1)}%</span>
+        <span class="sc tnum" style="color:${cls==='winners' ? 'var(--pos)' : 'var(--text-muted)'}">${fmt(r.score*100,1)} pont</span>
       </div>`).join('');
     return `<div class="wl-card ${cls}"><h3><span class="sw"></span>${title}</h3>${items}</div>`;
   }
   document.getElementById('wl-grid').innerHTML =
     wlList('Legerősebb nyertes szegmensek', data.top_winners, 'winners') +
-    wlList('Legközelebb a stagnáláshoz', data.top_losers, 'losers');
+    wlList('Leggyengébb szegmensek', data.top_losers, 'losers');
 
   // ---------- composition bar (fuel shares) ----------
   const fs = data.real.jarmuallomany.fuel_shares;
@@ -747,7 +747,7 @@ __DASHBOARD_DATA__
     const filterFn = rows => sel ? rows.filter(r => r.label.startsWith(sel + ' /')) : rows;
     document.getElementById('wl-grid').innerHTML =
       wlList('Legerősebb nyertes szegmensek', filterFn(data.top_winners), 'winners') +
-      wlList('Legközelebb a stagnáláshoz', filterFn(data.top_losers), 'losers');
+      wlList('Leggyengébb szegmensek', filterFn(data.top_losers), 'losers');
   });
 
   // ---------- forecast-aware sparkline (history line + dashed projection + band) ----------
@@ -891,17 +891,17 @@ __DASHBOARD_DATA__
         <div class="fan-row">
           <span class="fan-lbl">Pesszimista</span>
           <div class="fan-track"><div class="fan-dot" style="left:${pP}%; background:var(--neg);"></div></div>
-          <span class="fan-val tnum">${fmt(r.pesszimista * 100, 1)}%</span>
+          <span class="fan-val tnum">${fmt(r.pesszimista * 100, 1)}</span>
         </div>
         <div class="fan-row">
           <span class="fan-lbl">Alap</span>
           <div class="fan-track"><div class="fan-dot" style="left:${pA}%; background:var(--text-primary);"></div></div>
-          <span class="fan-val tnum">${fmt(r.score * 100, 1)}%</span>
+          <span class="fan-val tnum">${fmt(r.score * 100, 1)}</span>
         </div>
         <div class="fan-row">
           <span class="fan-lbl">Optimista</span>
           <div class="fan-track"><div class="fan-dot" style="left:${pO}%; background:var(--pos);"></div></div>
-          <span class="fan-val tnum">${fmt(r.optimista * 100, 1)}%</span>
+          <span class="fan-val tnum">${fmt(r.optimista * 100, 1)}</span>
         </div>
       </div>`;
     }).join('');

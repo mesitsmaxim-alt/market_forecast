@@ -56,7 +56,10 @@ LOG_FILE="$LOG_DIR/run_$(date +%Y-%m-%d_%H%M%S).log"
 # megmarad, és a következő futás push-a viszi fel.
 {
   echo "--- Git auto-commit ---"
-  git add -A
+  # Csak a pipeline által GENERÁLT fájlokat vesszük fel - egy félkész,
+  # még nem commitolt kódmódosítás így sosem kerül be egy "Havi
+  # pipeline-futás" commitba.
+  git add -- data/ reports/ config/factors.json dashboard/dashboard.html dashboard/dashboard_data.json
   if git diff --cached --quiet; then
     echo "Nincs változás, nincs commit."
   else

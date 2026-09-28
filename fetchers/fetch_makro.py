@@ -16,6 +16,7 @@ Kimenet:
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 from pathlib import Path
 
@@ -69,7 +70,10 @@ def parse_eur_huf() -> dict:
     for r in range(5, ws.nrows):
         label = ws.cell_value(r, 0)
         value = ws.cell_value(r, eur_col)
-        if not label or value in ("", None):
+        # Csak "ÉÉÉÉ. hónap" címkéjű adatsorok: a táblázat tetején van egy
+        # "Egység" sor (értéke 1 = egységszorzó), ami korábban adatpontként
+        # került be az idősor elejére, és elrontotta a görbét és a trendet.
+        if not label or value in ("", None) or not re.match(r"^\d{4}\.", str(label)):
             continue
         months.append(label)
         values.append(float(value))

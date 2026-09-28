@@ -54,9 +54,20 @@ def linreg_forecast(y: list[float], steps: int) -> dict | None:
     return {"forecast": forecast, "lower": lower, "upper": upper, "slope": round(slope, 4)}
 
 
-def forecast_card(series: list[float], steps: int, horizon_label: str) -> dict | None:
-    """linreg_forecast() eredményét a dashboard-kártyákhoz illő alakra hozza."""
-    result = linreg_forecast(series, steps)
+def forecast_card(series: list[float], steps: int, horizon_label: str,
+                  window: int | None = None) -> dict | None:
+    """linreg_forecast() eredményét a dashboard-kártyákhoz illő alakra hozza.
+
+    `window`: csak az utolsó ennyi (nem None) adatpontra illesztünk egyenest.
+    A teljes, évtizedes idősorra illesztett egyenes félrevezető (pl. az
+    alapkamatnál a 90-es évek 20% feletti szintje negatív kamatot "jósolt",
+    a gyorsuló hibrid/elektromos részesedésnél a jelenleginél kisebbet) - a
+    cél a JELENLEGI trend iránya, ezért a friss ablak a helyes alap. A
+    megjelenített történeti görbe ettől még a teljes idősor marad."""
+    clean = [v for v in series if v is not None]
+    if window is not None:
+        clean = clean[-window:]
+    result = linreg_forecast(clean, steps)
     if result is None:
         return None
     return {

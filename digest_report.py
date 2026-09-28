@@ -45,11 +45,11 @@ def build_digest() -> tuple[str, str]:
     lines.append("")
     lines.append(
         f"- A legerősebb hajtóerővel bíró hajtástípus: **{top_dt['label']}** "
-        f"({top_dt['dir']}, pontszám {top_dt['score']*100:+.1f}%)."
+        f"({top_dt['dir']}, pontszám {top_dt['score']*100:+.1f} pont)."
     )
     lines.append(
         f"- Legerősebb nyertes szegmens: **{top_winner['label']}** "
-        f"({top_winner['dir']}, {top_winner['score']*100:+.1f}%)."
+        f"({top_winner['dir']}, {top_winner['score']*100:+.1f} pont)."
     )
     lines.append(
         f"- Üzemanyagár (HU): benzin {real['uzemanyagar']['benzin_last']} Ft/l, "
@@ -83,7 +83,7 @@ def build_digest() -> tuple[str, str]:
     lines.append("")
 
     notification_text = (
-        f"{top_dt['label']}: {top_dt['dir']} ({top_dt['score']*100:+.1f}%). "
+        f"{top_dt['label']}: {top_dt['dir']} ({top_dt['score']*100:+.1f} pont). "
         f"Alapkamat {real['makro']['alapkamat_last']}%, benzin {real['uzemanyagar']['benzin_last']} Ft/l. "
         f"Részletek: reports/DIGEST.md"
     )
