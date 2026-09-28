@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 A Hungarian automotive market forecasting and automated reporting system. It combines a
 scenario-based scoring model (estimated factors like oil price, battery cost, EV tariffs)
 with real-data-calibrated factors and pure real-data trend reports (KSH, MNB, Eurostat, EAFO),
-and publishes a summary dashboard. Git repo, pushed to the private GitHub repo `mesitsmaxim-alt/market_forecast`; `logs/`, `__pycache__/` and the re-downloaded `data/_raw_*` files are gitignored (`data/raw_eafo/` is a manual export and IS tracked).
+and publishes a summary dashboard. Git repo, pushed to the PUBLIC GitHub repo `mesitsmaxim-alt/market_forecast`; `logs/`, `__pycache__/` and the re-downloaded `data/_raw_*` files are gitignored (`data/raw_eafo/` is a manual export and IS tracked).
 
 ## Running things
 
