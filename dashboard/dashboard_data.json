@@ -3573,129 +3573,789 @@
     "market_total_units": 110550,
     "market_total_label": "összes új személyautó és kishaszonjármű, 2026. I–VIII. hónap (Datahouse, a forráscikk szerint)",
     "public_note": "A Datahouse forgalomba helyezési adatain alapuló havi toplista, a forrás közös személyautó- és kishaszonjármű-rangsora. Hivatalos, gépileg lekérdezhető modell-szintű forrás nincs (a KSH csak márkánként publikál), ezért a lista kézzel frissül, amikor új forráscikk jelenik meg.",
-    "note": "Kézi adatbevitel — a forrás nem publikál gépileg feldolgozható táblázatot, csak folyó szöveget és egy címkézetlen számozott listát. Frissítés: amikor új jarmuipar.hu Top X cikk jelenik meg, kérd meg Claude-ot, hogy olvassa ki és frissítse ezt a fájlt. A 'type' mező (szemelyauto / kisbusz / kishaszon) a forráscikk jelölése alapján kézzel kerül be: a kisbusz (pl. Tourneo Custom) M1 kategóriás, a KSH személyautóként számolja, ezért a 'Csak személyautók' szűrő nem rejti el; a kishaszon (pickup, furgon, 'teherautó') N1, azt elrejti. Új modellnél ellenőrizd a típust.",
+    "note": "Kézi adatbevitel — a forrás nem publikál gépileg feldolgozható táblázatot, csak folyó szöveget és egy címkézetlen számozott listát. Frissítés: amikor új jarmuipar.hu Top X cikk jelenik meg, kérd meg Claude-ot, hogy olvassa ki és frissítse ezt a fájlt. A 'type' mező (szemelyauto / kisbusz / kishaszon) a forráscikk jelölése alapján kézzel kerül be: a kisbusz (pl. Tourneo Custom) M1 kategóriás, a KSH személyautóként számolja, ezért a 'Csak személyautók' szűrő nem rejti el; a kishaszon (pickup, furgon, 'teherautó') N1, azt elrejti. Új modellnél ellenőrizd a típust. Havi frissítéskor: a 'previous' blokkba az ELŐZŐ hónap cikkének TELJES Top 100-as listája kerül (nem csak a top 20), különben a 20. hely körül mozgó modellek tévesen 'új'-nak látszanak; a modellnevek egyeztetése a ' (teherautó)' és hasonló zárójeles jelölések nélkül történik.",
     "rows": [
       {
         "rank": 1,
         "model": "Nissan Qashqai",
         "units": 5453,
-        "type": "szemelyauto"
+        "type": "szemelyauto",
+        "brand": "Nissan",
+        "brand_tier": "tomeggyarto",
+        "brand_tier_label": "Tömeggyártó",
+        "share_pct": 4.93,
+        "prev_rank": 1,
+        "rank_change": 0,
+        "period_units": 92
       },
       {
         "rank": 2,
         "model": "Skoda Octavia",
         "units": 4355,
-        "type": "szemelyauto"
+        "type": "szemelyauto",
+        "brand": "Skoda",
+        "brand_tier": "tomeggyarto",
+        "brand_tier_label": "Tömeggyártó",
+        "share_pct": 3.94,
+        "prev_rank": 2,
+        "rank_change": 0,
+        "period_units": 277
       },
       {
         "rank": 3,
         "model": "Suzuki S-Cross",
         "units": 4036,
-        "type": "szemelyauto"
+        "type": "szemelyauto",
+        "brand": "Suzuki",
+        "brand_tier": "budget",
+        "brand_tier_label": "Belépő szintű / budget",
+        "share_pct": 3.65,
+        "prev_rank": 3,
+        "rank_change": 0,
+        "period_units": 454
       },
       {
         "rank": 4,
         "model": "Suzuki Vitara",
         "units": 3261,
-        "type": "szemelyauto"
+        "type": "szemelyauto",
+        "brand": "Suzuki",
+        "brand_tier": "budget",
+        "brand_tier_label": "Belépő szintű / budget",
+        "share_pct": 2.95,
+        "prev_rank": 4,
+        "rank_change": 0,
+        "period_units": 367
       },
       {
         "rank": 5,
         "model": "Hyundai Tucson",
         "units": 2285,
-        "type": "szemelyauto"
+        "type": "szemelyauto",
+        "brand": "Hyundai",
+        "brand_tier": "tomeggyarto",
+        "brand_tier_label": "Tömeggyártó",
+        "share_pct": 2.07,
+        "prev_rank": 5,
+        "rank_change": 0,
+        "period_units": 121
       },
       {
         "rank": 6,
         "model": "Toyota Corolla",
         "units": 2228,
-        "type": "szemelyauto"
+        "type": "szemelyauto",
+        "brand": "Toyota",
+        "brand_tier": "tomeggyarto",
+        "brand_tier_label": "Tömeggyártó",
+        "share_pct": 2.02,
+        "prev_rank": 6,
+        "rank_change": 0,
+        "period_units": 251
       },
       {
         "rank": 7,
         "model": "Toyota Yaris Cross",
         "units": 2104,
-        "type": "szemelyauto"
+        "type": "szemelyauto",
+        "brand": "Toyota",
+        "brand_tier": "tomeggyarto",
+        "brand_tier_label": "Tömeggyártó",
+        "share_pct": 1.9,
+        "prev_rank": 7,
+        "rank_change": 0,
+        "period_units": 151
       },
       {
         "rank": 8,
         "model": "Ford Ranger",
         "units": 1879,
-        "type": "kishaszon"
+        "type": "kishaszon",
+        "brand": "Ford",
+        "brand_tier": "tomeggyarto",
+        "brand_tier_label": "Tömeggyártó",
+        "share_pct": 1.7,
+        "prev_rank": 8,
+        "rank_change": 0,
+        "period_units": 246
       },
       {
         "rank": 9,
         "model": "Kia Sportage",
         "units": 1819,
-        "type": "szemelyauto"
+        "type": "szemelyauto",
+        "brand": "Kia",
+        "brand_tier": "tomeggyarto",
+        "brand_tier_label": "Tömeggyártó",
+        "share_pct": 1.65,
+        "prev_rank": 9,
+        "rank_change": 0,
+        "period_units": 221
       },
       {
         "rank": 10,
         "model": "Dacia Duster",
         "units": 1541,
-        "type": "szemelyauto"
+        "type": "szemelyauto",
+        "brand": "Dacia",
+        "brand_tier": "budget",
+        "brand_tier_label": "Belépő szintű / budget",
+        "share_pct": 1.39,
+        "prev_rank": 12,
+        "rank_change": 2,
+        "period_units": 267
       },
       {
         "rank": 11,
         "model": "Toyota C-HR",
         "units": 1439,
-        "type": "szemelyauto"
+        "type": "szemelyauto",
+        "brand": "Toyota",
+        "brand_tier": "tomeggyarto",
+        "brand_tier_label": "Tömeggyártó",
+        "share_pct": 1.3,
+        "prev_rank": 10,
+        "rank_change": -1,
+        "period_units": 123
       },
       {
         "rank": 12,
         "model": "Ford Kuga",
         "units": 1415,
-        "type": "szemelyauto"
+        "type": "szemelyauto",
+        "brand": "Ford",
+        "brand_tier": "tomeggyarto",
+        "brand_tier_label": "Tömeggyártó",
+        "share_pct": 1.28,
+        "prev_rank": 11,
+        "rank_change": -1,
+        "period_units": 135
       },
       {
         "rank": 13,
         "model": "Skoda Kodiaq",
         "units": 1338,
-        "type": "szemelyauto"
+        "type": "szemelyauto",
+        "brand": "Skoda",
+        "brand_tier": "tomeggyarto",
+        "brand_tier_label": "Tömeggyártó",
+        "share_pct": 1.21,
+        "prev_rank": 13,
+        "rank_change": 0,
+        "period_units": 108
       },
       {
         "rank": 14,
         "model": "Volkswagen T-Roc",
         "units": 1260,
-        "type": "szemelyauto"
+        "type": "szemelyauto",
+        "brand": "Volkswagen",
+        "brand_tier": "tomeggyarto",
+        "brand_tier_label": "Tömeggyártó",
+        "share_pct": 1.14,
+        "prev_rank": 14,
+        "rank_change": 0,
+        "period_units": 88
       },
       {
         "rank": 15,
         "model": "Ford Tourneo Custom",
         "units": 1242,
-        "type": "kisbusz"
+        "type": "kisbusz",
+        "brand": "Ford",
+        "brand_tier": "tomeggyarto",
+        "brand_tier_label": "Tömeggyártó",
+        "share_pct": 1.12,
+        "prev_rank": 17,
+        "rank_change": 2,
+        "period_units": 206
       },
       {
         "rank": 16,
         "model": "Ford Transit Custom",
         "units": 1201,
-        "type": "kishaszon"
+        "type": "kishaszon",
+        "brand": "Ford",
+        "brand_tier": "tomeggyarto",
+        "brand_tier_label": "Tömeggyártó",
+        "share_pct": 1.09,
+        "prev_rank": 16,
+        "rank_change": 0,
+        "period_units": 131
       },
       {
         "rank": 17,
         "model": "Skoda Superb",
         "units": 1183,
-        "type": "szemelyauto"
+        "type": "szemelyauto",
+        "brand": "Skoda",
+        "brand_tier": "tomeggyarto",
+        "brand_tier_label": "Tömeggyártó",
+        "share_pct": 1.07,
+        "prev_rank": 15,
+        "rank_change": -2,
+        "period_units": 70
       },
       {
         "rank": 18,
         "model": "Volkswagen Golf",
         "units": 1132,
-        "type": "szemelyauto"
+        "type": "szemelyauto",
+        "brand": "Volkswagen",
+        "brand_tier": "tomeggyarto",
+        "brand_tier_label": "Tömeggyártó",
+        "share_pct": 1.02,
+        "prev_rank": 18,
+        "rank_change": 0,
+        "period_units": 130
       },
       {
         "rank": 19,
         "model": "Renault Master",
         "units": 1070,
-        "type": "kishaszon"
+        "type": "kishaszon",
+        "brand": "Renault",
+        "brand_tier": "tomeggyarto",
+        "brand_tier_label": "Tömeggyártó",
+        "share_pct": 0.97,
+        "prev_rank": 19,
+        "rank_change": 0,
+        "period_units": 97
       },
       {
         "rank": 20,
         "model": "Toyota Corolla Cross",
         "units": 979,
-        "type": "szemelyauto"
+        "type": "szemelyauto",
+        "brand": "Toyota",
+        "brand_tier": "tomeggyarto",
+        "brand_tier_label": "Tömeggyártó",
+        "share_pct": 0.89,
+        "prev_rank": 20,
+        "rank_change": 0,
+        "period_units": 77
       }
-    ]
+    ],
+    "previous": {
+      "period_label": "2026. január–július (halmozott, I–VII. hónap)",
+      "source_url": "https://www.jarmuipar.hu/2026/08/top-100-ilyen-kocsikat-vettunk-2026-ban/",
+      "market_total_units": 99714,
+      "rows": [
+        {
+          "rank": 1,
+          "model": "Nissan Qashqai",
+          "units": 5361
+        },
+        {
+          "rank": 2,
+          "model": "Skoda Octavia",
+          "units": 4078
+        },
+        {
+          "rank": 3,
+          "model": "Suzuki S-Cross",
+          "units": 3582
+        },
+        {
+          "rank": 4,
+          "model": "Suzuki Vitara",
+          "units": 2894
+        },
+        {
+          "rank": 5,
+          "model": "Hyundai Tucson",
+          "units": 2164
+        },
+        {
+          "rank": 6,
+          "model": "Toyota Corolla",
+          "units": 1977
+        },
+        {
+          "rank": 7,
+          "model": "Toyota Yaris Cross",
+          "units": 1953
+        },
+        {
+          "rank": 8,
+          "model": "Ford Ranger",
+          "units": 1633
+        },
+        {
+          "rank": 9,
+          "model": "Kia Sportage",
+          "units": 1598
+        },
+        {
+          "rank": 10,
+          "model": "Toyota C-HR",
+          "units": 1316
+        },
+        {
+          "rank": 11,
+          "model": "Ford Kuga",
+          "units": 1280
+        },
+        {
+          "rank": 12,
+          "model": "Dacia Duster",
+          "units": 1274
+        },
+        {
+          "rank": 13,
+          "model": "Skoda Kodiaq",
+          "units": 1230
+        },
+        {
+          "rank": 14,
+          "model": "Volkswagen T-Roc",
+          "units": 1172
+        },
+        {
+          "rank": 15,
+          "model": "Skoda Superb",
+          "units": 1113
+        },
+        {
+          "rank": 16,
+          "model": "Ford Transit Custom (teherautó)",
+          "units": 1070
+        },
+        {
+          "rank": 17,
+          "model": "Ford Tourneo Custom",
+          "units": 1036
+        },
+        {
+          "rank": 18,
+          "model": "Volkswagen Golf",
+          "units": 1002
+        },
+        {
+          "rank": 19,
+          "model": "Renault Master",
+          "units": 973
+        },
+        {
+          "rank": 20,
+          "model": "Toyota Corolla Cross",
+          "units": 902
+        },
+        {
+          "rank": 21,
+          "model": "Nissan X-Trail",
+          "units": 894
+        },
+        {
+          "rank": 22,
+          "model": "Ford Puma",
+          "units": 885
+        },
+        {
+          "rank": 23,
+          "model": "Toyota Aygo X",
+          "units": 851
+        },
+        {
+          "rank": 24,
+          "model": "Suzuki Swift",
+          "units": 796
+        },
+        {
+          "rank": 25,
+          "model": "Volkswagen Tiguan",
+          "units": 776
+        },
+        {
+          "rank": 26,
+          "model": "Chery Tiggo 8",
+          "units": 762
+        },
+        {
+          "rank": 27,
+          "model": "Mercedes-Benz GLC/Coupé/AMG",
+          "units": 760
+        },
+        {
+          "rank": 28,
+          "model": "Citroen C3 Aircross",
+          "units": 748
+        },
+        {
+          "rank": 29,
+          "model": "Jaecoo 7",
+          "units": 745
+        },
+        {
+          "rank": 30,
+          "model": "Dacia Bigster",
+          "units": 726
+        },
+        {
+          "rank": 31,
+          "model": "BYD Seal U",
+          "units": 699
+        },
+        {
+          "rank": 32,
+          "model": "Ford Transit",
+          "units": 698
+        },
+        {
+          "rank": 33,
+          "model": "Chery Tiggo 7",
+          "units": 689
+        },
+        {
+          "rank": 34,
+          "model": "Toyota Yaris",
+          "units": 683
+        },
+        {
+          "rank": 35,
+          "model": "Omoda 5",
+          "units": 682
+        },
+        {
+          "rank": 36,
+          "model": "MG ZS",
+          "units": 680
+        },
+        {
+          "rank": 37,
+          "model": "Toyota Proace Max",
+          "units": 676
+        },
+        {
+          "rank": 38,
+          "model": "Skoda Scala",
+          "units": 675
+        },
+        {
+          "rank": 39,
+          "model": "Chery Tiggo 7",
+          "units": 672
+        },
+        {
+          "rank": 40,
+          "model": "Tesla Model Y",
+          "units": 647
+        },
+        {
+          "rank": 41,
+          "model": "Opel Frontera",
+          "units": 644
+        },
+        {
+          "rank": 42,
+          "model": "Nissan Juke",
+          "units": 617
+        },
+        {
+          "rank": 43,
+          "model": "Toyota Hilux",
+          "units": 580
+        },
+        {
+          "rank": 44,
+          "model": "BMW X1/iX1",
+          "units": 578
+        },
+        {
+          "rank": 45,
+          "model": "BMW X3",
+          "units": 571
+        },
+        {
+          "rank": 46,
+          "model": "Fiat Ducato",
+          "units": 566
+        },
+        {
+          "rank": 47,
+          "model": "BYD Atto 2",
+          "units": 565
+        },
+        {
+          "rank": 48,
+          "model": "Mercedes-Benz Citan",
+          "units": 551
+        },
+        {
+          "rank": 49,
+          "model": "Volvo XC60",
+          "units": 506
+        },
+        {
+          "rank": 50,
+          "model": "Renault Captur",
+          "units": 500
+        },
+        {
+          "rank": 51,
+          "model": "BMW 5/i5/M/Touring",
+          "units": 497
+        },
+        {
+          "rank": 51,
+          "model": "Mercedes-Benz GLE/Coupé/AMG",
+          "units": 497
+        },
+        {
+          "rank": 53,
+          "model": "Volkswagen Passat",
+          "units": 484
+        },
+        {
+          "rank": 54,
+          "model": "Ford Transit Custom",
+          "units": 483
+        },
+        {
+          "rank": 55,
+          "model": "Skoda Karoq",
+          "units": 482
+        },
+        {
+          "rank": 56,
+          "model": "Mercedes-Benz Sprinter",
+          "units": 475
+        },
+        {
+          "rank": 57,
+          "model": "Opel Corsa",
+          "units": 469
+        },
+        {
+          "rank": 57,
+          "model": "Volkswagen Polo",
+          "units": 469
+        },
+        {
+          "rank": 59,
+          "model": "Hyundai Kona",
+          "units": 466
+        },
+        {
+          "rank": 60,
+          "model": "BMW X5/M",
+          "units": 463
+        },
+        {
+          "rank": 61,
+          "model": "Toyota Proace City",
+          "units": 461
+        },
+        {
+          "rank": 62,
+          "model": "Ford Transit Courier",
+          "units": 450
+        },
+        {
+          "rank": 63,
+          "model": "Kia Ceed",
+          "units": 449
+        },
+        {
+          "rank": 64,
+          "model": "Volkswagen Tayron",
+          "units": 447
+        },
+        {
+          "rank": 65,
+          "model": "KGM Korando",
+          "units": 446
+        },
+        {
+          "rank": 66,
+          "model": "Volvo XC40",
+          "units": 434
+        },
+        {
+          "rank": 67,
+          "model": "Volkswagen Caddy",
+          "units": 429
+        },
+        {
+          "rank": 68,
+          "model": "Jeep Avenger",
+          "units": 426
+        },
+        {
+          "rank": 69,
+          "model": "Seat Leon",
+          "units": 423
+        },
+        {
+          "rank": 70,
+          "model": "Renault Kangoo Van",
+          "units": 420
+        },
+        {
+          "rank": 71,
+          "model": "Kia XCeed",
+          "units": 419
+        },
+        {
+          "rank": 72,
+          "model": "Toyota RAV4",
+          "units": 416
+        },
+        {
+          "rank": 73,
+          "model": "Peugeot 2008",
+          "units": 412
+        },
+        {
+          "rank": 74,
+          "model": "Peugeot 3008",
+          "units": 401
+        },
+        {
+          "rank": 75,
+          "model": "Opel Combo",
+          "units": 398
+        },
+        {
+          "rank": 76,
+          "model": "BYD Dolphin Surf",
+          "units": 391
+        },
+        {
+          "rank": 77,
+          "model": "Volkswagen T-Cross",
+          "units": 387
+        },
+        {
+          "rank": 78,
+          "model": "Chery Tiggo 4",
+          "units": 382
+        },
+        {
+          "rank": 79,
+          "model": "BMW 3/M",
+          "units": 360
+        },
+        {
+          "rank": 80,
+          "model": "Renault Symbioz",
+          "units": 355
+        },
+        {
+          "rank": 81,
+          "model": "Lexus NX",
+          "units": 349
+        },
+        {
+          "rank": 82,
+          "model": "BYD Atto 3",
+          "units": 348
+        },
+        {
+          "rank": 83,
+          "model": "Audi Q3/Sportback",
+          "units": 334
+        },
+        {
+          "rank": 84,
+          "model": "Audi A3 Limousine/S/RS/Allstreet",
+          "units": 333
+        },
+        {
+          "rank": 85,
+          "model": "Hyundai i30",
+          "units": 332
+        },
+        {
+          "rank": 85,
+          "model": "MG3",
+          "units": 332
+        },
+        {
+          "rank": 87,
+          "model": "Volkswagen Transporter",
+          "units": 329
+        },
+        {
+          "rank": 88,
+          "model": "BMW iX3",
+          "units": 315
+        },
+        {
+          "rank": 89,
+          "model": "Audi A5/Avant/S/RS",
+          "units": 313
+        },
+        {
+          "rank": 90,
+          "model": "Opel Mokka",
+          "units": 304
+        },
+        {
+          "rank": 91,
+          "model": "Omoda 9",
+          "units": 303
+        },
+        {
+          "rank": 92,
+          "model": "BYD Sealion 7",
+          "units": 301
+        },
+        {
+          "rank": 93,
+          "model": "Peugeot Boxer",
+          "units": 293
+        },
+        {
+          "rank": 94,
+          "model": "Chery Tiggo 9",
+          "units": 282
+        },
+        {
+          "rank": 95,
+          "model": "Mercedes-Benz CLA",
+          "units": 288
+        },
+        {
+          "rank": 95,
+          "model": "Renault Trafic",
+          "units": 288
+        },
+        {
+          "rank": 97,
+          "model": "Mercedes-Benz V-osztály",
+          "units": 278
+        },
+        {
+          "rank": 97,
+          "model": "Skoda Fabia",
+          "units": 278
+        },
+        {
+          "rank": 99,
+          "model": "Iveco Daily",
+          "units": 271
+        },
+        {
+          "rank": 100,
+          "model": "Peugeot 308",
+          "units": 268
+        }
+      ]
+    },
+    "increment_label": "aug.",
+    "tier_scores": {
+      "tomeggyarto": 0.1959,
+      "premium": 0.2104,
+      "budget": 0.121,
+      "kinai_belepo": 0.2021
+    },
+    "tier_labels": {
+      "tomeggyarto": "Tömeggyártó",
+      "premium": "Prémium",
+      "budget": "Belépő szintű / budget",
+      "kinai_belepo": "Kínai eredetű, EV-fókuszú belépő"
+    }
   },
   "changes": {
     "since": "2026-09-18",

@@ -168,6 +168,12 @@ tab-váltás kliensoldali JS-sel, nincs reload):
   Tourneo Custom) M1, a KSH is személyautónak számolja, ezért látható marad. A látogatóknak
   szóló szöveg a `public_note`, a `note` belső karbantartási útmutató — azt NE jelenítsd meg.
   A fül 45 napnál régebbi `updated` esetén elavulás-figyelmeztetést mutat.
+  A `previous` blokk az előző havi cikk TELJES Top 100-as listája: ebből számolja a
+  `build_top_modellek()` a helyezés-változást és az utolsó havi darabszámot (`increment_label`,
+  pl. "aug."); havi frissítéskor a mostani cikk teljes listája kerül át ide. A márkakategória a
+  `segments.json` `example_brands`-ából + a `DISPLAY_BRAND_TIERS` (csak megjelenítés; a
+  `segments.json`-t szándékosan NEM bővítjük, mert az hajtja a márka-momentumot). A piaci
+  részesedés nevezője a `market_total_units` (személyautó + kishaszonjármű együtt).
 
 ## Report/file naming convention
 `reports/` filenames are prefixed by report type: `riport_` (scenario-based), `szegmens_riport_`,

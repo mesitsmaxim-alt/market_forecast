@@ -21,13 +21,14 @@ from __future__ import annotations
 
 import datetime as dt
 import json
+import re
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(ROOT))
 
-from engine import compute_segments, classify, SCENARIOS  # noqa: E402
+from engine import compute_segments, classify, load_config, SCENARIOS  # noqa: E402
 from forecast import forecast_card  # noqa: E402
 
 DATA_DIR = ROOT / "data"
@@ -257,11 +258,75 @@ def build_hirek() -> dict:
     return load_json("hirek.json")
 
 
-def build_top_modellek() -> dict | None:
+# A toplistában szereplő, de a config/segments.json example_brands listáiban NEM
+# szereplő márkák kategóriája - CSAK a "Legkeresettebb modellek" fül
+# megjelenítéséhez. Szándékosan nem a segments.json-t bővítjük: az
+# example_brands hajtja a márkakategória-momentumot (engine.py), annak
+# bővítése a szegmens-pontszámokat is megváltoztatná.
+DISPLAY_BRAND_TIERS = {
+    "Nissan": "tomeggyarto", "Kia": "tomeggyarto", "Renault": "tomeggyarto",
+    "Peugeot": "tomeggyarto", "Citroen": "tomeggyarto", "Seat": "tomeggyarto",
+    "Cupra": "tomeggyarto", "Mazda": "tomeggyarto", "Honda": "tomeggyarto",
+    "Mitsubishi": "tomeggyarto", "Jeep": "tomeggyarto", "Mini": "premium",
+    "Lexus": "premium", "Tesla": "premium", "Land Rover": "premium",
+    "Porsche": "premium", "Chery": "kinai_belepo", "Omoda": "kinai_belepo",
+    "Jaecoo": "kinai_belepo", "Leapmotor": "kinai_belepo", "Xpeng": "kinai_belepo",
+}
+MULTIWORD_BRANDS = ("Land Rover", "Alfa Romeo", "Aston Martin")
+
+
+def model_brand(model: str) -> str:
+    for b in MULTIWORD_BRANDS:
+        if model.startswith(b + " "):
+            return b
+    return model.split(" ")[0]
+
+
+def normalize_model(model: str) -> str:
+    """Modellnév-egyeztetéshez: a zárójeles jelölések ("(teherautó)") nélkül."""
+    return re.sub(r"\s*\([^)]*\)", "", model).strip(" –").lower()
+
+
+def build_top_modellek(brand_summary: list[dict]) -> dict | None:
+    """A kézi toplista kiegészítése: márka + márkakategória (a szegmens-
+    pontszámmal együtt), helyezés-változás és havi darabszám az előző havi
+    listához képest, piaci részesedés a forráscikk összpiaci számából."""
     path = DATA_DIR / "top_modellek.json"
     if not path.exists():
         return None
-    return load_json("top_modellek.json")
+    tm = load_json("top_modellek.json")
+
+    _, segments = load_config()
+    tiers = segments["brand_tiers"]
+    brand_to_tier = dict(DISPLAY_BRAND_TIERS)
+    for tier_key, tier in tiers.items():
+        for b in tier["example_brands"]:
+            brand_to_tier[b] = tier_key
+    tier_score = {r["key"]: r["score"] for r in brand_summary}
+
+    prev = tm.get("previous") or {}
+    prev_by_model = {}
+    for r in prev.get("rows", []):
+        # a forrásban előfordul ugyanaz a név kétszer (pl. két Tiggo 7 változat) -
+        # a jobb helyezésűt tartjuk meg
+        prev_by_model.setdefault(normalize_model(r["model"]), r)
+
+    total = tm.get("market_total_units")
+    for r in tm["rows"]:
+        brand = model_brand(r["model"])
+        tier_key = brand_to_tier.get(brand)
+        r["brand"] = brand
+        r["brand_tier"] = tier_key
+        r["brand_tier_label"] = tiers[tier_key]["label"].split(" (")[0] if tier_key else None
+        r["share_pct"] = round(r["units"] / total * 100, 2) if total else None
+        p = prev_by_model.get(normalize_model(r["model"]))
+        if prev.get("rows"):
+            r["prev_rank"] = p["rank"] if p else None
+            r["rank_change"] = (p["rank"] - r["rank"]) if p else None  # + = feljebb lépett
+            r["period_units"] = (r["units"] - p["units"]) if p else None
+    tm["tier_scores"] = {k: tier_score.get(k) for k in tiers}
+    tm["tier_labels"] = {k: t["label"].split(" (")[0] for k, t in tiers.items()}
+    return tm
 
 
 def load_history(limit: int = HISTORY_LIMIT) -> list[dict]:
@@ -386,8 +451,8 @@ def main():
         "real": build_real_snapshot(),
         "run_history": run_history,
         "hirek": build_hirek(),
-        "top_modellek": build_top_modellek(),
     }
+    combined["top_modellek"] = build_top_modellek(combined["brand_summary"])
     combined["coverage"]["n_factors"] = len(combined["factors"])
     combined["changes"] = build_changes(run_history[-1] if run_history else None, combined)
 
