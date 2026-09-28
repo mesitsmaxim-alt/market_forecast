@@ -50,6 +50,23 @@ LOG_FILE="$LOG_DIR/run_$(date +%Y-%m-%d_%H%M%S).log"
   echo "=== Pipeline kész: $(date) ==="
 } >> "$LOG_FILE" 2>&1
 
+# Auto-commit + push: csak sikeres pipeline után fut (a set -e egy hibás
+# lépésnél már korábban kiléptet). Szándékosan nem dobja hibára a futást,
+# ha a push nem sikerül (pl. nincs hálózat) — a commit ilyenkor helyben
+# megmarad, és a következő futás push-a viszi fel.
+{
+  echo "--- Git auto-commit ---"
+  git add -A
+  if git diff --cached --quiet; then
+    echo "Nincs változás, nincs commit."
+  else
+    git commit -q -m "Havi pipeline-futás: $(date +%Y-%m-%d)" \
+      -m "Automatikus commit a run_pipeline.sh-ból (adatfrissítés, kalibráció, riportok, dashboard)." \
+      && git log --oneline -1
+  fi
+  git push -q origin main && echo "Push kész." || echo "FIGYELEM: a push nem sikerült, a commit helyben megmaradt."
+} >> "$LOG_FILE" 2>&1 || true
+
 # Az értesítést szándékosan a naplózott blokkon KÍVÜL küldjük, hogy egy
 # esetleges osascript-hiba (pl. nincs bejelentkezett GUI-munkamenet) ne
 # dobja hibára a teljes pipeline-t (set -e), és a naplóba is bekerüljön

@@ -11,7 +11,7 @@ and publishes a summary dashboard. Git repo, pushed to the private GitHub repo `
 
 ## Running things
 
-Run the full pipeline (fetch → calibrate → report → dashboard → backtest → digest → notify):
+Run the full pipeline (fetch → calibrate → report → dashboard → backtest → digest → git commit+push → notify):
 ```bash
 ./run_pipeline.sh
 ```
