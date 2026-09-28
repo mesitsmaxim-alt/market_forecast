@@ -3569,107 +3569,131 @@
     "source_url": "https://www.jarmuipar.hu/2026/09/top-100-igy-hazai-autopiac/",
     "period_label": "2026. január–augusztus (halmozott, I–VIII. hónap)",
     "updated": "2026-09-18",
-    "note": "Kézi adatbevitel — a forrás nem publikál gépileg feldolgozható táblázatot, csak folyó szöveget és egy címkézetlen számozott listát. Frissítés: amikor új jarmuipar.hu Top X cikk jelenik meg, kérd meg Claude-ot, hogy olvassa ki és frissítse ezt a fájlt.",
+    "scope": "személyautó és kishaszonjármű együtt (a forrás közös Top 100-as listája)",
+    "market_total_units": 110550,
+    "market_total_label": "összes új személyautó és kishaszonjármű, 2026. I–VIII. hónap (Datahouse, a forráscikk szerint)",
+    "public_note": "A Datahouse forgalomba helyezési adatain alapuló havi toplista, a forrás közös személyautó- és kishaszonjármű-rangsora. Hivatalos, gépileg lekérdezhető modell-szintű forrás nincs (a KSH csak márkánként publikál), ezért a lista kézzel frissül, amikor új forráscikk jelenik meg.",
+    "note": "Kézi adatbevitel — a forrás nem publikál gépileg feldolgozható táblázatot, csak folyó szöveget és egy címkézetlen számozott listát. Frissítés: amikor új jarmuipar.hu Top X cikk jelenik meg, kérd meg Claude-ot, hogy olvassa ki és frissítse ezt a fájlt. A 'type' mező (szemelyauto / kisbusz / kishaszon) a forráscikk jelölése alapján kézzel kerül be: a kisbusz (pl. Tourneo Custom) M1 kategóriás, a KSH személyautóként számolja, ezért a 'Csak személyautók' szűrő nem rejti el; a kishaszon (pickup, furgon, 'teherautó') N1, azt elrejti. Új modellnél ellenőrizd a típust.",
     "rows": [
       {
         "rank": 1,
         "model": "Nissan Qashqai",
-        "units": 5453
+        "units": 5453,
+        "type": "szemelyauto"
       },
       {
         "rank": 2,
         "model": "Skoda Octavia",
-        "units": 4355
+        "units": 4355,
+        "type": "szemelyauto"
       },
       {
         "rank": 3,
         "model": "Suzuki S-Cross",
-        "units": 4036
+        "units": 4036,
+        "type": "szemelyauto"
       },
       {
         "rank": 4,
         "model": "Suzuki Vitara",
-        "units": 3261
+        "units": 3261,
+        "type": "szemelyauto"
       },
       {
         "rank": 5,
         "model": "Hyundai Tucson",
-        "units": 2285
+        "units": 2285,
+        "type": "szemelyauto"
       },
       {
         "rank": 6,
         "model": "Toyota Corolla",
-        "units": 2228
+        "units": 2228,
+        "type": "szemelyauto"
       },
       {
         "rank": 7,
         "model": "Toyota Yaris Cross",
-        "units": 2104
+        "units": 2104,
+        "type": "szemelyauto"
       },
       {
         "rank": 8,
         "model": "Ford Ranger",
-        "units": 1879
+        "units": 1879,
+        "type": "kishaszon"
       },
       {
         "rank": 9,
         "model": "Kia Sportage",
-        "units": 1819
+        "units": 1819,
+        "type": "szemelyauto"
       },
       {
         "rank": 10,
         "model": "Dacia Duster",
-        "units": 1541
+        "units": 1541,
+        "type": "szemelyauto"
       },
       {
         "rank": 11,
         "model": "Toyota C-HR",
-        "units": 1439
+        "units": 1439,
+        "type": "szemelyauto"
       },
       {
         "rank": 12,
         "model": "Ford Kuga",
-        "units": 1415
+        "units": 1415,
+        "type": "szemelyauto"
       },
       {
         "rank": 13,
         "model": "Skoda Kodiaq",
-        "units": 1338
+        "units": 1338,
+        "type": "szemelyauto"
       },
       {
         "rank": 14,
         "model": "Volkswagen T-Roc",
-        "units": 1260
+        "units": 1260,
+        "type": "szemelyauto"
       },
       {
         "rank": 15,
         "model": "Ford Tourneo Custom",
-        "units": 1242
+        "units": 1242,
+        "type": "kisbusz"
       },
       {
         "rank": 16,
-        "model": "Ford Transit Custom (teherautó)",
-        "units": 1201
+        "model": "Ford Transit Custom",
+        "units": 1201,
+        "type": "kishaszon"
       },
       {
         "rank": 17,
         "model": "Skoda Superb",
-        "units": 1183
+        "units": 1183,
+        "type": "szemelyauto"
       },
       {
         "rank": 18,
         "model": "Volkswagen Golf",
-        "units": 1132
+        "units": 1132,
+        "type": "szemelyauto"
       },
       {
         "rank": 19,
         "model": "Renault Master",
-        "units": 1070
+        "units": 1070,
+        "type": "kishaszon"
       },
       {
         "rank": 20,
         "model": "Toyota Corolla Cross",
-        "units": 979
+        "units": 979,
+        "type": "szemelyauto"
       }
     ]
   },

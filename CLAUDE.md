@@ -162,7 +162,12 @@ tab-váltás kliensoldali JS-sel, nincs reload):
   is hónapról hónapra változik: Top 50/75/100/150) — ezért ez SZÁNDÉKOSAN kézi adatbevitel, nincs
   hozzá fetcher és nincs bekötve a `run_pipeline.sh`-ba. Frissítéshez: amikor megjelenik egy új
   jarmuipar.hu cikk, olvasd ki a modell-szintű Top listát és írd át a `rows` tömböt (lásd a fájl
-  `note` mezőjét).
+  `note` mezőjét). A forrás KÖZÖS személyautó + kishaszonjármű lista: minden sor kap egy `type`
+  mezőt (`szemelyauto` / `kisbusz` / `kishaszon`, a cikk jelölése alapján). A dashboard "Csak
+  személyautók" szűrője csak a `kishaszon`-t (N1: pickup, furgon) rejti el; a `kisbusz` (pl.
+  Tourneo Custom) M1, a KSH is személyautónak számolja, ezért látható marad. A látogatóknak
+  szóló szöveg a `public_note`, a `note` belső karbantartási útmutató — azt NE jelenítsd meg.
+  A fül 45 napnál régebbi `updated` esetén elavulás-figyelmeztetést mutat.
 
 ## Report/file naming convention
 `reports/` filenames are prefixed by report type: `riport_` (scenario-based), `szegmens_riport_`,

@@ -168,6 +168,14 @@
   .model-track{ position:relative; height:8px; background:var(--surface-2); border-radius:4px; overflow:hidden; }
   .model-fill{ position:absolute; top:0; bottom:0; left:0; background:var(--accent); border-radius:4px; }
   .model-units{ font-family:"JetBrains Mono",monospace; font-size:12.5px; text-align:right; font-weight:600; }
+  .model-name .badge{ margin-left:8px; vertical-align:1px; }
+  .model-controls{ display:flex; flex-wrap:wrap; align-items:center; gap:8px 16px; margin-bottom:12px; font-size:12.5px; color:var(--text-secondary); }
+  .model-controls label{ display:inline-flex; align-items:center; gap:7px; cursor:pointer; font-weight:600; color:var(--text-primary); }
+  .model-controls input{ width:16px; height:16px; accent-color:var(--accent); margin:0; }
+  .stale-note{
+    display:flex; gap:8px; align-items:flex-start; margin-bottom:14px; padding:10px 14px; border-radius:10px; font-size:12.5px; line-height:1.45;
+    background:color-mix(in srgb, var(--warning) 16%, transparent); border:1px solid color-mix(in srgb, var(--warning) 45%, transparent); color:var(--text-primary);
+  }
 
   section{ margin-bottom:40px; }
   .section-head{ display:flex; align-items:baseline; justify-content:space-between; gap:16px; margin-bottom:14px; flex-wrap:wrap; }
@@ -503,7 +511,7 @@
 <section id="models">
   <div class="section-head">
     <h2>Legkeresettebb modellek</h2>
-    <span class="section-note">Nincs hivatalos, gépileg lekérdezhető magyar forrás modell-szintű eladási adatra (a KSH csak márka-szinten publikál) — ez a lista kézi adatbevitellel frissül, amikor új forrás-cikk jelenik meg.</span>
+    <span class="section-note">Új autók forgalomba helyezése modellenként, a Datahouse adatai alapján — havonta, kézzel frissülő toplista.</span>
   </div>
   <div id="models-body"></div>
 </section>
@@ -4090,107 +4098,131 @@
     "source_url": "https://www.jarmuipar.hu/2026/09/top-100-igy-hazai-autopiac/",
     "period_label": "2026. január–augusztus (halmozott, I–VIII. hónap)",
     "updated": "2026-09-18",
-    "note": "Kézi adatbevitel — a forrás nem publikál gépileg feldolgozható táblázatot, csak folyó szöveget és egy címkézetlen számozott listát. Frissítés: amikor új jarmuipar.hu Top X cikk jelenik meg, kérd meg Claude-ot, hogy olvassa ki és frissítse ezt a fájlt.",
+    "scope": "személyautó és kishaszonjármű együtt (a forrás közös Top 100-as listája)",
+    "market_total_units": 110550,
+    "market_total_label": "összes új személyautó és kishaszonjármű, 2026. I–VIII. hónap (Datahouse, a forráscikk szerint)",
+    "public_note": "A Datahouse forgalomba helyezési adatain alapuló havi toplista, a forrás közös személyautó- és kishaszonjármű-rangsora. Hivatalos, gépileg lekérdezhető modell-szintű forrás nincs (a KSH csak márkánként publikál), ezért a lista kézzel frissül, amikor új forráscikk jelenik meg.",
+    "note": "Kézi adatbevitel — a forrás nem publikál gépileg feldolgozható táblázatot, csak folyó szöveget és egy címkézetlen számozott listát. Frissítés: amikor új jarmuipar.hu Top X cikk jelenik meg, kérd meg Claude-ot, hogy olvassa ki és frissítse ezt a fájlt. A 'type' mező (szemelyauto / kisbusz / kishaszon) a forráscikk jelölése alapján kézzel kerül be: a kisbusz (pl. Tourneo Custom) M1 kategóriás, a KSH személyautóként számolja, ezért a 'Csak személyautók' szűrő nem rejti el; a kishaszon (pickup, furgon, 'teherautó') N1, azt elrejti. Új modellnél ellenőrizd a típust.",
     "rows": [
       {
         "rank": 1,
         "model": "Nissan Qashqai",
-        "units": 5453
+        "units": 5453,
+        "type": "szemelyauto"
       },
       {
         "rank": 2,
         "model": "Skoda Octavia",
-        "units": 4355
+        "units": 4355,
+        "type": "szemelyauto"
       },
       {
         "rank": 3,
         "model": "Suzuki S-Cross",
-        "units": 4036
+        "units": 4036,
+        "type": "szemelyauto"
       },
       {
         "rank": 4,
         "model": "Suzuki Vitara",
-        "units": 3261
+        "units": 3261,
+        "type": "szemelyauto"
       },
       {
         "rank": 5,
         "model": "Hyundai Tucson",
-        "units": 2285
+        "units": 2285,
+        "type": "szemelyauto"
       },
       {
         "rank": 6,
         "model": "Toyota Corolla",
-        "units": 2228
+        "units": 2228,
+        "type": "szemelyauto"
       },
       {
         "rank": 7,
         "model": "Toyota Yaris Cross",
-        "units": 2104
+        "units": 2104,
+        "type": "szemelyauto"
       },
       {
         "rank": 8,
         "model": "Ford Ranger",
-        "units": 1879
+        "units": 1879,
+        "type": "kishaszon"
       },
       {
         "rank": 9,
         "model": "Kia Sportage",
-        "units": 1819
+        "units": 1819,
+        "type": "szemelyauto"
       },
       {
         "rank": 10,
         "model": "Dacia Duster",
-        "units": 1541
+        "units": 1541,
+        "type": "szemelyauto"
       },
       {
         "rank": 11,
         "model": "Toyota C-HR",
-        "units": 1439
+        "units": 1439,
+        "type": "szemelyauto"
       },
       {
         "rank": 12,
         "model": "Ford Kuga",
-        "units": 1415
+        "units": 1415,
+        "type": "szemelyauto"
       },
       {
         "rank": 13,
         "model": "Skoda Kodiaq",
-        "units": 1338
+        "units": 1338,
+        "type": "szemelyauto"
       },
       {
         "rank": 14,
         "model": "Volkswagen T-Roc",
-        "units": 1260
+        "units": 1260,
+        "type": "szemelyauto"
       },
       {
         "rank": 15,
         "model": "Ford Tourneo Custom",
-        "units": 1242
+        "units": 1242,
+        "type": "kisbusz"
       },
       {
         "rank": 16,
-        "model": "Ford Transit Custom (teherautó)",
-        "units": 1201
+        "model": "Ford Transit Custom",
+        "units": 1201,
+        "type": "kishaszon"
       },
       {
         "rank": 17,
         "model": "Skoda Superb",
-        "units": 1183
+        "units": 1183,
+        "type": "szemelyauto"
       },
       {
         "rank": 18,
         "model": "Volkswagen Golf",
-        "units": 1132
+        "units": 1132,
+        "type": "szemelyauto"
       },
       {
         "rank": 19,
         "model": "Renault Master",
-        "units": 1070
+        "units": 1070,
+        "type": "kishaszon"
       },
       {
         "rank": 20,
         "model": "Toyota Corolla Cross",
-        "units": 979
+        "units": 979,
+        "type": "szemelyauto"
       }
     ]
   },
@@ -4919,23 +4951,54 @@
       el.innerHTML = `<div class="collecting-note">Egyelőre nincs feltöltött modell-lista. Kézi adatbevitel szükséges (nincs hivatalos gépi forrás), ld. a fül tetején lévő megjegyzést.</div>`;
       return;
     }
-    const maxUnits = Math.max(...tm.rows.map(r => r.units));
-    const rows = tm.rows.map(r => `
-      <div class="model-row">
-        <span class="model-rank tnum">${r.rank}.</span>
-        <span class="model-name">${r.model}</span>
-        <div class="model-track"><div class="model-fill" style="width:${(r.units / maxUnits * 100).toFixed(1)}%;"></div></div>
-        <span class="model-units tnum">${fmtInt(r.units)} db</span>
-      </div>`).join('');
+    const TYPE_BADGE = { kisbusz: 'kisbusz', kishaszon: 'kishaszonjármű' };
+    const nCommercial = tm.rows.filter(r => r.type === 'kishaszon').length;
+
+    // elavulás: a forrás havonta frissül, 45 napnál régebbi kézi frissítés már gyanús
+    const STALE_DAYS = 45;
+    const ageDays = Math.round((new Date(data.generated) - new Date(tm.updated)) / 86400000);
+    const stale = ageDays > STALE_DAYS
+      ? `<div class="stale-note" role="status"><span aria-hidden="true">⚠</span><span><b>Elavulhatott:</b> a lista ${ageDays} napja (${tm.updated}) frissült utoljára, a forrás havonta jelentet meg újat. Az adatok a jelzett időszakra (${tm.period_label}) érvényesek.</span></div>`
+      : '';
+
+    const sourceLink = tm.source_url
+      ? `<a href="${tm.source_url}" target="_blank" rel="noopener">${tm.source}</a>`
+      : tm.source;
+
     el.innerHTML = `
+      ${stale}
       <div class="model-meta">
-        Forrás: ${tm.source} · Időszak: ${tm.period_label} · Utolsó kézi frissítés: ${tm.updated}<br>
-        ${tm.note}
+        Forrás: ${sourceLink} · Időszak: ${tm.period_label} · Utolsó frissítés: ${tm.updated}<br>
+        ${tm.public_note || ''}
       </div>
-      <div class="model-list">
-        <div class="model-row head"><span>#</span><span>Modell</span><span>Arány</span><span>Darabszám</span></div>
-        ${rows}
-      </div>`;
+      ${nCommercial ? `<div class="model-controls">
+        <label><input type="checkbox" id="models-cars-only" checked> Csak személyautók</label>
+        <span id="models-count"></span>
+      </div>` : ''}
+      <div class="model-list" id="model-list"></div>`;
+
+    const listEl = document.getElementById('model-list');
+    const toggle = document.getElementById('models-cars-only');
+    function draw() {
+      const carsOnly = toggle ? toggle.checked : false;
+      const visible = tm.rows.filter(r => !carsOnly || r.type !== 'kishaszon');
+      const maxUnits = Math.max(...visible.map(r => r.units));
+      listEl.innerHTML = `
+        <div class="model-row head"><span title="Helyezés a forrás közös (személyautó + kishaszonjármű) listáján">#</span><span>Modell</span><span>Arány</span><span>Darabszám</span></div>
+        ${visible.map(r => `
+          <div class="model-row">
+            <span class="model-rank tnum">${r.rank}.</span>
+            <span class="model-name">${r.model}${TYPE_BADGE[r.type] ? `<span class="badge est">${TYPE_BADGE[r.type]}</span>` : ''}</span>
+            <div class="model-track"><div class="model-fill" style="width:${(r.units / maxUnits * 100).toFixed(1)}%;"></div></div>
+            <span class="model-units tnum">${fmtInt(r.units)} db</span>
+          </div>`).join('')}`;
+      const countEl = document.getElementById('models-count');
+      if (countEl) countEl.textContent = carsOnly
+        ? `${visible.length} modell · ${nCommercial} kishaszonjármű (pickup, furgon) elrejtve — a helyezés a forrás közös listáján értendő`
+        : `${visible.length} modell, személyautók és kishaszonjárművek együtt`;
+    }
+    if (toggle) toggle.addEventListener('change', draw);
+    draw();
   }
   renderModels();
 
