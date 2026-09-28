@@ -272,6 +272,9 @@ def main():
 
     annualized_pct, oil_note = compute_oil_price_trend()
     oil = config["factors"]["oil_price"]
+    # A kulcs történeti okból "oil_price", de a tényező a HAZAI kútár (benzin +
+    # dízel) éves változása, nem a Brent-árfolyam - a címke ezt mondja.
+    oil["label"] = "Üzemanyagár (HU, benzin + dízel)"
     oil["note"] = oil_note
     oil["scenarios"] = {
         "pesszimista": round(annualized_pct - SPREAD_PCT, 1),

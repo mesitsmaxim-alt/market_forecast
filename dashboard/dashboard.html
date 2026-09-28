@@ -390,7 +390,7 @@
     <h1>Piaci előrejelző &amp; riportoló dashboard</h1>
     <p class="subtitle">Tényező-alapú forgatókönyv-modell + valós KSH / MNB / Eurostat adatokkal kalibrált szegmens-elemzés, automatizált havi frissítéssel.</p>
   </div>
-  <span class="status-pill"><span class="status-dot"></span> <span id="generated-label">Generálva —</span> · automata futás: <span id="automation-label">—</span></span>
+  <span class="status-pill"><span class="status-dot"></span> <span id="generated-label">Frissítve —</span> · havonta frissül</span>
   <button class="theme-toggle" id="theme-toggle" type="button">🌓 Téma</button>
 </header>
 
@@ -535,9 +535,9 @@
 </div>
 
 <footer>
-  <p><b>Automatizálás:</b> a teljes pipeline (letöltés → kalibráció → riportok) <span class="mono" id="automation-label-2">—</span> ütemezéssel fut, macOS <span class="mono">launchd</span>-vel. Kézi futtatás: <span class="mono">./run_pipeline.sh</span>.</p>
+  <p><b>Frissítés:</b> az adatok havonta, minden hónap elején automatikusan frissülnek a forrásokból (KSH, MNB, Eurostat, holtankoljak.hu, EAFO); néhány forrás — akkumulátorár, EV-vámok, CO2-szabályozás, modell-toplista — kézzel, a megjelenésükkor kerül be. Ez az oldal a <span id="generated-label-2">—</span>-i állapotot mutatja.</p>
   <p><b>Módszertan:</b> minden szegmens (hajtástípus × márkakategória × évjárat-sáv) pontszáma a tényezők forgatókönyv-deltáinak és az érzékenységi együtthatóknak a súlyozott összege, kiegészítve a KSH-adatból számolt megfigyelt piaci momentummal. A pontszám iránya és nagyságrendje informál, nem pontos előrejelzés.</p>
-  <p>Ez a dashboard a <span class="mono">market_forecast</span> projekt egy adott pillanatfelvétele (<span id="generated-label-2">—</span>). Frissítéshez futtasd újra a <span class="mono">run_pipeline.sh</span>-t, majd kérd az újrapublikálást.</p>
+  <p>A projekt forráskódja nyilvános: <a href="https://github.com/mesitsmaxim-alt/market_forecast" target="_blank" rel="noopener">github.com/mesitsmaxim-alt/market_forecast</a>.</p>
 </footer>
 
 <div class="viz-tip" id="viz-tip" role="tooltip"></div>
@@ -555,7 +555,7 @@
   "factors": [
     {
       "key": "oil_price",
-      "label": "Olajár (Brent)",
+      "label": "Üzemanyagár (HU, benzin + dízel)",
       "unit": "%",
       "calibrated": "auto",
       "pesszimista": 4.9,
@@ -4957,7 +4957,7 @@
       },
       {
         "group": "Tényező (alap)",
-        "label": "Olajár (Brent)",
+        "label": "Üzemanyagár (HU, benzin + dízel)",
         "unit": "%",
         "from": 13.2,
         "to": 12.9,
@@ -5004,20 +5004,36 @@
 (function(){
   const data = JSON.parse(document.getElementById('dashboard-data').textContent);
 
+  // ---------- magyar számformátum ----------
+  // tizedesvessző, szóközös ezres tagolás (táblázatos oszlopokban a négyjegyűeket
+  // is tagoljuk, hogy a számok egymás alatt egyformán olvashatók legyenek) és
+  // valódi mínuszjel. Minden megjelenített szám ezen megy át.
+  const NF = {};
+  function huNum(n, d) {
+    if (!NF[d]) {
+      try {
+        NF[d] = new Intl.NumberFormat('hu-HU', { minimumFractionDigits: d, maximumFractionDigits: d, useGrouping: 'always' });
+      } catch (e) {
+        NF[d] = new Intl.NumberFormat('hu-HU', { minimumFractionDigits: d, maximumFractionDigits: d });
+      }
+    }
+    const s = NF[d].format(Math.abs(n));
+    if (Number(Math.abs(n).toFixed(d)) === 0) return NF[d].format(0);  // ne legyen "−0,0"
+    return (n < 0 ? '−' : '') + s;
+  }
+  const isNum = n => typeof n === 'number' && !Number.isNaN(n);
+  // előjeles változás (+/−)
   const fmt = (n, d=1) => {
-    if (n === null || n === undefined || Number.isNaN(n)) return '—';
-    const s = n.toFixed(d);
-    if (Number(s) === 0) return (0).toFixed(d);  // ne legyen "-0.0" / "+0"
-    return (n > 0 ? '+' : '') + s;
+    if (!isNum(n)) return '—';
+    const s = huNum(n, d);
+    return (n > 0 && Number(n.toFixed(d)) !== 0 ? '+' : '') + s;
   };
-  const fmtInt = (n) => n === null || n === undefined ? '—' : Math.round(n).toLocaleString('hu-HU');
-  // sima szintérték (nincs +/- előjel elé téve) - fő számokhoz, nem változásokhoz
-  const fmtPlain = (n, d=1) => (n === null || n === undefined || Number.isNaN(n)) ? '—' : n.toFixed(d);
+  const fmtInt = (n) => isNum(n) ? huNum(Math.round(n), 0) : '—';
+  // sima szintérték (nincs + előjel) - fő számokhoz, nem változásokhoz
+  const fmtPlain = (n, d=1) => isNum(n) ? huNum(n, d) : '—';
 
-  document.getElementById('generated-label').textContent = 'Generálva ' + data.generated;
+  document.getElementById('generated-label').textContent = 'Frissítve ' + data.generated;
   document.getElementById('generated-label-2').textContent = data.generated;
-  document.getElementById('automation-label').textContent = data.coverage.automation;
-  document.getElementById('automation-label-2').textContent = data.coverage.automation;
 
   const nEst = data.coverage.n_factors - data.coverage.n_calibrated - data.coverage.n_manual;
   document.getElementById('realdata-note').textContent =
@@ -5207,10 +5223,10 @@
   document.getElementById('comp-title').textContent =
     `Hajtástípus szerinti megoszlás — ${fmtInt(data.real.jarmuallomany.total_last)} db állomány (${data.real.jarmuallomany.last_year})`;
   document.getElementById('comp-bar').innerHTML = compOrder.map(([k,,color]) =>
-    `<div style="width:${fs[k]}%; background:${color};" title="${k}: ${fs[k]}%"></div>`).join('');
+    `<div style="width:${fs[k]}%; background:${color};" title="${k}: ${fmtPlain(fs[k], 1)}%"></div>`).join('');
   document.getElementById('comp-legend').innerHTML = compOrder.map(([k,label,color]) => `
     <div class="li"><span class="sw" style="background:${color};"></span>
-      ${label} <b>${fs[k]}%</b> <span class="cagr">(5 éves átlagos éves növekedési ütem: ${fmt(fc[k])}%)</span>
+      ${label} <b>${fmtPlain(fs[k], 1)}%</b> <span class="cagr">(5 éves átlagos éves növekedési ütem: ${fmt(fc[k])}%)</span>
     </div>`).join('');
 
   // ---------- sparkline helper ----------
@@ -5318,7 +5334,7 @@
     desc: 'Azt méri, az emberek mennyire terveznek nagyobb (pl. autó jellegű) vásárlást a következő 12 hónapban — minél magasabb (kevésbé negatív) az érték, annál jobb a vásárlási kedv.',
     v: r.szentiment.mp_last, u: 'pont (lásd lent a skálát)',
     cap: `${r.szentiment.last_month} havi adata`,
-    scaleNote: 'A skála -100-tól (mindenki visszafogja a vásárlást) +100-ig (mindenki bővíteni tervez) terjed; a gyakorlatban jellemzően -40 és +10 között mozog egy adott hónapban, ezért a negatív szám önmagában nem feltétlenül rossz jel — a változás iránya számít.',
+    scaleNote: 'A skála −100-tól (mindenki visszafogja a vásárlást) +100-ig (mindenki bővíteni tervez) terjed; a gyakorlatban jellemzően −40 és +10 között mozog egy adott hónapban, ezért a negatív szám önmagában nem feltétlenül rossz jel — a változás iránya számít.',
     series: r.szentiment.mp_series,
     sparkLabels: ['24 hónappal ezelőtt', 'most'],
     delta: deltaTag(r.szentiment.mp_last, r.szentiment.mp_series[0], ' pont', true, 'az elmúlt 24 hónapban')
@@ -5347,7 +5363,7 @@
 
   // ---------- source table ----------
   const rows = [
-    ['Olajár / üzemanyagár', 'holtankoljak.hu — élő, napi frissülő oldal', 'Automata, minden futáskor', '✓ kalibrálva'],
+    ['Üzemanyagár (benzin + dízel)', 'holtankoljak.hu — élő, napi frissülő oldal', 'Automata, minden futáskor', '✓ kalibrálva'],
     ['Akkumulátorár', 'BloombergNEF — éves akkumulátorár-felmérés', 'Kézi frissítés, évente (december)', '◐ kézi forrás'],
     ['Töltőinfrastruktúra', 'European Alternative Fuels Observatory — az Európai Bizottság alternatívüzemanyag-megfigyelő szolgálata', 'Kézi feltöltés (CSV-export)', '✓ kalibrálva'],
     ['EV-vámok', 'Európai Bizottság (DG TRADE) — kínai BEV-ekre kivetett kiegyenlítő vámok', 'Kézi frissítés, eseményre', '◐ kézi forrás'],
@@ -5405,10 +5421,12 @@
       body.innerHTML = `<div class="collecting-note">Nincs érdemi változás az előző napi futás (${ch.since}) óta.</div>`;
       return;
     }
-    const num = v => (typeof v === 'number' && Math.abs(v) >= 1000) ? fmtInt(v) : String(v);
+    // tizedesjegyek száma az értékhez igazodva (0-2), hogy "12" ne legyen "12,0"
+    const decOf = v => Number.isInteger(v) ? 0 : (Number.isInteger(Math.round(v * 1e6) / 1e5) ? 1 : 2);
+    const num = v => isNum(v) ? fmtPlain(v, decOf(v)) : String(v);
     const row = i => {
       const d = i.to - i.from;
-      const dStr = Math.abs(d) >= 1000 ? (d > 0 ? '+' : '−') + fmtInt(Math.abs(d)) : fmt(d, Math.abs(d) < 1 && d !== 0 ? 2 : 1);
+      const dStr = fmt(d, Math.max(decOf(i.from), decOf(i.to)));
       return `<div class="change-row">
         <span class="change-group">${i.group}</span>
         <span class="change-label">${i.label}</span>
@@ -5671,7 +5689,7 @@
         const up = r.rank_change > 0;
         return `<span class="rank-chg" title="Helyezés az előző listán: ${r.prev_rank}." aria-label="${up ? 'feljebb' : 'lejjebb'} ${Math.abs(r.rank_change)} hellyel">${up ? '▲' : '▼'}${Math.abs(r.rank_change)}</span>`;
       };
-      const pct = v => v == null ? '' : v.toFixed(v < 1 ? 2 : 1).replace('.', ',') + '%';
+      const pct = v => v == null ? '' : fmtPlain(v, v < 1 ? 2 : 1) + '%';
       listEl.innerHTML = `
         <div class="model-row head"><span title="Helyezés a forrás közös (személyautó + kishaszonjármű) listáján">#</span><span>Modell</span><span>Arány</span><span>Darabszám</span></div>
         ${visible.map(r => `

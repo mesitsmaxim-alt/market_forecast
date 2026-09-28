@@ -10,7 +10,7 @@
   "factors": [
     {
       "key": "oil_price",
-      "label": "Olajár (Brent)",
+      "label": "Üzemanyagár (HU, benzin + dízel)",
       "unit": "%",
       "calibrated": "auto",
       "pesszimista": 4.9,
@@ -4412,7 +4412,7 @@
       },
       {
         "group": "Tényező (alap)",
-        "label": "Olajár (Brent)",
+        "label": "Üzemanyagár (HU, benzin + dízel)",
         "unit": "%",
         "from": 13.2,
         "to": 12.9,

@@ -82,7 +82,12 @@ automated (monthly via launchd); publishing is intentionally a manual confirmati
 Every "real data" card in `template.html` needs: a plain-language `desc` line, `sparkLabels`
 (period anchors under the mini chart), and — where the metric's scale isn't self-evident (e.g.
 the -100..+100 consumer sentiment balance index) — a `scaleNote`. Use `fmtPlain()` for standalone
-headline values (no +/- prefix) and `fmt()` only for genuine deltas.
+headline values (no +/- prefix) and `fmt()` only for genuine deltas. Every displayed number must go
+through `fmt`/`fmtPlain`/`fmtInt` (all built on `huNum()`: Hungarian decimal comma, space thousands
+grouping incl. 4-digit numbers, real minus sign) — never print a raw number or `toFixed()` into
+visible text (`toFixed` is only for SVG coordinates / CSS widths). The page is PUBLIC: no internal
+maintenance text (script names, "ask Claude", launchd) in visible copy — that belongs in the data
+files' `note` fields or here.
 
 ### Backtesting is intentionally narrow
 `backtest.py` only validates the 3 factors with enough historical depth (`financing_cost`,

@@ -3,7 +3,7 @@
   "horizon_months": 12,
   "factors": {
     "oil_price": {
-      "label": "Olajár (Brent)",
+      "label": "Üzemanyagár (HU, benzin + dízel)",
       "unit": "%",
       "note": "Kalibrálva: holtankoljak.hu ÉLŐ, napi frissülő adatából, a HU 95-ös benzin+gázolaj átlagár tényleges éves (YoY) változása (2026-09-28 - 2026-10-04 vs. 2025-09-28 - 2025-10-04: +12.9%). Forrás: data/uzemanyagar_elo.json (fetchers/fetch_uzemanyag_elo.py, majd calibrate_factors.py futtatásának eredménye) - ez MINDIG a legfrissebb elérhető árat használja, nem egy befagyott pillanatfelvételt.",
       "scenarios": {
