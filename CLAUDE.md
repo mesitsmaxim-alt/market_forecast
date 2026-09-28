@@ -124,6 +124,17 @@ tab-váltás kliensoldali JS-sel, nincs reload):
   (`forecast_card()` None-t ad vissza 3 pontnál kevesebb adatra), az `oil_price` faktor sávja adja az
   irányt helyette.
 
+### Dashboard: forgatókönyv-váltó, hőtérkép, "Mi változott?"
+- `build_engine_summary()` a `segments` kulcson mind a 48 szegmenst átadja mindhárom
+  forgatókönyvre (`scores`/`dirs`); az Áttekintés forgatókönyv-váltója, a hőtérkép és a
+  nyertes/vesztes listák kliensoldalon ebből számolnak. A `top_winners`/`top_losers` (alap)
+  a digest miatt maradt meg.
+- `load_history()` NAPONTA EGY pillanatképet ad vissza (a nap utolsó futását); a
+  `snapshots.jsonl` nyers archívum továbbra is minden futást megtart. A `main()` a mai
+  napot kiveszi a `run_history`-ból, a Történet fül a mostani futást a végére fűzi.
+- `build_changes()` az előző NAPI futáshoz viszonyít (szegmens-irányok, alap tényezők, valós
+  fő mutatók) → `changes` kulcs, irányváltások elöl.
+
 ### Piaci hírek ("Amit a piac mond" fül) és legkeresettebb modellek
 - **Hírek** (`fetchers/fetch_hirek.py` → `data/hirek.json` → `hirek_report.py`): 3 magyar RSS-forrás
   (Vezess.hu, Portfolio.hu, Világgazdaság), curl-lal lekérve, `xml.etree.ElementTree`-vel parszolva

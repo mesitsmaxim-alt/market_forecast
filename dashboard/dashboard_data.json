@@ -88,7 +88,12 @@
       "score": 0.3698,
       "dir": "Erős növekedés",
       "pesszimista": 0.076,
-      "optimista": 0.6635
+      "optimista": 0.6635,
+      "dirs": {
+        "pesszimista": "Növekedés",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
     },
     {
       "key": "PHEV",
@@ -96,7 +101,12 @@
       "score": 0.2264,
       "dir": "Erős növekedés",
       "pesszimista": 0.065,
-      "optimista": 0.3879
+      "optimista": 0.3879,
+      "dirs": {
+        "pesszimista": "Növekedés",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
     },
     {
       "key": "HEV",
@@ -104,7 +114,12 @@
       "score": 0.1915,
       "dir": "Erős növekedés",
       "pesszimista": 0.0912,
-      "optimista": 0.2919
+      "optimista": 0.2919,
+      "dirs": {
+        "pesszimista": "Növekedés",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
     },
     {
       "key": "ICE",
@@ -112,7 +127,12 @@
       "score": -0.0583,
       "dir": "Visszaesés",
       "pesszimista": -0.0362,
-      "optimista": -0.0805
+      "optimista": -0.0805,
+      "dirs": {
+        "pesszimista": "Stagnálás",
+        "alap": "Visszaesés",
+        "optimista": "Visszaesés"
+      }
     }
   ],
   "brand_summary": [
@@ -122,7 +142,12 @@
       "score": 0.2104,
       "dir": "Erős növekedés",
       "pesszimista": 0.0724,
-      "optimista": 0.3484
+      "optimista": 0.3484,
+      "dirs": {
+        "pesszimista": "Növekedés",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
     },
     {
       "key": "kinai_belepo",
@@ -130,7 +155,12 @@
       "score": 0.2021,
       "dir": "Erős növekedés",
       "pesszimista": -0.0003,
-      "optimista": 0.4044
+      "optimista": 0.4044,
+      "dirs": {
+        "pesszimista": "Stagnálás",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
     },
     {
       "key": "tomeggyarto",
@@ -138,7 +168,12 @@
       "score": 0.1959,
       "dir": "Erős növekedés",
       "pesszimista": 0.0651,
-      "optimista": 0.3268
+      "optimista": 0.3268,
+      "dirs": {
+        "pesszimista": "Növekedés",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
     },
     {
       "key": "budget",
@@ -146,7 +181,12 @@
       "score": 0.121,
       "dir": "Növekedés",
       "pesszimista": 0.0587,
-      "optimista": 0.1833
+      "optimista": 0.1833,
+      "dirs": {
+        "pesszimista": "Növekedés",
+        "alap": "Növekedés",
+        "optimista": "Erős növekedés"
+      }
     }
   ],
   "year_summary": [
@@ -156,7 +196,12 @@
       "score": 0.3066,
       "dir": "Erős növekedés",
       "pesszimista": 0.0785,
-      "optimista": 0.5347
+      "optimista": 0.5347,
+      "dirs": {
+        "pesszimista": "Növekedés",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
     },
     {
       "key": "fiatal_hasznalt",
@@ -164,7 +209,12 @@
       "score": 0.1654,
       "dir": "Erős növekedés",
       "pesszimista": 0.0457,
-      "optimista": 0.2852
+      "optimista": 0.2852,
+      "dirs": {
+        "pesszimista": "Stagnálás",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
     },
     {
       "key": "idosebb_hasznalt",
@@ -172,7 +222,12 @@
       "score": 0.075,
       "dir": "Növekedés",
       "pesszimista": 0.0228,
-      "optimista": 0.1272
+      "optimista": 0.1272,
+      "dirs": {
+        "pesszimista": "Stagnálás",
+        "alap": "Növekedés",
+        "optimista": "Növekedés"
+      }
     }
   ],
   "top_winners": [
@@ -227,6 +282,872 @@
       "label": "Belső égésű (benzin/dízel) / Tömeggyártó (pl. Volkswagen, Toyota, Hyundai, Ford) / Fiatal használt (3-5 év)",
       "score": -0.0442,
       "dir": "Stagnálás"
+    }
+  ],
+  "segments": [
+    {
+      "drivetrain": "ICE",
+      "drivetrain_label": "Belső égésű (benzin/dízel)",
+      "brand_tier": "tomeggyarto",
+      "brand_tier_label": "Tömeggyártó (pl. Volkswagen, Toyota, Hyundai, Ford)",
+      "year_bucket": "uj",
+      "year_bucket_label": "Új (0-2 év)",
+      "scores": {
+        "pesszimista": -0.0278,
+        "alap": -0.0428,
+        "optimista": -0.0578
+      },
+      "dirs": {
+        "pesszimista": "Stagnálás",
+        "alap": "Stagnálás",
+        "optimista": "Visszaesés"
+      }
+    },
+    {
+      "drivetrain": "ICE",
+      "drivetrain_label": "Belső égésű (benzin/dízel)",
+      "brand_tier": "tomeggyarto",
+      "brand_tier_label": "Tömeggyártó (pl. Volkswagen, Toyota, Hyundai, Ford)",
+      "year_bucket": "fiatal_hasznalt",
+      "year_bucket_label": "Fiatal használt (3-5 év)",
+      "scores": {
+        "pesszimista": -0.0181,
+        "alap": -0.0442,
+        "optimista": -0.0703
+      },
+      "dirs": {
+        "pesszimista": "Stagnálás",
+        "alap": "Stagnálás",
+        "optimista": "Visszaesés"
+      }
+    },
+    {
+      "drivetrain": "ICE",
+      "drivetrain_label": "Belső égésű (benzin/dízel)",
+      "brand_tier": "tomeggyarto",
+      "brand_tier_label": "Tömeggyártó (pl. Volkswagen, Toyota, Hyundai, Ford)",
+      "year_bucket": "idosebb_hasznalt",
+      "year_bucket_label": "Idősebb használt (6+ év)",
+      "scores": {
+        "pesszimista": -0.0144,
+        "alap": -0.0473,
+        "optimista": -0.0802
+      },
+      "dirs": {
+        "pesszimista": "Stagnálás",
+        "alap": "Stagnálás",
+        "optimista": "Visszaesés"
+      }
+    },
+    {
+      "drivetrain": "ICE",
+      "drivetrain_label": "Belső égésű (benzin/dízel)",
+      "brand_tier": "premium",
+      "brand_tier_label": "Prémium (pl. BMW, Mercedes, Audi)",
+      "year_bucket": "uj",
+      "year_bucket_label": "Új (0-2 év)",
+      "scores": {
+        "pesszimista": -0.0165,
+        "alap": -0.0205,
+        "optimista": -0.0245
+      },
+      "dirs": {
+        "pesszimista": "Stagnálás",
+        "alap": "Stagnálás",
+        "optimista": "Stagnálás"
+      }
+    },
+    {
+      "drivetrain": "ICE",
+      "drivetrain_label": "Belső égésű (benzin/dízel)",
+      "brand_tier": "premium",
+      "brand_tier_label": "Prémium (pl. BMW, Mercedes, Audi)",
+      "year_bucket": "fiatal_hasznalt",
+      "year_bucket_label": "Fiatal használt (3-5 év)",
+      "scores": {
+        "pesszimista": -0.0113,
+        "alap": -0.0308,
+        "optimista": -0.0503
+      },
+      "dirs": {
+        "pesszimista": "Stagnálás",
+        "alap": "Stagnálás",
+        "optimista": "Visszaesés"
+      }
+    },
+    {
+      "drivetrain": "ICE",
+      "drivetrain_label": "Belső égésű (benzin/dízel)",
+      "brand_tier": "premium",
+      "brand_tier_label": "Prémium (pl. BMW, Mercedes, Audi)",
+      "year_bucket": "idosebb_hasznalt",
+      "year_bucket_label": "Idősebb használt (6+ év)",
+      "scores": {
+        "pesszimista": -0.0104,
+        "alap": -0.0395,
+        "optimista": -0.0685
+      },
+      "dirs": {
+        "pesszimista": "Stagnálás",
+        "alap": "Stagnálás",
+        "optimista": "Visszaesés"
+      }
+    },
+    {
+      "drivetrain": "ICE",
+      "drivetrain_label": "Belső égésű (benzin/dízel)",
+      "brand_tier": "budget",
+      "brand_tier_label": "Belépő szintű / budget (pl. Dacia)",
+      "year_bucket": "uj",
+      "year_bucket_label": "Új (0-2 év)",
+      "scores": {
+        "pesszimista": -0.0376,
+        "alap": -0.1581,
+        "optimista": -0.2786
+      },
+      "dirs": {
+        "pesszimista": "Stagnálás",
+        "alap": "Erős visszaesés",
+        "optimista": "Erős visszaesés"
+      }
+    },
+    {
+      "drivetrain": "ICE",
+      "drivetrain_label": "Belső égésű (benzin/dízel)",
+      "brand_tier": "budget",
+      "brand_tier_label": "Belépő szintű / budget (pl. Dacia)",
+      "year_bucket": "fiatal_hasznalt",
+      "year_bucket_label": "Fiatal használt (3-5 év)",
+      "scores": {
+        "pesszimista": -0.024,
+        "alap": -0.1134,
+        "optimista": -0.2028
+      },
+      "dirs": {
+        "pesszimista": "Stagnálás",
+        "alap": "Visszaesés",
+        "optimista": "Erős visszaesés"
+      }
+    },
+    {
+      "drivetrain": "ICE",
+      "drivetrain_label": "Belső égésű (benzin/dízel)",
+      "brand_tier": "budget",
+      "brand_tier_label": "Belépő szintű / budget (pl. Dacia)",
+      "year_bucket": "idosebb_hasznalt",
+      "year_bucket_label": "Idősebb használt (6+ év)",
+      "scores": {
+        "pesszimista": -0.0178,
+        "alap": -0.0876,
+        "optimista": -0.1575
+      },
+      "dirs": {
+        "pesszimista": "Stagnálás",
+        "alap": "Visszaesés",
+        "optimista": "Erős visszaesés"
+      }
+    },
+    {
+      "drivetrain": "ICE",
+      "drivetrain_label": "Belső égésű (benzin/dízel)",
+      "brand_tier": "kinai_belepo",
+      "brand_tier_label": "Kínai eredetű, EV-fókuszú belépő (pl. BYD, MG)",
+      "year_bucket": "uj",
+      "year_bucket_label": "Új (0-2 év)",
+      "scores": {
+        "pesszimista": -0.1283,
+        "alap": -0.0333,
+        "optimista": 0.0617
+      },
+      "dirs": {
+        "pesszimista": "Visszaesés",
+        "alap": "Stagnálás",
+        "optimista": "Növekedés"
+      }
+    },
+    {
+      "drivetrain": "ICE",
+      "drivetrain_label": "Belső égésű (benzin/dízel)",
+      "brand_tier": "kinai_belepo",
+      "brand_tier_label": "Kínai eredetű, EV-fókuszú belépő (pl. BYD, MG)",
+      "year_bucket": "fiatal_hasznalt",
+      "year_bucket_label": "Fiatal használt (3-5 év)",
+      "scores": {
+        "pesszimista": -0.0784,
+        "alap": -0.0385,
+        "optimista": 0.0014
+      },
+      "dirs": {
+        "pesszimista": "Visszaesés",
+        "alap": "Stagnálás",
+        "optimista": "Stagnálás"
+      }
+    },
+    {
+      "drivetrain": "ICE",
+      "drivetrain_label": "Belső égésű (benzin/dízel)",
+      "brand_tier": "kinai_belepo",
+      "brand_tier_label": "Kínai eredetű, EV-fókuszú belépő (pl. BYD, MG)",
+      "year_bucket": "idosebb_hasznalt",
+      "year_bucket_label": "Idősebb használt (6+ év)",
+      "scores": {
+        "pesszimista": -0.0496,
+        "alap": -0.044,
+        "optimista": -0.0384
+      },
+      "dirs": {
+        "pesszimista": "Stagnálás",
+        "alap": "Stagnálás",
+        "optimista": "Stagnálás"
+      }
+    },
+    {
+      "drivetrain": "HEV",
+      "drivetrain_label": "Hibrid (nem tölthető)",
+      "brand_tier": "tomeggyarto",
+      "brand_tier_label": "Tömeggyártó (pl. Volkswagen, Toyota, Hyundai, Ford)",
+      "year_bucket": "uj",
+      "year_bucket_label": "Új (0-2 év)",
+      "scores": {
+        "pesszimista": 0.1681,
+        "alap": 0.3416,
+        "optimista": 0.5151
+      },
+      "dirs": {
+        "pesszimista": "Erős növekedés",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "HEV",
+      "drivetrain_label": "Hibrid (nem tölthető)",
+      "brand_tier": "tomeggyarto",
+      "brand_tier_label": "Tömeggyártó (pl. Volkswagen, Toyota, Hyundai, Ford)",
+      "year_bucket": "fiatal_hasznalt",
+      "year_bucket_label": "Fiatal használt (3-5 év)",
+      "scores": {
+        "pesszimista": 0.0995,
+        "alap": 0.1865,
+        "optimista": 0.2735
+      },
+      "dirs": {
+        "pesszimista": "Növekedés",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "HEV",
+      "drivetrain_label": "Hibrid (nem tölthető)",
+      "brand_tier": "tomeggyarto",
+      "brand_tier_label": "Tömeggyártó (pl. Volkswagen, Toyota, Hyundai, Ford)",
+      "year_bucket": "idosebb_hasznalt",
+      "year_bucket_label": "Idősebb használt (6+ év)",
+      "scores": {
+        "pesszimista": 0.0542,
+        "alap": 0.0873,
+        "optimista": 0.1203
+      },
+      "dirs": {
+        "pesszimista": "Növekedés",
+        "alap": "Növekedés",
+        "optimista": "Növekedés"
+      }
+    },
+    {
+      "drivetrain": "HEV",
+      "drivetrain_label": "Hibrid (nem tölthető)",
+      "brand_tier": "premium",
+      "brand_tier_label": "Prémium (pl. BMW, Mercedes, Audi)",
+      "year_bucket": "uj",
+      "year_bucket_label": "Új (0-2 év)",
+      "scores": {
+        "pesszimista": 0.1794,
+        "alap": 0.3639,
+        "optimista": 0.5484
+      },
+      "dirs": {
+        "pesszimista": "Erős növekedés",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "HEV",
+      "drivetrain_label": "Hibrid (nem tölthető)",
+      "brand_tier": "premium",
+      "brand_tier_label": "Prémium (pl. BMW, Mercedes, Audi)",
+      "year_bucket": "fiatal_hasznalt",
+      "year_bucket_label": "Fiatal használt (3-5 év)",
+      "scores": {
+        "pesszimista": 0.1062,
+        "alap": 0.1998,
+        "optimista": 0.2934
+      },
+      "dirs": {
+        "pesszimista": "Növekedés",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "HEV",
+      "drivetrain_label": "Hibrid (nem tölthető)",
+      "brand_tier": "premium",
+      "brand_tier_label": "Prémium (pl. BMW, Mercedes, Audi)",
+      "year_bucket": "idosebb_hasznalt",
+      "year_bucket_label": "Idősebb használt (6+ év)",
+      "scores": {
+        "pesszimista": 0.0581,
+        "alap": 0.0951,
+        "optimista": 0.132
+      },
+      "dirs": {
+        "pesszimista": "Növekedés",
+        "alap": "Növekedés",
+        "optimista": "Növekedés"
+      }
+    },
+    {
+      "drivetrain": "HEV",
+      "drivetrain_label": "Hibrid (nem tölthető)",
+      "brand_tier": "budget",
+      "brand_tier_label": "Belépő szintű / budget (pl. Dacia)",
+      "year_bucket": "uj",
+      "year_bucket_label": "Új (0-2 év)",
+      "scores": {
+        "pesszimista": 0.1583,
+        "alap": 0.2263,
+        "optimista": 0.2943
+      },
+      "dirs": {
+        "pesszimista": "Erős növekedés",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "HEV",
+      "drivetrain_label": "Hibrid (nem tölthető)",
+      "brand_tier": "budget",
+      "brand_tier_label": "Belépő szintű / budget (pl. Dacia)",
+      "year_bucket": "fiatal_hasznalt",
+      "year_bucket_label": "Fiatal használt (3-5 év)",
+      "scores": {
+        "pesszimista": 0.0936,
+        "alap": 0.1173,
+        "optimista": 0.141
+      },
+      "dirs": {
+        "pesszimista": "Növekedés",
+        "alap": "Növekedés",
+        "optimista": "Növekedés"
+      }
+    },
+    {
+      "drivetrain": "HEV",
+      "drivetrain_label": "Hibrid (nem tölthető)",
+      "brand_tier": "budget",
+      "brand_tier_label": "Belépő szintű / budget (pl. Dacia)",
+      "year_bucket": "idosebb_hasznalt",
+      "year_bucket_label": "Idősebb használt (6+ év)",
+      "scores": {
+        "pesszimista": 0.0508,
+        "alap": 0.0469,
+        "optimista": 0.0431
+      },
+      "dirs": {
+        "pesszimista": "Növekedés",
+        "alap": "Stagnálás",
+        "optimista": "Stagnálás"
+      }
+    },
+    {
+      "drivetrain": "HEV",
+      "drivetrain_label": "Hibrid (nem tölthető)",
+      "brand_tier": "kinai_belepo",
+      "brand_tier_label": "Kínai eredetű, EV-fókuszú belépő (pl. BYD, MG)",
+      "year_bucket": "uj",
+      "year_bucket_label": "Új (0-2 év)",
+      "scores": {
+        "pesszimista": 0.0676,
+        "alap": 0.3511,
+        "optimista": 0.6346
+      },
+      "dirs": {
+        "pesszimista": "Növekedés",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "HEV",
+      "drivetrain_label": "Hibrid (nem tölthető)",
+      "brand_tier": "kinai_belepo",
+      "brand_tier_label": "Kínai eredetű, EV-fókuszú belépő (pl. BYD, MG)",
+      "year_bucket": "fiatal_hasznalt",
+      "year_bucket_label": "Fiatal használt (3-5 év)",
+      "scores": {
+        "pesszimista": 0.0391,
+        "alap": 0.1921,
+        "optimista": 0.3451
+      },
+      "dirs": {
+        "pesszimista": "Stagnálás",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "HEV",
+      "drivetrain_label": "Hibrid (nem tölthető)",
+      "brand_tier": "kinai_belepo",
+      "brand_tier_label": "Kínai eredetű, EV-fókuszú belépő (pl. BYD, MG)",
+      "year_bucket": "idosebb_hasznalt",
+      "year_bucket_label": "Idősebb használt (6+ év)",
+      "scores": {
+        "pesszimista": 0.019,
+        "alap": 0.0906,
+        "optimista": 0.1621
+      },
+      "dirs": {
+        "pesszimista": "Stagnálás",
+        "alap": "Növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "PHEV",
+      "drivetrain_label": "Plug-in hibrid",
+      "brand_tier": "tomeggyarto",
+      "brand_tier_label": "Tömeggyártó (pl. Volkswagen, Toyota, Hyundai, Ford)",
+      "year_bucket": "uj",
+      "year_bucket_label": "Új (0-2 év)",
+      "scores": {
+        "pesszimista": 0.1278,
+        "alap": 0.3953,
+        "optimista": 0.6628
+      },
+      "dirs": {
+        "pesszimista": "Növekedés",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "PHEV",
+      "drivetrain_label": "Plug-in hibrid",
+      "brand_tier": "tomeggyarto",
+      "brand_tier_label": "Tömeggyártó (pl. Volkswagen, Toyota, Hyundai, Ford)",
+      "year_bucket": "fiatal_hasznalt",
+      "year_bucket_label": "Fiatal használt (3-5 év)",
+      "scores": {
+        "pesszimista": 0.0753,
+        "alap": 0.2187,
+        "optimista": 0.3621
+      },
+      "dirs": {
+        "pesszimista": "Növekedés",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "PHEV",
+      "drivetrain_label": "Plug-in hibrid",
+      "brand_tier": "tomeggyarto",
+      "brand_tier_label": "Tömeggyártó (pl. Volkswagen, Toyota, Hyundai, Ford)",
+      "year_bucket": "idosebb_hasznalt",
+      "year_bucket_label": "Idősebb használt (6+ év)",
+      "scores": {
+        "pesszimista": 0.0401,
+        "alap": 0.1061,
+        "optimista": 0.172
+      },
+      "dirs": {
+        "pesszimista": "Stagnálás",
+        "alap": "Növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "PHEV",
+      "drivetrain_label": "Plug-in hibrid",
+      "brand_tier": "premium",
+      "brand_tier_label": "Prémium (pl. BMW, Mercedes, Audi)",
+      "year_bucket": "uj",
+      "year_bucket_label": "Új (0-2 év)",
+      "scores": {
+        "pesszimista": 0.1391,
+        "alap": 0.4176,
+        "optimista": 0.6961
+      },
+      "dirs": {
+        "pesszimista": "Növekedés",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "PHEV",
+      "drivetrain_label": "Plug-in hibrid",
+      "brand_tier": "premium",
+      "brand_tier_label": "Prémium (pl. BMW, Mercedes, Audi)",
+      "year_bucket": "fiatal_hasznalt",
+      "year_bucket_label": "Fiatal használt (3-5 év)",
+      "scores": {
+        "pesszimista": 0.082,
+        "alap": 0.232,
+        "optimista": 0.382
+      },
+      "dirs": {
+        "pesszimista": "Növekedés",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "PHEV",
+      "drivetrain_label": "Plug-in hibrid",
+      "brand_tier": "premium",
+      "brand_tier_label": "Prémium (pl. BMW, Mercedes, Audi)",
+      "year_bucket": "idosebb_hasznalt",
+      "year_bucket_label": "Idősebb használt (6+ év)",
+      "scores": {
+        "pesszimista": 0.044,
+        "alap": 0.1139,
+        "optimista": 0.1837
+      },
+      "dirs": {
+        "pesszimista": "Stagnálás",
+        "alap": "Növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "PHEV",
+      "drivetrain_label": "Plug-in hibrid",
+      "brand_tier": "budget",
+      "brand_tier_label": "Belépő szintű / budget (pl. Dacia)",
+      "year_bucket": "uj",
+      "year_bucket_label": "Új (0-2 év)",
+      "scores": {
+        "pesszimista": 0.118,
+        "alap": 0.28,
+        "optimista": 0.442
+      },
+      "dirs": {
+        "pesszimista": "Növekedés",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "PHEV",
+      "drivetrain_label": "Plug-in hibrid",
+      "brand_tier": "budget",
+      "brand_tier_label": "Belépő szintű / budget (pl. Dacia)",
+      "year_bucket": "fiatal_hasznalt",
+      "year_bucket_label": "Fiatal használt (3-5 év)",
+      "scores": {
+        "pesszimista": 0.0694,
+        "alap": 0.1495,
+        "optimista": 0.2296
+      },
+      "dirs": {
+        "pesszimista": "Növekedés",
+        "alap": "Növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "PHEV",
+      "drivetrain_label": "Plug-in hibrid",
+      "brand_tier": "budget",
+      "brand_tier_label": "Belépő szintű / budget (pl. Dacia)",
+      "year_bucket": "idosebb_hasznalt",
+      "year_bucket_label": "Idősebb használt (6+ év)",
+      "scores": {
+        "pesszimista": 0.0367,
+        "alap": 0.0657,
+        "optimista": 0.0948
+      },
+      "dirs": {
+        "pesszimista": "Stagnálás",
+        "alap": "Növekedés",
+        "optimista": "Növekedés"
+      }
+    },
+    {
+      "drivetrain": "PHEV",
+      "drivetrain_label": "Plug-in hibrid",
+      "brand_tier": "kinai_belepo",
+      "brand_tier_label": "Kínai eredetű, EV-fókuszú belépő (pl. BYD, MG)",
+      "year_bucket": "uj",
+      "year_bucket_label": "Új (0-2 év)",
+      "scores": {
+        "pesszimista": 0.0273,
+        "alap": 0.4048,
+        "optimista": 0.7823
+      },
+      "dirs": {
+        "pesszimista": "Stagnálás",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "PHEV",
+      "drivetrain_label": "Plug-in hibrid",
+      "brand_tier": "kinai_belepo",
+      "brand_tier_label": "Kínai eredetű, EV-fókuszú belépő (pl. BYD, MG)",
+      "year_bucket": "fiatal_hasznalt",
+      "year_bucket_label": "Fiatal használt (3-5 év)",
+      "scores": {
+        "pesszimista": 0.015,
+        "alap": 0.2244,
+        "optimista": 0.4338
+      },
+      "dirs": {
+        "pesszimista": "Stagnálás",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "PHEV",
+      "drivetrain_label": "Plug-in hibrid",
+      "brand_tier": "kinai_belepo",
+      "brand_tier_label": "Kínai eredetű, EV-fókuszú belépő (pl. BYD, MG)",
+      "year_bucket": "idosebb_hasznalt",
+      "year_bucket_label": "Idősebb használt (6+ év)",
+      "scores": {
+        "pesszimista": 0.0049,
+        "alap": 0.1094,
+        "optimista": 0.2138
+      },
+      "dirs": {
+        "pesszimista": "Stagnálás",
+        "alap": "Növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "BEV",
+      "drivetrain_label": "Tisztán elektromos",
+      "brand_tier": "tomeggyarto",
+      "brand_tier_label": "Tömeggyártó (pl. Volkswagen, Toyota, Hyundai, Ford)",
+      "year_bucket": "uj",
+      "year_bucket_label": "Új (0-2 év)",
+      "scores": {
+        "pesszimista": 0.1448,
+        "alap": 0.6158,
+        "optimista": 1.0868
+      },
+      "dirs": {
+        "pesszimista": "Növekedés",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "BEV",
+      "drivetrain_label": "Tisztán elektromos",
+      "brand_tier": "tomeggyarto",
+      "brand_tier_label": "Tömeggyártó (pl. Volkswagen, Toyota, Hyundai, Ford)",
+      "year_bucket": "fiatal_hasznalt",
+      "year_bucket_label": "Fiatal használt (3-5 év)",
+      "scores": {
+        "pesszimista": 0.0855,
+        "alap": 0.351,
+        "optimista": 0.6165
+      },
+      "dirs": {
+        "pesszimista": "Növekedés",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "BEV",
+      "drivetrain_label": "Tisztán elektromos",
+      "brand_tier": "tomeggyarto",
+      "brand_tier_label": "Tömeggyártó (pl. Volkswagen, Toyota, Hyundai, Ford)",
+      "year_bucket": "idosebb_hasznalt",
+      "year_bucket_label": "Idősebb használt (6+ év)",
+      "scores": {
+        "pesszimista": 0.046,
+        "alap": 0.1832,
+        "optimista": 0.3204
+      },
+      "dirs": {
+        "pesszimista": "Stagnálás",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "BEV",
+      "drivetrain_label": "Tisztán elektromos",
+      "brand_tier": "premium",
+      "brand_tier_label": "Prémium (pl. BMW, Mercedes, Audi)",
+      "year_bucket": "uj",
+      "year_bucket_label": "Új (0-2 év)",
+      "scores": {
+        "pesszimista": 0.1561,
+        "alap": 0.6381,
+        "optimista": 1.1201
+      },
+      "dirs": {
+        "pesszimista": "Erős növekedés",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "BEV",
+      "drivetrain_label": "Tisztán elektromos",
+      "brand_tier": "premium",
+      "brand_tier_label": "Prémium (pl. BMW, Mercedes, Audi)",
+      "year_bucket": "fiatal_hasznalt",
+      "year_bucket_label": "Fiatal használt (3-5 év)",
+      "scores": {
+        "pesszimista": 0.0922,
+        "alap": 0.3643,
+        "optimista": 0.6364
+      },
+      "dirs": {
+        "pesszimista": "Növekedés",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "BEV",
+      "drivetrain_label": "Tisztán elektromos",
+      "brand_tier": "premium",
+      "brand_tier_label": "Prémium (pl. BMW, Mercedes, Audi)",
+      "year_bucket": "idosebb_hasznalt",
+      "year_bucket_label": "Idősebb használt (6+ év)",
+      "scores": {
+        "pesszimista": 0.05,
+        "alap": 0.191,
+        "optimista": 0.3321
+      },
+      "dirs": {
+        "pesszimista": "Stagnálás",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "BEV",
+      "drivetrain_label": "Tisztán elektromos",
+      "brand_tier": "budget",
+      "brand_tier_label": "Belépő szintű / budget (pl. Dacia)",
+      "year_bucket": "uj",
+      "year_bucket_label": "Új (0-2 év)",
+      "scores": {
+        "pesszimista": 0.135,
+        "alap": 0.5005,
+        "optimista": 0.866
+      },
+      "dirs": {
+        "pesszimista": "Növekedés",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "BEV",
+      "drivetrain_label": "Tisztán elektromos",
+      "brand_tier": "budget",
+      "brand_tier_label": "Belépő szintű / budget (pl. Dacia)",
+      "year_bucket": "fiatal_hasznalt",
+      "year_bucket_label": "Fiatal használt (3-5 év)",
+      "scores": {
+        "pesszimista": 0.0796,
+        "alap": 0.2818,
+        "optimista": 0.484
+      },
+      "dirs": {
+        "pesszimista": "Növekedés",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "BEV",
+      "drivetrain_label": "Tisztán elektromos",
+      "brand_tier": "budget",
+      "brand_tier_label": "Belépő szintű / budget (pl. Dacia)",
+      "year_bucket": "idosebb_hasznalt",
+      "year_bucket_label": "Idősebb használt (6+ év)",
+      "scores": {
+        "pesszimista": 0.0426,
+        "alap": 0.1429,
+        "optimista": 0.2431
+      },
+      "dirs": {
+        "pesszimista": "Stagnálás",
+        "alap": "Növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "BEV",
+      "drivetrain_label": "Tisztán elektromos",
+      "brand_tier": "kinai_belepo",
+      "brand_tier_label": "Kínai eredetű, EV-fókuszú belépő (pl. BYD, MG)",
+      "year_bucket": "uj",
+      "year_bucket_label": "Új (0-2 év)",
+      "scores": {
+        "pesszimista": 0.0443,
+        "alap": 0.6253,
+        "optimista": 1.2063
+      },
+      "dirs": {
+        "pesszimista": "Stagnálás",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "BEV",
+      "drivetrain_label": "Tisztán elektromos",
+      "brand_tier": "kinai_belepo",
+      "brand_tier_label": "Kínai eredetű, EV-fókuszú belépő (pl. BYD, MG)",
+      "year_bucket": "fiatal_hasznalt",
+      "year_bucket_label": "Fiatal használt (3-5 év)",
+      "scores": {
+        "pesszimista": 0.0251,
+        "alap": 0.3566,
+        "optimista": 0.6881
+      },
+      "dirs": {
+        "pesszimista": "Stagnálás",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "BEV",
+      "drivetrain_label": "Tisztán elektromos",
+      "brand_tier": "kinai_belepo",
+      "brand_tier_label": "Kínai eredetű, EV-fókuszú belépő (pl. BYD, MG)",
+      "year_bucket": "idosebb_hasznalt",
+      "year_bucket_label": "Idősebb használt (6+ év)",
+      "scores": {
+        "pesszimista": 0.0108,
+        "alap": 0.1865,
+        "optimista": 0.3622
+      },
+      "dirs": {
+        "pesszimista": "Stagnálás",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
     }
   ],
   "real": {
@@ -2570,64 +3491,6 @@
     {
       "date": "2026-09-18",
       "factors": {
-        "oil_price": 11.7,
-        "battery_cost": -9,
-        "charging_infra": -2.6,
-        "ev_tariffs": 10,
-        "co2_regulation": 6,
-        "financing_cost": -1.0,
-        "consumer_sentiment": 13.5,
-        "purchasing_power": 4.8
-      },
-      "drivetrain_summary": [
-        {
-          "key": "BEV",
-          "score": 0.286
-        },
-        {
-          "key": "PHEV",
-          "score": 0.1938
-        },
-        {
-          "key": "HEV",
-          "score": 0.1806
-        },
-        {
-          "key": "ICE",
-          "score": -0.0065
-        }
-      ],
-      "brand_summary": [
-        {
-          "key": "premium",
-          "score": 0.213
-        },
-        {
-          "key": "tomeggyarto",
-          "score": 0.1857
-        },
-        {
-          "key": "budget",
-          "score": 0.1371
-        },
-        {
-          "key": "kinai_belepo",
-          "score": 0.1181
-        }
-      ],
-      "real_headline": {
-        "benzin": 626,
-        "dizel": 701,
-        "alapkamat": 5.5,
-        "eurhuf": 363.69,
-        "forgalomba_total": 78118,
-        "sentiment_mp": -11.8,
-        "wage_yoy": 4.8
-      }
-    },
-    {
-      "date": "2026-09-18",
-      "factors": {
         "oil_price": 13.2,
         "battery_cost": -9,
         "charging_infra": -2.6,
@@ -2675,470 +3538,6 @@
       ],
       "real_headline": {
         "benzin": 635,
-        "dizel": 709,
-        "alapkamat": 5.5,
-        "eurhuf": 363.69,
-        "forgalomba_total": 78118,
-        "sentiment_mp": -11.8,
-        "wage_yoy": 4.8
-      }
-    },
-    {
-      "date": "2026-09-18",
-      "factors": {
-        "oil_price": 13.2,
-        "battery_cost": -9,
-        "charging_infra": -2.6,
-        "ev_tariffs": 10,
-        "co2_regulation": 6,
-        "financing_cost": -1.0,
-        "consumer_sentiment": 13.5,
-        "purchasing_power": 4.8
-      },
-      "drivetrain_summary": [
-        {
-          "key": "BEV",
-          "score": 0.2932
-        },
-        {
-          "key": "PHEV",
-          "score": 0.1961
-        },
-        {
-          "key": "HEV",
-          "score": 0.1849
-        },
-        {
-          "key": "ICE",
-          "score": -0.0159
-        }
-      ],
-      "brand_summary": [
-        {
-          "key": "premium",
-          "score": 0.2143
-        },
-        {
-          "key": "tomeggyarto",
-          "score": 0.187
-        },
-        {
-          "key": "budget",
-          "score": 0.1365
-        },
-        {
-          "key": "kinai_belepo",
-          "score": 0.1204
-        }
-      ],
-      "real_headline": {
-        "benzin": 635,
-        "dizel": 709,
-        "alapkamat": 5.5,
-        "eurhuf": 363.69,
-        "forgalomba_total": 78118,
-        "sentiment_mp": -11.8,
-        "wage_yoy": 4.8
-      }
-    },
-    {
-      "date": "2026-09-18",
-      "factors": {
-        "oil_price": 13.2,
-        "battery_cost": -9,
-        "charging_infra": -2.6,
-        "ev_tariffs": 10,
-        "co2_regulation": 6,
-        "financing_cost": -1.0,
-        "consumer_sentiment": 13.5,
-        "purchasing_power": 4.8
-      },
-      "drivetrain_summary": [
-        {
-          "key": "BEV",
-          "score": 0.2932
-        },
-        {
-          "key": "PHEV",
-          "score": 0.1961
-        },
-        {
-          "key": "HEV",
-          "score": 0.1849
-        },
-        {
-          "key": "ICE",
-          "score": -0.0159
-        }
-      ],
-      "brand_summary": [
-        {
-          "key": "premium",
-          "score": 0.2143
-        },
-        {
-          "key": "tomeggyarto",
-          "score": 0.187
-        },
-        {
-          "key": "budget",
-          "score": 0.1365
-        },
-        {
-          "key": "kinai_belepo",
-          "score": 0.1204
-        }
-      ],
-      "real_headline": {
-        "benzin": 635,
-        "dizel": 709,
-        "alapkamat": 5.5,
-        "eurhuf": 363.69,
-        "forgalomba_total": 78118,
-        "sentiment_mp": -11.8,
-        "wage_yoy": 4.8
-      }
-    },
-    {
-      "date": "2026-09-18",
-      "factors": {
-        "oil_price": 13.2,
-        "battery_cost": -9,
-        "charging_infra": -2.6,
-        "ev_tariffs": 10,
-        "co2_regulation": 6,
-        "financing_cost": -1.0,
-        "consumer_sentiment": 13.5,
-        "purchasing_power": 4.8
-      },
-      "drivetrain_summary": [
-        {
-          "key": "BEV",
-          "score": 0.2932
-        },
-        {
-          "key": "PHEV",
-          "score": 0.1961
-        },
-        {
-          "key": "HEV",
-          "score": 0.1849
-        },
-        {
-          "key": "ICE",
-          "score": -0.0159
-        }
-      ],
-      "brand_summary": [
-        {
-          "key": "premium",
-          "score": 0.2143
-        },
-        {
-          "key": "tomeggyarto",
-          "score": 0.187
-        },
-        {
-          "key": "budget",
-          "score": 0.1365
-        },
-        {
-          "key": "kinai_belepo",
-          "score": 0.1204
-        }
-      ],
-      "real_headline": {
-        "benzin": 635,
-        "dizel": 709,
-        "alapkamat": 5.5,
-        "eurhuf": 363.69,
-        "forgalomba_total": 78118,
-        "sentiment_mp": -11.8,
-        "wage_yoy": 4.8
-      }
-    },
-    {
-      "date": "2026-09-18",
-      "factors": {
-        "oil_price": 13.2,
-        "battery_cost": -9,
-        "charging_infra": -2.6,
-        "ev_tariffs": 10,
-        "co2_regulation": 6,
-        "financing_cost": -1.0,
-        "consumer_sentiment": 13.5,
-        "purchasing_power": 4.8
-      },
-      "drivetrain_summary": [
-        {
-          "key": "BEV",
-          "score": 0.2932
-        },
-        {
-          "key": "PHEV",
-          "score": 0.1961
-        },
-        {
-          "key": "HEV",
-          "score": 0.1849
-        },
-        {
-          "key": "ICE",
-          "score": -0.0159
-        }
-      ],
-      "brand_summary": [
-        {
-          "key": "premium",
-          "score": 0.2143
-        },
-        {
-          "key": "tomeggyarto",
-          "score": 0.187
-        },
-        {
-          "key": "budget",
-          "score": 0.1365
-        },
-        {
-          "key": "kinai_belepo",
-          "score": 0.1204
-        }
-      ],
-      "real_headline": {
-        "benzin": 635,
-        "dizel": 709,
-        "alapkamat": 5.5,
-        "eurhuf": 363.69,
-        "forgalomba_total": 78118,
-        "sentiment_mp": -11.8,
-        "wage_yoy": 4.8
-      }
-    },
-    {
-      "date": "2026-09-18",
-      "factors": {
-        "oil_price": 13.2,
-        "battery_cost": -9,
-        "charging_infra": -2.6,
-        "ev_tariffs": 10,
-        "co2_regulation": 6,
-        "financing_cost": -1.0,
-        "consumer_sentiment": 13.5,
-        "purchasing_power": 4.8
-      },
-      "drivetrain_summary": [
-        {
-          "key": "BEV",
-          "score": 0.2932
-        },
-        {
-          "key": "PHEV",
-          "score": 0.1961
-        },
-        {
-          "key": "HEV",
-          "score": 0.1849
-        },
-        {
-          "key": "ICE",
-          "score": -0.0159
-        }
-      ],
-      "brand_summary": [
-        {
-          "key": "premium",
-          "score": 0.2143
-        },
-        {
-          "key": "tomeggyarto",
-          "score": 0.187
-        },
-        {
-          "key": "budget",
-          "score": 0.1365
-        },
-        {
-          "key": "kinai_belepo",
-          "score": 0.1204
-        }
-      ],
-      "real_headline": {
-        "benzin": 635,
-        "dizel": 709,
-        "alapkamat": 5.5,
-        "eurhuf": 363.69,
-        "forgalomba_total": 78118,
-        "sentiment_mp": -11.8,
-        "wage_yoy": 4.8
-      }
-    },
-    {
-      "date": "2026-09-28",
-      "factors": {
-        "oil_price": 12.9,
-        "battery_cost": -8.0,
-        "charging_infra": -2.6,
-        "ev_tariffs": -1.0,
-        "co2_regulation": 14.4,
-        "financing_cost": -1.0,
-        "consumer_sentiment": 13.5,
-        "purchasing_power": 4.8
-      },
-      "drivetrain_summary": [
-        {
-          "key": "BEV",
-          "score": 0.3698
-        },
-        {
-          "key": "PHEV",
-          "score": 0.2264
-        },
-        {
-          "key": "HEV",
-          "score": 0.1915
-        },
-        {
-          "key": "ICE",
-          "score": -0.0583
-        }
-      ],
-      "brand_summary": [
-        {
-          "key": "premium",
-          "score": 0.2104
-        },
-        {
-          "key": "kinai_belepo",
-          "score": 0.2021
-        },
-        {
-          "key": "tomeggyarto",
-          "score": 0.1959
-        },
-        {
-          "key": "budget",
-          "score": 0.121
-        }
-      ],
-      "real_headline": {
-        "benzin": 636,
-        "dizel": 709,
-        "alapkamat": 5.5,
-        "eurhuf": 363.69,
-        "forgalomba_total": 78118,
-        "sentiment_mp": -11.8,
-        "wage_yoy": 4.8
-      }
-    },
-    {
-      "date": "2026-09-28",
-      "factors": {
-        "oil_price": 12.9,
-        "battery_cost": -8.0,
-        "charging_infra": -2.6,
-        "ev_tariffs": -1.0,
-        "co2_regulation": 14.4,
-        "financing_cost": -1.0,
-        "consumer_sentiment": 13.5,
-        "purchasing_power": 4.8
-      },
-      "drivetrain_summary": [
-        {
-          "key": "BEV",
-          "score": 0.3698
-        },
-        {
-          "key": "PHEV",
-          "score": 0.2264
-        },
-        {
-          "key": "HEV",
-          "score": 0.1915
-        },
-        {
-          "key": "ICE",
-          "score": -0.0583
-        }
-      ],
-      "brand_summary": [
-        {
-          "key": "premium",
-          "score": 0.2104
-        },
-        {
-          "key": "kinai_belepo",
-          "score": 0.2021
-        },
-        {
-          "key": "tomeggyarto",
-          "score": 0.1959
-        },
-        {
-          "key": "budget",
-          "score": 0.121
-        }
-      ],
-      "real_headline": {
-        "benzin": 636,
-        "dizel": 709,
-        "alapkamat": 5.5,
-        "eurhuf": 363.69,
-        "forgalomba_total": 78118,
-        "sentiment_mp": -11.8,
-        "wage_yoy": 4.8
-      }
-    },
-    {
-      "date": "2026-09-28",
-      "factors": {
-        "oil_price": 12.9,
-        "battery_cost": -8.0,
-        "charging_infra": -2.6,
-        "ev_tariffs": -1.0,
-        "co2_regulation": 14.4,
-        "financing_cost": -1.0,
-        "consumer_sentiment": 13.5,
-        "purchasing_power": 4.8
-      },
-      "drivetrain_summary": [
-        {
-          "key": "BEV",
-          "score": 0.3698
-        },
-        {
-          "key": "PHEV",
-          "score": 0.2264
-        },
-        {
-          "key": "HEV",
-          "score": 0.1915
-        },
-        {
-          "key": "ICE",
-          "score": -0.0583
-        }
-      ],
-      "brand_summary": [
-        {
-          "key": "premium",
-          "score": 0.2104
-        },
-        {
-          "key": "kinai_belepo",
-          "score": 0.2021
-        },
-        {
-          "key": "tomeggyarto",
-          "score": 0.1959
-        },
-        {
-          "key": "budget",
-          "score": 0.121
-        }
-      ],
-      "real_headline": {
-        "benzin": 636,
         "dizel": 709,
         "alapkamat": 5.5,
         "eurhuf": 363.69,
@@ -3271,6 +3670,101 @@
         "rank": 20,
         "model": "Toyota Corolla Cross",
         "units": 979
+      }
+    ]
+  },
+  "changes": {
+    "since": "2026-09-18",
+    "items": [
+      {
+        "group": "Hajtástípus",
+        "label": "Belső égésű (benzin/dízel)",
+        "unit": "pont",
+        "from": -1.6,
+        "to": -5.8,
+        "from_dir": "Stagnálás",
+        "to_dir": "Visszaesés",
+        "dir_changed": true
+      },
+      {
+        "group": "Márkakategória",
+        "label": "Kínai eredetű, EV-fókuszú belépő (pl. BYD, MG)",
+        "unit": "pont",
+        "from": 12.0,
+        "to": 20.2,
+        "from_dir": "Növekedés",
+        "to_dir": "Erős növekedés",
+        "dir_changed": true
+      },
+      {
+        "group": "Hajtástípus",
+        "label": "Tisztán elektromos",
+        "unit": "pont",
+        "from": 29.3,
+        "to": 37.0,
+        "from_dir": "Erős növekedés",
+        "to_dir": "Erős növekedés",
+        "dir_changed": false
+      },
+      {
+        "group": "Hajtástípus",
+        "label": "Plug-in hibrid",
+        "unit": "pont",
+        "from": 19.6,
+        "to": 22.6,
+        "from_dir": "Erős növekedés",
+        "to_dir": "Erős növekedés",
+        "dir_changed": false
+      },
+      {
+        "group": "Márkakategória",
+        "label": "Belépő szintű / budget (pl. Dacia)",
+        "unit": "pont",
+        "from": 13.7,
+        "to": 12.1,
+        "from_dir": "Növekedés",
+        "to_dir": "Növekedés",
+        "dir_changed": false
+      },
+      {
+        "group": "Tényező (alap)",
+        "label": "Olajár (Brent)",
+        "unit": "%",
+        "from": 13.2,
+        "to": 12.9,
+        "dir_changed": false
+      },
+      {
+        "group": "Tényező (alap)",
+        "label": "Akkumulátorcsomag ár ($/kWh index)",
+        "unit": "%",
+        "from": -9,
+        "to": -8.0,
+        "dir_changed": false
+      },
+      {
+        "group": "Tényező (alap)",
+        "label": "EV importvámok (elsősorban kínai gyártmányú BEV-ekre)",
+        "unit": "pp",
+        "from": 10,
+        "to": -1.0,
+        "dir_changed": false
+      },
+      {
+        "group": "Tényező (alap)",
+        "label": "EU CO2-szabályozás szigorodása / ICE-tiltás közeledése",
+        "unit": "%/év",
+        "from": 6,
+        "to": 14.4,
+        "dir_changed": false
+      },
+      {
+        "group": "Valós adat",
+        "label": "Benzin ára",
+        "unit": "Ft/l",
+        "from": 635,
+        "to": 636,
+        "dir_changed": false
       }
     ]
   }

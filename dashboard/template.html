@@ -242,7 +242,50 @@
   :root[data-theme="dark"] .dirpill.warning{ color:#ffd991; }
   :root[data-theme="dark"] .dirpill.serious{ color:#ffb08c; }
 
-  .segment-filters{ margin-bottom:14px; }
+  .segment-filters{ margin-bottom:14px; display:flex; flex-wrap:wrap; gap:12px 20px; align-items:center; }
+  .seg-control{ display:inline-flex; background:var(--surface-2); border:1px solid var(--border); border-radius:999px; padding:3px; gap:2px; }
+  .seg-control button{
+    appearance:none; border:none; background:none; cursor:pointer; font-family:inherit; font-size:12.5px; font-weight:600;
+    color:var(--text-secondary); padding:6px 14px; border-radius:999px;
+  }
+  .seg-control button:hover{ color:var(--text-primary); }
+  .seg-control button[aria-pressed="true"]{ background:var(--surface); color:var(--text-primary); box-shadow:var(--shadow); }
+  .seg-control button:focus-visible, .heat-cell:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  .filter-label{ font-size:12.5px; color:var(--text-secondary); display:inline-flex; align-items:center; gap:8px; }
+  .filter-label select{ font-family:inherit; font-size:12.5px; padding:5px 8px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--text-primary); }
+
+  /* ---------- heatmap (48 szegmens) ---------- */
+  .heat-card{ background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:18px 20px; box-shadow:var(--shadow); margin-top:16px; }
+  .heat-card > h3{ font-size:13px; font-weight:700; margin:0 0 4px; }
+  .heat-card .heat-sub{ font-size:12px; color:var(--text-muted); margin:0 0 14px; line-height:1.4; }
+  .heat-grids{ display:grid; grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr)); gap:20px; }
+  .heat-block h4{ font-size:12px; font-weight:700; color:var(--text-secondary); margin:0 0 8px; }
+  .heat{ display:grid; grid-template-columns: minmax(84px,auto) repeat(4, 1fr); gap:2px; }
+  .heat .hh{ font-size:10.5px; color:var(--text-muted); font-weight:600; line-height:1.25; padding:0 2px 4px; align-self:end; text-align:center; }
+  .heat .rh{ font-size:11.5px; color:var(--text-secondary); font-weight:600; display:flex; align-items:center; padding-right:6px; line-height:1.25; }
+  .heat-cell{
+    height:40px; border-radius:4px; display:flex; align-items:center; justify-content:center;
+    font-family:"JetBrains Mono",monospace; font-size:12px; font-weight:600; color:var(--text-primary); cursor:default;
+  }
+  .heat-legend{ display:flex; align-items:center; gap:10px; margin-top:14px; font-size:11px; color:var(--text-muted); flex-wrap:wrap; }
+  .heat-legend .ramp{ width:180px; height:10px; border-radius:3px; }
+  .viz-tip{
+    position:fixed; z-index:50; pointer-events:none; background:var(--surface); border:1px solid var(--border-strong);
+    border-radius:8px; padding:8px 11px; font-size:12px; line-height:1.45; color:var(--text-primary); box-shadow:var(--shadow);
+    max-width:280px; display:none;
+  }
+  .t-muted{ color:var(--text-muted); }
+
+  /* ---------- "mi változott" ---------- */
+  .changes-card{ background:var(--surface); border:1px solid var(--border); border-radius:14px; box-shadow:var(--shadow); overflow:hidden; }
+  .change-row{ display:grid; grid-template-columns: 130px 1fr auto; gap:6px 14px; align-items:center; padding:10px 18px; border-bottom:1px solid var(--border); font-size:13px; }
+  .change-row:last-child{ border-bottom:none; }
+  .change-group{ font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-muted); font-weight:600; }
+  .change-label{ color:var(--text-primary); font-weight:500; line-height:1.35; }
+  .change-vals{ font-family:"JetBrains Mono",monospace; font-size:12.5px; color:var(--text-secondary); white-space:nowrap; text-align:right; }
+  .change-vals b{ color:var(--text-primary); }
+  .change-dirs{ grid-column: 2 / -1; display:flex; align-items:center; gap:6px; font-size:12px; color:var(--text-muted); }
+  .change-more{ appearance:none; border:none; background:none; cursor:pointer; font-family:inherit; font-size:12.5px; font-weight:600; color:var(--accent); padding:10px 18px; }
 
   /* ---------- winners/losers ---------- */
   .wl-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:16px; margin-top:16px; }
@@ -306,6 +349,14 @@
     .model-row .model-track{ display:none; }
     .model-row.head{ display:none; }
     .news-item{ flex-direction:column; gap:2px; }
+    body{ padding-inline:16px; }
+    .status-pill{ display:block; white-space:normal; border-radius:14px; line-height:1.5; }
+    .status-dot{ display:inline-block; margin-right:6px; vertical-align:1px; }
+    .heat-card{ padding:16px 12px; }
+    .heat{ grid-template-columns: minmax(64px,auto) repeat(4, 1fr); }
+    .change-row{ grid-template-columns: 1fr auto; }
+    .change-group{ grid-column: 1 / -1; }
+    .change-dirs{ grid-column: 1 / -1; }
   }
 </style>
 
@@ -329,6 +380,14 @@
 
 <div class="tabpanel" data-tabpanel="overview">
 
+<section id="changes">
+  <div class="section-head">
+    <h2>Mi változott?</h2>
+    <span class="section-note" id="changes-note"></span>
+  </div>
+  <div id="changes-body"></div>
+</section>
+
 <section id="coverage">
   <div class="section-head"><h2>Lefedettség</h2></div>
   <div class="tiles" id="tiles"></div>
@@ -344,11 +403,17 @@
 
 <section id="segments">
   <div class="section-head">
-    <h2>2. Szegmens-pontszámok (alap forgatókönyv)</h2>
+    <h2 id="segments-title">2. Szegmens-pontszámok (alap forgatókönyv)</h2>
     <span class="section-note">Relatív kitettségi pontszám <b>pontban, nem százalékban</b> — azt mutatja, mennyire segítik (+) vagy hátráltatják (−) a tényezők az adott szegmenst. 0 = semleges, ±5 pont fölött növekedés/visszaesés, ±15 fölött erős. Nem eladás-előrejelzés.</span>
   </div>
   <div class="segment-filters" id="segment-filters"></div>
   <div class="bar-groups" id="bar-groups"></div>
+  <div class="heat-card">
+    <h3>Mind a 48 szegmens — hőtérkép</h3>
+    <p class="heat-sub">Sorok: hajtástípus, oszlopok: márkakategória, évjárat-sávonként. Kék = a tényezők segítik, piros = hátráltatják, szürke = semleges. Vidd az egeret egy cellára a részletekért.</p>
+    <div class="heat-grids" id="heatmap"></div>
+    <div class="heat-legend" id="heat-legend"></div>
+  </div>
   <div class="wl-grid" id="wl-grid"></div>
 </section>
 
@@ -451,6 +516,8 @@
   <p>Ez a dashboard a <span class="mono">market_forecast</span> projekt egy adott pillanatfelvétele (<span id="generated-label-2">—</span>). Frissítéshez futtasd újra a <span class="mono">run_pipeline.sh</span>-t, majd kérd az újrapublikálást.</p>
 </footer>
 
+<div class="viz-tip" id="viz-tip" role="tooltip"></div>
+
 <script id="dashboard-data" type="application/json">
 __DASHBOARD_DATA__
 </script>
@@ -462,6 +529,7 @@ __DASHBOARD_DATA__
   const fmt = (n, d=1) => {
     if (n === null || n === undefined || Number.isNaN(n)) return '—';
     const s = n.toFixed(d);
+    if (Number(s) === 0) return (0).toFixed(d);  // ne legyen "-0.0" / "+0"
     return (n > 0 ? '+' : '') + s;
   };
   const fmtInt = (n) => n === null || n === undefined ? '—' : Math.round(n).toLocaleString('hu-HU');
@@ -543,10 +611,18 @@ __DASHBOARD_DATA__
     return `<div class="bar-card"><h3>${title}</h3>${bars}</div>`;
   }
 
-  document.getElementById('bar-groups').innerHTML =
-    barGroup('Hajtástípus szerint', data.drivetrain_summary) +
-    barGroup('Márkakategória szerint', data.brand_summary) +
-    barGroup('Évjárat-sáv szerint', data.year_summary);
+  // ---------- forgatókönyv-váltó állapota ----------
+  const SCEN_LABELS = { pesszimista: 'pesszimista', alap: 'alap', optimista: 'optimista' };
+  let scen = 'alap';
+  let dtFilter = '';
+  // az aggregátumokban az alap értéke "score" néven van, a másik kettő a forgatókönyv nevén
+  const aggRow = r => ({ label: r.label, score: scen === 'alap' ? r.score : r[scen], dir: (r.dirs && r.dirs[scen]) || r.dir });
+  const shortLabel = s => s.split(' (')[0];
+  // rövid oszlop-/sorfejlécek a hőtérképhez (a teljes címke a tooltipben látszik)
+  const HEAT_SHORT = { tomeggyarto: 'Tömeg­gyártó', premium: 'Prémium', budget: 'Budget', kinai_belepo: 'Kínai belépő',
+                       ICE: 'Belső égésű', HEV: 'Hibrid', PHEV: 'Plug-in hibrid', BEV: 'Elektromos' };
+  const heatLabel = (key, label) => HEAT_SHORT[key] || shortLabel(label);
+  const segLabel = s => `${s.drivetrain_label} / ${s.brand_tier_label} / ${s.year_bucket_label}`;
 
   // ---------- winners / losers ----------
   function wlList(title, rows, cls) {
@@ -557,9 +633,88 @@ __DASHBOARD_DATA__
       </div>`).join('');
     return `<div class="wl-card ${cls}"><h3><span class="sw"></span>${title}</h3>${items}</div>`;
   }
-  document.getElementById('wl-grid').innerHTML =
-    wlList('Legerősebb nyertes szegmensek', data.top_winners, 'winners') +
-    wlList('Leggyengébb szegmensek', data.top_losers, 'losers');
+
+  // ---------- hőtérkép ----------
+  const uniq = (arr, key, lbl) => { const seen = new Map(); arr.forEach(x => { if (!seen.has(x[key])) seen.set(x[key], x[lbl]); }); return [...seen]; };
+  const DTS = uniq(data.segments, 'drivetrain', 'drivetrain_label');
+  const BTS = uniq(data.segments, 'brand_tier', 'brand_tier_label');
+  const YBS = uniq(data.segments, 'year_bucket', 'year_bucket_label');
+  const MAX_MIX = 58; // a legerősebb cella színkeverése (%), hogy a szöveg olvasható maradjon
+
+  function heatColor(v, maxAbs) {
+    const t = Math.min(1, Math.abs(v) / maxAbs);
+    if (t < 0.04) return 'var(--surface-2)';
+    const pole = v >= 0 ? 'var(--pos)' : 'var(--neg)';
+    return `color-mix(in srgb, ${pole} ${Math.round(t * MAX_MIX)}%, var(--surface-2))`;
+  }
+
+  function renderHeatmap() {
+    const maxAbs = Math.max(...data.segments.map(s => Math.abs(s.scores[scen])), 0.001);
+    const find = (dt, bt, yb) => data.segments.find(s => s.drivetrain === dt && s.brand_tier === bt && s.year_bucket === yb);
+    document.getElementById('heatmap').innerHTML = YBS.map(([yb, ybLabel]) => `
+      <div class="heat-block">
+        <h4>${ybLabel}</h4>
+        <div class="heat" role="table" aria-label="${ybLabel} — kitettségi pontszámok, ${SCEN_LABELS[scen]} forgatókönyv">
+          <div class="hh" role="columnheader"></div>
+          ${BTS.map(([bt, btLabel]) => `<div class="hh" role="columnheader" title="${btLabel}">${heatLabel(bt, btLabel)}</div>`).join('')}
+          ${DTS.map(([dt, dtLabel]) => `
+            <div class="rh" role="rowheader" title="${dtLabel}">${heatLabel(dt, dtLabel)}</div>
+            ${BTS.map(([bt]) => {
+              const s = find(dt, bt, yb);
+              if (!s) return '<div></div>';
+              const v = s.scores[scen];
+              return `<div class="heat-cell tnum" role="cell" tabindex="0"
+                  style="background:${heatColor(v, maxAbs)};"
+                  data-tip="${encodeURIComponent(JSON.stringify({ l: segLabel(s), v, d: s.dirs[scen] }))}"
+                  aria-label="${segLabel(s)}: ${fmt(v * 100, 1)} pont, ${s.dirs[scen]}">${fmt(v * 100, 0)}</div>`;
+            }).join('')}`).join('')}
+        </div>
+      </div>`).join('');
+    const m = Math.round(maxAbs * 100);
+    document.getElementById('heat-legend').innerHTML = `
+      <span class="tnum">−${m} pont</span>
+      <span class="ramp" style="background:linear-gradient(90deg, color-mix(in srgb, var(--neg) ${MAX_MIX}%, var(--surface-2)), var(--surface-2), color-mix(in srgb, var(--pos) ${MAX_MIX}%, var(--surface-2)));"></span>
+      <span class="tnum">+${m} pont</span>
+      <span>· a színskála a jelenlegi forgatókönyv legnagyobb abszolút értékéhez igazodik</span>`;
+  }
+
+  // tooltip a hőtérkép celláihoz (egér + billentyűzet-fókusz)
+  const tip = document.getElementById('viz-tip');
+  function showTip(cell, x, y) {
+    const d = JSON.parse(decodeURIComponent(cell.dataset.tip));
+    tip.innerHTML = `<div><b>${d.l}</b></div>
+      <div class="tnum">${fmt(d.v * 100, 1)} pont · ${d.d}</div>
+      <div class="t-muted">${SCEN_LABELS[scen]} forgatókönyv</div>`;
+    tip.style.display = 'block';
+    const w = tip.offsetWidth, h = tip.offsetHeight;
+    tip.style.left = Math.min(window.innerWidth - w - 8, Math.max(8, x + 14)) + 'px';
+    tip.style.top = (y + h + 20 > window.innerHeight ? y - h - 12 : y + 16) + 'px';
+  }
+  const heatEl = document.getElementById('heatmap');
+  heatEl.addEventListener('mousemove', e => { const c = e.target.closest('.heat-cell'); c ? showTip(c, e.clientX, e.clientY) : (tip.style.display = 'none'); });
+  heatEl.addEventListener('mouseleave', () => { tip.style.display = 'none'; });
+  heatEl.addEventListener('focusin', e => { const c = e.target.closest('.heat-cell'); if (c) { const r = c.getBoundingClientRect(); showTip(c, r.left, r.bottom); } });
+  heatEl.addEventListener('focusout', () => { tip.style.display = 'none'; });
+
+  // ---------- szegmens-szekció (sávok + hőtérkép + nyertesek/vesztesek) ----------
+  function renderSegments() {
+    document.getElementById('segments-title').textContent = `2. Szegmens-pontszámok (${SCEN_LABELS[scen]} forgatókönyv)`;
+    const byScore = (a, b) => b.score - a.score;
+    document.getElementById('bar-groups').innerHTML =
+      barGroup('Hajtástípus szerint', data.drivetrain_summary.map(aggRow).sort(byScore)) +
+      barGroup('Márkakategória szerint', data.brand_summary.map(aggRow).sort(byScore)) +
+      barGroup('Évjárat-sáv szerint', data.year_summary.map(aggRow).sort(byScore));
+    renderHeatmap();
+
+    const rows = data.segments
+      .filter(s => !dtFilter || s.drivetrain === dtFilter)
+      .map(s => ({ label: segLabel(s), score: s.scores[scen] }))
+      .sort(byScore);
+    const n = Math.min(5, Math.floor(rows.length / 2));
+    document.getElementById('wl-grid').innerHTML =
+      wlList('Legerősebb nyertes szegmensek', rows.slice(0, n), 'winners') +
+      wlList('Leggyengébb szegmensek', rows.slice(-n).reverse(), 'losers');
+  }
 
   // ---------- composition bar (fuel shares) ----------
   const fs = data.real.jarmuallomany.fuel_shares;
@@ -735,20 +890,70 @@ __DASHBOARD_DATA__
 
   // ---------- segment filter (drivetrain) ----------
   document.getElementById('segment-filters').innerHTML = `
-    <label style="font-size:12.5px; color:var(--text-secondary); display:inline-flex; align-items:center; gap:8px;">
-      Szűrés hajtástípusra a nyertes/vesztes listákban:
-      <select id="drivetrain-filter" style="font-family:inherit; font-size:12.5px; padding:4px 8px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--text-primary);">
+    <div class="seg-control" role="group" aria-label="Forgatókönyv">
+      ${Object.keys(SCEN_LABELS).map(s => `<button type="button" data-scen="${s}" aria-pressed="${s === scen}">${SCEN_LABELS[s][0].toUpperCase() + SCEN_LABELS[s].slice(1)}</button>`).join('')}
+    </div>
+    <label class="filter-label">
+      Nyertes/vesztes listák hajtástípusra szűrve:
+      <select id="drivetrain-filter">
         <option value="">Összes</option>
-        ${data.drivetrain_summary.map(d => `<option value="${d.label}">${d.label}</option>`).join('')}
+        ${DTS.map(([k, l]) => `<option value="${k}">${l}</option>`).join('')}
       </select>
     </label>`;
+  document.querySelectorAll('.seg-control button').forEach(btn => btn.addEventListener('click', () => {
+    scen = btn.dataset.scen;
+    document.querySelectorAll('.seg-control button').forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
+    renderSegments();
+  }));
   document.getElementById('drivetrain-filter').addEventListener('change', (e) => {
-    const sel = e.target.value;
-    const filterFn = rows => sel ? rows.filter(r => r.label.startsWith(sel + ' /')) : rows;
-    document.getElementById('wl-grid').innerHTML =
-      wlList('Legerősebb nyertes szegmensek', filterFn(data.top_winners), 'winners') +
-      wlList('Leggyengébb szegmensek', filterFn(data.top_losers), 'losers');
+    dtFilter = e.target.value;
+    renderSegments();
   });
+  renderSegments();
+
+  // ---------- "mi változott az előző futás óta" ----------
+  function renderChanges() {
+    const ch = data.changes;
+    const note = document.getElementById('changes-note');
+    const body = document.getElementById('changes-body');
+    if (!ch) {
+      note.textContent = '';
+      body.innerHTML = `<div class="collecting-note">Ez az első napi futás az archívumban — a következő futástól itt jelenik meg, mi változott az előzőhöz képest.</div>`;
+      return;
+    }
+    const nDir = ch.items.filter(i => i.dir_changed).length;
+    note.textContent = `Az előző napi futáshoz (${ch.since}) képest: ${ch.items.length} változás` + (nDir ? `, ebből ${nDir} irányváltás.` : '.');
+    if (!ch.items.length) {
+      body.innerHTML = `<div class="collecting-note">Nincs érdemi változás az előző napi futás (${ch.since}) óta.</div>`;
+      return;
+    }
+    const num = v => (typeof v === 'number' && Math.abs(v) >= 1000) ? fmtInt(v) : String(v);
+    const row = i => {
+      const d = i.to - i.from;
+      const dStr = Math.abs(d) >= 1000 ? (d > 0 ? '+' : '−') + fmtInt(Math.abs(d)) : fmt(d, Math.abs(d) < 1 && d !== 0 ? 2 : 1);
+      return `<div class="change-row">
+        <span class="change-group">${i.group}</span>
+        <span class="change-label">${i.label}</span>
+        <span class="change-vals tnum">${num(i.from)} → <b>${num(i.to)}</b> ${i.unit} <span class="t-muted">(${dStr})</span></span>
+        ${i.dir_changed ? `<div class="change-dirs"><span class="dirpill ${dirClass(i.from_dir)}">${i.from_dir}</span> → <span class="dirpill ${dirClass(i.to_dir)}">${i.to_dir}</span></div>` : ''}
+      </div>`;
+    };
+    const LIMIT = 6;
+    const extra = ch.items.length - LIMIT;
+    body.innerHTML = `<div class="changes-card">
+      ${ch.items.slice(0, LIMIT).map(row).join('')}
+      ${extra > 0 ? `<div id="changes-extra" hidden>${ch.items.slice(LIMIT).map(row).join('')}</div>
+        <button type="button" class="change-more" id="changes-more" aria-expanded="false">+ további ${extra} változás</button>` : ''}
+    </div>`;
+    const more = document.getElementById('changes-more');
+    if (more) more.addEventListener('click', () => {
+      const ex = document.getElementById('changes-extra');
+      ex.hidden = !ex.hidden;
+      more.setAttribute('aria-expanded', String(!ex.hidden));
+      more.textContent = ex.hidden ? `+ további ${extra} változás` : 'Kevesebb';
+    });
+  }
+  renderChanges();
 
   // ---------- forecast-aware sparkline (history line + dashed projection + band) ----------
   function forecastSpark(history, forecast, lower, upper, color) {
@@ -785,11 +990,11 @@ __DASHBOARD_DATA__
 
   // ---------- history tab: run-over-run model outputs ----------
   function renderRunHistory() {
-    const rh = data.run_history || [];
+    // naponta egy bejegyzés (a build deduplikál), a végére a mostani futás
+    const rh = (data.run_history || []).concat([{ date: data.generated, drivetrain_summary: data.drivetrain_summary }]);
     const el = document.getElementById('run-history-body');
     if (rh.length < 3) {
-      const dates = rh.length ? rh.map(x => x.date).join(', ') : 'nincs még korábbi futás';
-      el.innerHTML = `<div class="collecting-note">Eddig ${rh.length} korábbi futás van archiválva (${dates}) — a mai frissítés mostantól szintén bekerül az archívumba. A modell saját kimeneteinek (tényező-értékek, szegmens-pontszámok) trendje legalább 3 futás után válik értelmezhetővé; a nyers KSH/MNB/Eurostat idősorok teljes múltja alább, a "Valós adatforrások" blokkban már most is elérhető.</div>`;
+      el.innerHTML = `<div class="collecting-note">Eddig ${rh.length} napi futás van archiválva (${rh.map(x => x.date).join(', ')}; egy napon belüli újrafuttatásból csak a nap utolsó futása számít). A modell saját kimeneteinek (tényező-értékek, szegmens-pontszámok) trendje legalább 3 különböző napi futás után válik értelmezhetővé; a nyers KSH/MNB/Eurostat idősorok teljes múltja alább, a "Valós adatforrások" blokkban már most is elérhető.</div>`;
       return;
     }
     const cards = data.drivetrain_summary.map(d => {

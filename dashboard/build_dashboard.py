@@ -69,6 +69,7 @@ def build_engine_summary() -> dict:
                 "score": round(avg["alap"], 4), "dir": classify(avg["alap"]),
                 "pesszimista": round(avg["pesszimista"], 4),
                 "optimista": round(avg["optimista"], 4),
+                "dirs": {s: classify(avg[s]) for s in SCENARIOS},
             })
         out.sort(key=lambda x: -x["score"])
         return out
@@ -95,6 +96,17 @@ def build_engine_summary() -> dict:
             "dir": classify(r.scores["alap"]),
         }
 
+    # Mind a 48 szegmens mindhárom forgatókönyvre - a dashboard forgatókönyv-
+    # váltója és hőtérképe ebből számol kliensoldalon (a top_winners/
+    # top_losers az alap forgatókönyvre marad a digest számára).
+    segments = [{
+        "drivetrain": r.drivetrain, "drivetrain_label": r.drivetrain_label,
+        "brand_tier": r.brand_tier, "brand_tier_label": r.brand_tier_label,
+        "year_bucket": r.year_bucket, "year_bucket_label": r.year_bucket_label,
+        "scores": {s: round(r.scores[s], 4) for s in SCENARIOS},
+        "dirs": {s: classify(r.scores[s]) for s in SCENARIOS},
+    } for r in results]
+
     top_winners = [segment_row(r) for r in results_sorted[:5]]
     top_losers = [segment_row(r) for r in results_sorted[-5:][::-1]]
 
@@ -118,6 +130,7 @@ def build_engine_summary() -> dict:
         "year_summary": year_summary,
         "top_winners": top_winners,
         "top_losers": top_losers,
+        "segments": segments,
     }
 
 
@@ -252,11 +265,89 @@ def build_top_modellek() -> dict | None:
 
 
 def load_history(limit: int = HISTORY_LIMIT) -> list[dict]:
+    """A korábbi futások pillanatképei, NAPONTA EGY bejegyzéssel (az adott
+    nap utolsó futása). A snapshots.jsonl nyers archívum minden futást
+    megtart; a deduplikálás csak a megjelenítéshez kell, hogy egy napon
+    belüli kézi újrafuttatások ne torzítsák a trendgörbét."""
     if not HISTORY_PATH.exists():
         return []
     lines = HISTORY_PATH.read_text(encoding="utf-8").splitlines()
-    snapshots = [json.loads(line) for line in lines if line.strip()]
-    return snapshots[-limit:]
+    by_date: dict[str, dict] = {}
+    for line in lines:
+        if line.strip():
+            snap = json.loads(line)
+            by_date[snap["date"]] = snap  # későbbi futás felülírja a korábbit
+    return list(by_date.values())[-limit:]
+
+
+REAL_HEADLINE_LABELS = {
+    "benzin": ("Benzin ára", "Ft/l"),
+    "dizel": ("Dízel ára", "Ft/l"),
+    "alapkamat": ("Jegybanki alapkamat", "%"),
+    "eurhuf": ("Euró/forint árfolyam", "Ft"),
+    "forgalomba_total": ("Új forgalomba helyezések (negyedév)", "db"),
+    "sentiment_mp": ("Vásárlási szándék", "pont"),
+    "wage_yoy": ("Reálkereset változása", "%"),
+}
+
+
+def build_changes(prev: dict | None, combined: dict) -> dict | None:
+    """Összevetés az előző NAPI futással: a szegmens-irányok (hajtástípus,
+    márkakategória), az alap forgatókönyv tényező-értékei és a valós
+    fő mutatók változásai. None, ha nincs korábbi napi futás."""
+    if prev is None:
+        return None
+    items = []
+
+    for group, key in (("Hajtástípus", "drivetrain_summary"), ("Márkakategória", "brand_summary")):
+        prev_scores = {r["key"]: r["score"] for r in prev.get(key, [])}
+        for r in combined[key]:
+            if r["key"] not in prev_scores:
+                continue
+            old, new = prev_scores[r["key"]], r["score"]
+            old_dir, new_dir = classify(old), r["dir"]
+            if old_dir != new_dir or abs(new - old) >= 0.01:
+                items.append({
+                    "group": group, "label": r["label"], "unit": "pont",
+                    "from": round(old * 100, 1), "to": round(new * 100, 1),
+                    "from_dir": old_dir, "to_dir": new_dir,
+                    "dir_changed": old_dir != new_dir,
+                })
+
+    prev_factors = prev.get("factors", {})
+    for f in combined["factors"]:
+        old = prev_factors.get(f["key"])
+        if old is not None and abs(f["alap"] - old) >= 0.1:
+            items.append({
+                "group": "Tényező (alap)", "label": f["label"], "unit": f["unit"],
+                "from": old, "to": f["alap"], "dir_changed": False,
+            })
+
+    prev_real = prev.get("real_headline", {})
+    cur_real = build_real_headline(combined["real"])
+    for key, (label, unit) in REAL_HEADLINE_LABELS.items():
+        old, new = prev_real.get(key), cur_real.get(key)
+        if old is not None and new is not None and old != new:
+            items.append({
+                "group": "Valós adat", "label": label, "unit": unit,
+                "from": old, "to": new, "dir_changed": False,
+            })
+
+    # Irányváltások elöl, utána csoportonként az eredeti sorrend
+    items.sort(key=lambda it: not it["dir_changed"])
+    return {"since": prev["date"], "items": items}
+
+
+def build_real_headline(real: dict) -> dict:
+    return {
+        "benzin": real["uzemanyagar"]["benzin_last"],
+        "dizel": real["uzemanyagar"]["dizel_last"],
+        "alapkamat": real["makro"]["alapkamat_last"],
+        "eurhuf": real["makro"]["eurhuf_last"],
+        "forgalomba_total": real["forgalomba"]["total_last"],
+        "sentiment_mp": real["szentiment"]["mp_last"],
+        "wage_yoy": real["realjovedelem"]["wage_series"][-1],
+    }
 
 
 def append_history_snapshot(combined: dict) -> None:
@@ -267,15 +358,7 @@ def append_history_snapshot(combined: dict) -> None:
         "factors": factor_alap,
         "drivetrain_summary": [{"key": r["key"], "score": r["score"]} for r in combined["drivetrain_summary"]],
         "brand_summary": [{"key": r["key"], "score": r["score"]} for r in combined["brand_summary"]],
-        "real_headline": {
-            "benzin": real["uzemanyagar"]["benzin_last"],
-            "dizel": real["uzemanyagar"]["dizel_last"],
-            "alapkamat": real["makro"]["alapkamat_last"],
-            "eurhuf": real["makro"]["eurhuf_last"],
-            "forgalomba_total": real["forgalomba"]["total_last"],
-            "sentiment_mp": real["szentiment"]["mp_last"],
-            "wage_yoy": real["realjovedelem"]["wage_series"][-1],
-        },
+        "real_headline": build_real_headline(real),
     }
     HISTORY_PATH.parent.mkdir(parents=True, exist_ok=True)
     with HISTORY_PATH.open("a", encoding="utf-8") as fh:
@@ -285,10 +368,13 @@ def append_history_snapshot(combined: dict) -> None:
 def main():
     # A run_history-t a JELENLEGI snapshot hozzáfűzése ELŐTT töltjük be, hogy a
     # mai futás ne szerepeljen duplán a "korábbi futások" listájában.
-    run_history = load_history()
+    today = dt.date.today().isoformat()
+    # A mai napi korábbi futás(ok) nem "korábbi futás": a mai állapotot a
+    # jelenlegi build adja, a változás-blokk az előző NAPHOZ viszonyít.
+    run_history = [s for s in load_history() if s["date"] != today]
 
     combined = {
-        "generated": dt.date.today().isoformat(),
+        "generated": today,
         "coverage": {
             "n_factors": None,  # kitöltve lent
             "n_calibrated": len(CALIBRATED_FACTORS),
@@ -303,6 +389,7 @@ def main():
         "top_modellek": build_top_modellek(),
     }
     combined["coverage"]["n_factors"] = len(combined["factors"])
+    combined["changes"] = build_changes(run_history[-1] if run_history else None, combined)
 
     DATA_OUT_PATH.write_text(json.dumps(combined, ensure_ascii=False, indent=2), encoding="utf-8")
     append_history_snapshot(combined)
