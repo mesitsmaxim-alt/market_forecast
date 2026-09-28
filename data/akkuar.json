@@ -1,0 +1,16 @@
+{
+  "source": "BloombergNEF — Lithium-Ion Battery Price Survey (éves, decemberi sajtóközlemény)",
+  "source_url": "https://about.bnef.com/insights/clean-transport/lithium-ion-battery-pack-prices-fall-to-108-per-kilowatt-hour-despite-rising-metal-prices-bloombergnef/",
+  "updated": "2025-12-09",
+  "note": "Kézi adatbevitel — a BNEF nem publikál gépileg lekérdezhető idősort, csak éves sajtóközleményt. A BNEF minden évben reálértéken újraszámolja a korábbi évek árait, ezért a YoY változást a közleményben megadott százalékból vesszük (yoy_pct_reported), nem a két egymás utáni felmérés nominális számából. Frissítés: minden decemberben, az új BNEF-közlemény megjelenésekor írd át a latest_* mezőket és az updated dátumot.",
+  "unit": "USD/kWh (csomagár, összes szegmens átlaga, adott évi reálértéken)",
+  "survey_year": 2025,
+  "latest_pack_price_usd_kwh": 108,
+  "latest_bev_pack_price_usd_kwh": 99,
+  "yoy_pct_reported": -8.0,
+  "history_as_reported": {
+    "2023": 139,
+    "2024": 115,
+    "2025": 108
+  }
+}

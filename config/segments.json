@@ -1,0 +1,60 @@
+{
+  "_comment": "Szegmensdefiníciók és érzékenységi együtthatók (-1..+1). Illusztratív becslések, finomíthatók valós regisztrációs/eladási adatokkal.",
+  "drivetrains": {
+    "ICE": {
+      "label": "Belső égésű (benzin/dízel)",
+      "sensitivity": { "oil_price": -0.9, "battery_cost": 0.0, "charging_infra": -0.1, "ev_tariffs": 0.3, "co2_regulation": -0.6, "financing_cost": -0.1, "consumer_sentiment": 0.1, "purchasing_power": 0.0 }
+    },
+    "HEV": {
+      "label": "Hibrid (nem tölthető)",
+      "sensitivity": { "oil_price": 0.5, "battery_cost": 0.1, "charging_infra": -0.05, "ev_tariffs": 0.1, "co2_regulation": 0.1, "financing_cost": -0.2, "consumer_sentiment": 0.2, "purchasing_power": 0.1 }
+    },
+    "PHEV": {
+      "label": "Plug-in hibrid",
+      "sensitivity": { "oil_price": 0.3, "battery_cost": 0.4, "charging_infra": 0.3, "ev_tariffs": -0.1, "co2_regulation": 0.3, "financing_cost": -0.4, "consumer_sentiment": 0.4, "purchasing_power": 0.2 }
+    },
+    "BEV": {
+      "label": "Tisztán elektromos",
+      "sensitivity": { "oil_price": 0.8, "battery_cost": 0.9, "charging_infra": 0.9, "ev_tariffs": -0.5, "co2_regulation": 0.7, "financing_cost": -0.5, "consumer_sentiment": 0.5, "purchasing_power": 0.3 }
+    }
+  },
+  "brand_tiers": {
+    "tomeggyarto": {
+      "label": "Tömeggyártó (pl. Volkswagen, Toyota, Hyundai, Ford)",
+      "example_brands": ["Volkswagen", "Toyota", "Hyundai", "Ford", "Skoda", "Opel"],
+      "sensitivity": { "oil_price": 0.0, "battery_cost": 0.1, "charging_infra": 0.1, "ev_tariffs": -0.1, "co2_regulation": -0.1, "financing_cost": -0.3, "consumer_sentiment": 0.2, "purchasing_power": 0.2 }
+    },
+    "premium": {
+      "label": "Prémium (pl. BMW, Mercedes, Audi)",
+      "example_brands": ["BMW", "Mercedes-Benz", "Audi", "Volvo"],
+      "sensitivity": { "oil_price": 0.0, "battery_cost": 0.0, "charging_infra": 0.15, "ev_tariffs": 0.05, "co2_regulation": -0.15, "financing_cost": -0.1, "consumer_sentiment": 0.4, "purchasing_power": 0.4 }
+    },
+    "budget": {
+      "label": "Belépő szintű / budget (pl. Dacia)",
+      "example_brands": ["Dacia", "Suzuki", "Fiat"],
+      "sensitivity": { "oil_price": -0.2, "battery_cost": -0.1, "charging_infra": -0.1, "ev_tariffs": 0.15, "co2_regulation": -0.25, "financing_cost": -0.4, "consumer_sentiment": 0.1, "purchasing_power": -0.1 }
+    },
+    "kinai_belepo": {
+      "label": "Kínai eredetű, EV-fókuszú belépő (pl. BYD, MG)",
+      "example_brands": ["BYD", "MG", "Nio"],
+      "sensitivity": { "oil_price": 0.1, "battery_cost": 0.2, "charging_infra": 0.2, "ev_tariffs": -0.9, "co2_regulation": 0.2, "financing_cost": -0.3, "consumer_sentiment": 0.2, "purchasing_power": 0.1 }
+    }
+  },
+  "year_buckets": {
+    "uj": {
+      "label": "Új (0-2 év)",
+      "weight": 1.0,
+      "extra_sensitivity": { "financing_cost": -0.2, "consumer_sentiment": 0.3, "purchasing_power": 0.3 }
+    },
+    "fiatal_hasznalt": {
+      "label": "Fiatal használt (3-5 év)",
+      "weight": 0.6,
+      "extra_sensitivity": { "financing_cost": -0.1, "consumer_sentiment": 0.15, "purchasing_power": 0.1 }
+    },
+    "idosebb_hasznalt": {
+      "label": "Idősebb használt (6+ év)",
+      "weight": 0.35,
+      "extra_sensitivity": { "oil_price": -0.2, "financing_cost": 0.0, "consumer_sentiment": 0.0, "purchasing_power": -0.2 }
+    }
+  }
+}

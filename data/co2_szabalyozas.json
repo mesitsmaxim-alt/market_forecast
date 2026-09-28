@@ -1,0 +1,15 @@
+{
+  "source": "EU 2019/631 rendelet (személyautók/kisteherautók CO2-kibocsátási normái) és módosításai; Európai Bizottság 2025-12-16-i módosító javaslata",
+  "source_url": "https://climate.ec.europa.eu/areas-action/transport-decarbonisation/road-transport/cars-and-vans_en",
+  "updated": "2026-09-28",
+  "note": "Kézi adatbevitel — jogszabályi idővonal, eseményszerűen változik. Frissítés: ha a 2025-12-16-i javaslatot (2035: -90%) a Parlament és a Tanács elfogadja, állítsd át a status mezőjét 'hatályos'-ra és frissítsd az érintett mérföldkövet. A célértékek személyautókra, EU-flottaátlag, WLTP g CO2/km.",
+  "unit": "g CO2/km (WLTP, EU flottaátlag, személyautó)",
+  "milestones": [
+    { "from": "2025-01-01", "target_g_km": 93.6, "status": "hatályos", "label": "2025–2027 cél (3 éves átlagolással teljesíthető, 2025-ös módosítás)" },
+    { "from": "2030-01-01", "target_g_km": 49.5, "status": "hatályos", "label": "2030: -55% a 2021-es bázishoz képest" },
+    { "from": "2035-01-01", "target_g_km": 0.0, "status": "hatályos", "label": "2035: -100% (új belső égésű autó gyakorlatilag kizárva)" }
+  ],
+  "proposals": [
+    { "date": "2025-12-16", "status": "javaslat", "label": "Bizottsági javaslat: 2035-re -90% a -100% helyett (a maradék 10% alacsony karbontartalmú acéllal / e-üzemanyaggal kompenzálható)", "affects_from": "2035-01-01", "proposed_target_g_km": 9.4 }
+  ]
+}

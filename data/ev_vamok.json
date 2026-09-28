@@ -1,0 +1,33 @@
+{
+  "source": "Európai Bizottság, DG TRADE — kínai BEV-ekre kivetett kiegyenlítő vámok és árkötelezettség-vállalások",
+  "source_url": "https://policy.trade.ec.europa.eu/news/commission-accepts-price-undertaking-chinese-electric-car-producer-2026-02-10_en",
+  "updated": "2026-09-28",
+  "note": "Kézi adatbevitel — a vámok eseményszerűen változnak (rendelet, árkötelezettség-vállalás elfogadása). Frissítés: új DG TRADE döntésnél vegyél fel egy új 'events' bejegyzést. Az impact_pp az EU-ba irányuló kínai BEV-import egészére vetített EFFEKTÍV átlagvám becsült változása százalékpontban — ez durva becslés (az érintett modell importrészesedése alapján), az impact_basis mező indokolja.",
+  "base_mfn_duty_pct": 10.0,
+  "countervailing_duties_pct": {
+    "BYD": 17.0,
+    "Geely": 18.8,
+    "SAIC": 35.3,
+    "egyéb együttműködő": 20.7,
+    "egyéb nem együttműködő": 35.3,
+    "Tesla (Shanghai)": 7.8
+  },
+  "in_force_since": "2024-10-30",
+  "expires": "2029-10-30",
+  "events": [
+    {
+      "date": "2026-01-12",
+      "title": "A Bizottság útmutatót ad ki a minimális importár-kötelezettségvállalások (price undertaking) benyújtásához",
+      "status": "hatályos",
+      "impact_pp": 0.0,
+      "impact_basis": "Önmagában nem változtat vámot, csak megnyitja az utat az egyedi mentességekhez."
+    },
+    {
+      "date": "2026-02-10",
+      "title": "Első elfogadott árkötelezettség-vállalás: VW Anhui (CUPRA Tavascan) mentesül a 20,7%-os kiegyenlítő vám alól",
+      "status": "hatályos",
+      "impact_pp": -1.0,
+      "impact_basis": "Egyetlen modell, a kínai BEV-import kis hányada — a 20,7 pp-es mentesség az összimportra vetítve ~1 pp effektív csökkenés."
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "source": "jarmuipar.hu (Datahouse adatai alapján)",
+  "source_url": "https://www.jarmuipar.hu/2026/09/top-100-igy-hazai-autopiac/",
+  "period_label": "2026. január–augusztus (halmozott, I–VIII. hónap)",
+  "updated": "2026-09-18",
+  "note": "Kézi adatbevitel — a forrás nem publikál gépileg feldolgozható táblázatot, csak folyó szöveget és egy címkézetlen számozott listát. Frissítés: amikor új jarmuipar.hu Top X cikk jelenik meg, kérd meg Claude-ot, hogy olvassa ki és frissítse ezt a fájlt.",
+  "rows": [
+    { "rank": 1, "model": "Nissan Qashqai", "units": 5453 },
+    { "rank": 2, "model": "Skoda Octavia", "units": 4355 },
+    { "rank": 3, "model": "Suzuki S-Cross", "units": 4036 },
+    { "rank": 4, "model": "Suzuki Vitara", "units": 3261 },
+    { "rank": 5, "model": "Hyundai Tucson", "units": 2285 },
+    { "rank": 6, "model": "Toyota Corolla", "units": 2228 },
+    { "rank": 7, "model": "Toyota Yaris Cross", "units": 2104 },
+    { "rank": 8, "model": "Ford Ranger", "units": 1879 },
+    { "rank": 9, "model": "Kia Sportage", "units": 1819 },
+    { "rank": 10, "model": "Dacia Duster", "units": 1541 },
+    { "rank": 11, "model": "Toyota C-HR", "units": 1439 },
+    { "rank": 12, "model": "Ford Kuga", "units": 1415 },
+    { "rank": 13, "model": "Skoda Kodiaq", "units": 1338 },
+    { "rank": 14, "model": "Volkswagen T-Roc", "units": 1260 },
+    { "rank": 15, "model": "Ford Tourneo Custom", "units": 1242 },
+    { "rank": 16, "model": "Ford Transit Custom (teherautó)", "units": 1201 },
+    { "rank": 17, "model": "Skoda Superb", "units": 1183 },
+    { "rank": 18, "model": "Volkswagen Golf", "units": 1132 },
+    { "rank": 19, "model": "Renault Master", "units": 1070 },
+    { "rank": 20, "model": "Toyota Corolla Cross", "units": 979 }
+  ]
+}

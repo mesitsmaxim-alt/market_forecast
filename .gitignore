@@ -1,0 +1,13 @@
+# Futási naplók
+logs/
+
+# Python
+__pycache__/
+*.pyc
+
+# Minden pipeline-futáskor újra letöltött nyers forrásfájlok
+# (a data/raw_eafo/ kézi export, az SZÁNDÉKOSAN verziókezelt)
+data/_raw_*
+
+# macOS
+.DS_Store
