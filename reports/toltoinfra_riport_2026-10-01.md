@@ -1,13 +1,13 @@
 # Töltőinfrastruktúra-trend riport — 2026-10-01
 
 Forrás: EAFO, kézzel exportálva (https://alternative-fuels-observatory.ec.europa.eu/transport-mode/road/hungary/infrastructure).
-Utolsó adat-negyedév: 2026 Q3.
+Utolsó adat-negyedév: 2026 Q2.
 
 ## Összes nyilvános töltőpont (AC + DC)
 
-- Jelenlegi (2026 Q3): **5001 db** (AC: 3397, DC: 1604)
-- Éves (YoY) változás: **-2.6%**
-  - AC: -11.2% | DC: +22.4%
+- Jelenlegi (2026 Q2): **5481 db** (AC: 3806, DC: 1675)
+- Éves (YoY) változás: **+5.7%**
+  - AC: -3.3% | DC: +33.8%
 
 > A DC (gyorstöltő) állomány jellemzően gyorsabban nő, mint az AC — ez összhangban van azzal, hogy a hálózatbővítés a BEV-használat gyakorlati akadályait (hosszú töltési idő) próbálja csökkenteni.
 
@@ -15,6 +15,7 @@ Utolsó adat-negyedév: 2026 Q3.
 
 | Negyedév | AC | DC | Összesen |
 |---|---|---|---|
+| 2024 Q3 | 3135 | 857 | 3992 |
 | 2024 Q4 | 3170 | 1005 | 4175 |
 | 2025 Q1 | 3726 | 1135 | 4861 |
 | 2025 Q2 | 3935 | 1252 | 5187 |
@@ -22,7 +23,6 @@ Utolsó adat-negyedév: 2026 Q3.
 | 2025 Q4 | 3580 | 1503 | 5083 |
 | 2026 Q1 | 3813 | 1627 | 5440 |
 | 2026 Q2 | 3806 | 1675 | 5481 |
-| 2026 Q3 | 3397 | 1604 | 5001 |
 
 ## DC töltők teljesítmény-kategória szerint (év végi állapot)
 
@@ -34,6 +34,5 @@ Utolsó adat-negyedév: 2026 Q3.
 | 2023 | 204 | 196 | 151 | 24 |
 | 2024 | 233 | 321 | 419 | 32 |
 | 2025 | 299 | 468 | 663 | 73 |
-| 2026 | 324 | 496 | 691 | 93 |
 
 > Jól látszik az ultragyors (150kW+) DC-töltők arányának gyors növekedése az elmúlt években, ami a hosszabb távú BEV-használatot (pl. autópályás töltést) könnyíti meg.

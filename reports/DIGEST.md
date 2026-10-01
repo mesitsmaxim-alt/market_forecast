@@ -1,14 +1,14 @@
 # Piaci előrejelző — heti/havi digest (2026-10-01)
 
-**Lefedettség:** 8/8 tényező kalibrálva valós adattal (ebből 3 kézi forrásból), 6 automatizált forrás. (havonta, minden hónap 1-jén 10:00 (launchd) - adat-előkészítés automata, publikálás kézi kérésre)
+**Lefedettség:** 8/8 tényező kalibrálva valós adattal (ebből 3 kézi forrásból), 9 automatizált forrás. (havonta, minden hónap 1-jén 10:00 (launchd) - adat-előkészítés automata, publikálás kézi kérésre)
 
 ## Legfontosabb pontok
 
-- A legerősebb hajtóerővel bíró hajtástípus: **Tisztán elektromos** (Erős növekedés, pontszám +24.1 pont).
-- Legerősebb nyertes szegmens: **Tisztán elektromos / Kínai eredetű, EV-fókuszú belépő (pl. BYD, MG) / Új (0-2 év)** (Erős növekedés, +41.8 pont).
+- A legerősebb hajtóerővel bíró hajtástípus: **Tisztán elektromos** (Erős növekedés, pontszám +33.1 pont).
+- Legerősebb nyertes szegmens: **Tisztán elektromos / Kínai eredetű, EV-fókuszú belépő (pl. BYD, MG) / Új (0-2 év)** (Erős növekedés, +57.1 pont).
 - Üzemanyagár (HU): benzin 636 Ft/l, dízel 709 Ft/l (2026. október 1. állapot).
 - Jegybanki alapkamat: 5.5% (2026-08-26 óta hatályos).
-- Nyilvános töltőpontok (AC+DC): 5,001 db (2026 Q3).
+- Nyilvános töltőpontok (AC+DC): 5,481 db (2026 Q2).
 - Forgalomba helyezés: 78,118 db (2026. II. negyedév, YoY +21.5%).
 - Fogyasztói vásárlási szándék: -16.0 pont (2026-09).
 
