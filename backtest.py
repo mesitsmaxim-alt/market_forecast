@@ -225,6 +225,24 @@ def main():
     out_path = REPORTS_DIR / "backtest_riport.md"
     out_path.write_text(content, encoding="utf-8")
 
+    # Gépileg olvasható összefoglaló a dashboard módszertani blokkjához
+    # (a markdown riport mellett; a run_pipeline.sh a dashboard ELŐTT futtatja).
+    summary = {
+        "generated": datetime.date.today().isoformat(),
+        "tested_factors": list(TESTED_FACTORS),
+        "comparisons": [{
+            "label": res["label"],
+            "correlation": round(res["correlation"], 3) if res["correlation"] is not None else None,
+            "hit_rate": round(res["hit_rate"], 3) if res["hit_rate"] is not None else None,
+            "n": len(res["rows"]),
+            "first_year": res["rows"][0]["year"] if res["rows"] else None,
+            "last_year": res["rows"][-1]["year"] if res["rows"] else None,
+        } for res in results],
+    }
+    (DATA_DIR / "backtest.json").write_text(
+        json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+
     for res in results:
         corr = f"{res['correlation']:+.2f}" if res["correlation"] is not None else "n/a"
         hit = f"{res['hit_rate']*100:.0f}%" if res["hit_rate"] is not None else "n/a"

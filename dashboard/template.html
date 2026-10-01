@@ -274,6 +274,31 @@
   .filter-label{ font-size:12.5px; color:var(--text-secondary); display:inline-flex; align-items:center; gap:8px; }
   .filter-label select{ font-family:inherit; font-size:12.5px; padding:5px 8px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--text-primary); }
 
+  /* ---------- "Hogyan számol a modell?" ---------- */
+  .method{ background:var(--surface); border:1px solid var(--border); border-radius:14px; box-shadow:var(--shadow); margin-bottom:16px; }
+  .method > summary{
+    cursor:pointer; list-style:none; padding:13px 18px; font-size:13.5px; font-weight:700; color:var(--text-primary);
+    display:flex; align-items:center; gap:10px;
+  }
+  .method > summary::-webkit-details-marker{ display:none; }
+  .method > summary::before{ content:"▸"; color:var(--accent); font-size:12px; transition:transform .15s; }
+  .method[open] > summary::before{ transform:rotate(90deg); }
+  .method > summary .m-sub{ font-weight:500; color:var(--text-muted); font-size:12.5px; }
+  .method > summary:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; border-radius:14px; }
+  .method-body{ padding:4px 18px 18px; font-size:13px; line-height:1.55; color:var(--text-secondary); }
+  .method-body h4{ font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted); margin:16px 0 6px; }
+  .method-body p{ margin:0 0 8px; max-width:85ch; }
+  .method-body b{ color:var(--text-primary); }
+  .method-body ul{ margin:0 0 8px; padding-left:18px; max-width:85ch; }
+  .method-body li{ margin-bottom:4px; }
+  .m-table{ width:100%; border-collapse:collapse; font-size:12.5px; }
+  .m-table td{ padding:7px 8px 7px 0; border-bottom:1px solid var(--border); vertical-align:top; }
+  .m-table tr:last-child td{ border-bottom:none; }
+  .m-table td.f{ color:var(--text-primary); font-weight:600; }
+  .m-table td.v{ font-family:"JetBrains Mono",monospace; white-space:nowrap; text-align:right; }
+  .badge.scope-hu{ background:color-mix(in srgb, var(--accent) 12%, transparent); color:var(--accent); }
+  .badge.scope-eu{ background:var(--surface-2); color:var(--text-secondary); border:1px solid var(--border); }
+
   /* ---------- heatmap (48 szegmens) ---------- */
   .heat-card{ background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:18px 20px; box-shadow:var(--shadow); margin-top:16px; }
   .heat-card > h3{ font-size:13px; font-weight:700; margin:0 0 4px; }
@@ -379,6 +404,13 @@
     .heat-card{ padding:16px 12px; }
     .heat{ grid-template-columns: minmax(64px,auto) repeat(4, 1fr); }
     .change-row{ grid-template-columns: 1fr auto; }
+    .method > summary{ flex-wrap:wrap; padding:12px 14px; }
+    .method-body{ padding:4px 14px 14px; }
+    .m-table td.v{ display:none; }
+    .m-table tr{ display:grid; grid-template-columns:1fr auto; column-gap:10px; padding:8px 0; border-bottom:1px solid var(--border); }
+    .m-table tr:last-child{ border-bottom:none; }
+    .m-table td{ border-bottom:none; padding:0; }
+    .m-table td.f{ grid-column:1 / -1; margin-bottom:2px; }
     .change-group{ grid-column: 1 / -1; }
     .change-dirs{ grid-column: 1 / -1; }
   }
@@ -428,8 +460,12 @@
 <section id="segments">
   <div class="section-head">
     <h2 id="segments-title">2. Szegmens-pontszámok (alap forgatókönyv)</h2>
-    <span class="section-note">Relatív kitettségi pontszám <b>pontban, nem százalékban</b> — azt mutatja, mennyire segítik (+) vagy hátráltatják (−) a tényezők az adott szegmenst. 0 = semleges, ±5 pont fölött növekedés/visszaesés, ±15 fölött erős. Nem eladás-előrejelzés.</span>
+    <span class="section-note">Magyar autópiac, új és használt autók — relatív kitettségi pontszám <b>pontban, nem százalékban</b>, a következő 12 hónapra. Nem eladás-előrejelzés.</span>
   </div>
+  <details class="method" id="method">
+    <summary>Hogyan számol a modell? <span class="m-sub">— mire vonatkozik, miből számol, mik a korlátai</span></summary>
+    <div class="method-body" id="method-body"></div>
+  </details>
   <div class="segment-filters" id="segment-filters"></div>
   <div class="bar-groups" id="bar-groups"></div>
   <div class="heat-card">
@@ -950,6 +986,52 @@ __DASHBOARD_DATA__
     renderSegments();
   });
   renderSegments();
+
+  // ---------- "Hogyan számol a modell?" ----------
+  function renderMethod() {
+    const m = data.methodology;
+    const el = document.getElementById('method-body');
+    if (!m) { document.getElementById('method').hidden = true; return; }
+    const d = m.dimensions;
+    const yb = d.year_buckets.map(y => `${y.label} ×${fmtPlain(y.weight, 2)}`).join(', ');
+    const nHu = m.factors.filter(f => f.scope === 'HU').length;
+    const factorRows = m.factors.map(f => `<tr>
+        <td class="f">${f.label}</td>
+        <td>${f.source}</td>
+        <td><span class="badge ${f.scope === 'HU' ? 'scope-hu' : 'scope-eu'}">${f.scope}</span></td>
+        <td class="v tnum">${fmt(f.alap, 1)} ${f.unit}</td>
+      </tr>`).join('');
+    const ex = m.example;
+    const exText = ex ? `Példa: a <b>${ex.label}</b> szegmens alap pontszáma ${fmt(ex.score, 1)} pont; ebből a három legnagyobb tétel ${ex.top.map(t => `${t.label} (${fmt(t.points, 1)} pont)`).join(', ')}.` : '';
+    const bt = m.backtest;
+    const btText = bt && bt.comparisons.length ? (() => {
+      const c = bt.comparisons[0];
+      return `<li><b>Gyenge visszamérés.</b> A ${bt.tested_factors.length} tesztelhető tényezőt (${bt.tested_factors.map(t => t.split(' (')[0]).join(', ')}) a ${c.first_year}–${c.last_year} közötti KSH-adatokon visszamérve az irány az esetek ${fmtPlain(c.hit_rate * 100, 0)}%-ában stimmel (véletlenszerűen 50% lenne), de a korreláció csak ${fmt(c.correlation, 2)} — az irány tájékoztató, a nagyságrend nem megbízható. A többi ${m.factors.length - bt.tested_factors.length} tényezőhöz nincs elég hosszú múltbeli adat a visszaméréshez.</li>`;
+    })() : '';
+    el.innerHTML = `
+      <h4>Mire vonatkozik?</h4>
+      <p>A <b>magyar autópiacra</b>, új és használt autókra együtt, a <b>következő 12 hónapra</b>. A pontszám azt mutatja, mennyire segítik (+) vagy hátráltatják (−) a külső körülmények az adott szegmenst — <b>relatív jelzés, nem eladási darabszám vagy százalékos növekedés</b>. 0 = semleges; ±5 pont fölött növekedés / visszaesés, ±15 fölött erős.</p>
+      <h4>Mit pontoz?</h4>
+      <p>${m.n_segments} szegmenst: ${d.drivetrains.length} hajtástípus (${d.drivetrains.map(shortLabel).join(', ')}) × ${d.brand_tiers.length} márkakategória (${d.brand_tiers.join(', ')}) × ${d.year_buckets.length} évjárat-sáv.</p>
+      <h4>Miből számol?</h4>
+      <p>${m.factors.length} tényező várható változásából — mindegyik a legfrissebb megfigyelt trendből, azzal a feltételezéssel, hogy folytatódik. ${nHu} hazai adat, ${m.factors.length - nHu} pedig EU-s vagy globális tényező, ami a magyar piacra hat.</p>
+      <table class="m-table"><tbody>${factorRows}</tbody></table>
+      <h4>Hogyan?</h4>
+      <ul>
+        <li>Minden szegmensnek tényezőnként van egy <b>érzékenysége</b> (−1 és +1 között): mennyire és milyen irányban reagál az adott tényezőre. Például a drágább üzemanyag az elektromos autóknak kedvez, a belső égésűeknek nem.</li>
+        <li>A pontszám a <b>tényezőváltozás × érzékenység</b> szorzatok összege, évjárat szerint súlyozva (${yb}).</li>
+        <li>Ehhez jön két kisebb súlyú <b>valós piaci lendület</b> a KSH-adatokból: a hajtástípusok állományának ${m.momentum.stock_window_years} éves növekedése (súly ${fmtPlain(m.momentum.stock_weight, 2)}) és a márkák forgalomba helyezésének éves változása (súly ${fmtPlain(m.momentum.reg_weight, 2)}).</li>
+      </ul>
+      ${exText ? `<p>${exText}</p>` : ''}
+      <h4>Korlátok</h4>
+      <ul>
+        <li><b>Az érzékenységek szakértői becslések</b>, nem adatból illesztett értékek — ez a modell legbizonytalanabb része.</li>
+        ${btText}
+        <li>A KSH nem különbözteti meg a plug-in hibridet a sima hibridtől, ezért a <b>plug-in hibrid</b> valós lendülete a teljes hibrid kategóriából jön.</li>
+        <li>A forgalomba helyezési adatban a <b>használtként behozott autók</b> is benne vannak, nem csak az újak.</li>
+      </ul>`;
+  }
+  renderMethod();
 
   // ---------- "mi változott az előző futás óta" ----------
   function renderChanges() {

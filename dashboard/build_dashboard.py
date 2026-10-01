@@ -28,7 +28,10 @@ from pathlib import Path
 ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(ROOT))
 
-from engine import compute_segments, classify, load_config, SCENARIOS  # noqa: E402
+from engine import (  # noqa: E402
+    compute_segments, classify, load_config, SCENARIOS,
+    MOMENTUM_WEIGHT, MOMENTUM_WINDOW_YEARS, REG_MOMENTUM_WEIGHT,
+)
 from forecast import forecast_card  # noqa: E402
 
 DATA_DIR = ROOT / "data"
@@ -46,6 +49,21 @@ CALIBRATED_FACTORS = {
 # Kézi, forrásmegjelölt adatfájlból kalibrált tényezők (nincs gépi forrásuk,
 # ld. calibrate_factors.py) — a dashboard külön "kézi forrás" jelzést ad nekik.
 MANUAL_SOURCE_FACTORS = {"battery_cost", "ev_tariffs", "co2_regulation"}
+
+# A dashboard "Hogyan számol a modell?" blokkjához: tényezőnként a forrás
+# rövid, látogatóknak szóló neve és a hatókör (hazai adat vagy a magyar piacra
+# ható EU-s / globális tényező). Új tényezőnél ide is fel kell venni.
+FACTOR_SOURCES = {
+    "oil_price": ("holtankoljak.hu — hazai kútárak", "HU"),
+    "battery_cost": ("BloombergNEF — éves akkumulátorár-felmérés", "EU/globális"),
+    "charging_infra": ("EAFO — magyarországi nyilvános töltőpontok", "HU"),
+    "ev_tariffs": ("Európai Bizottság — vámok kínai elektromos autókra", "EU/globális"),
+    "co2_regulation": ("EU flotta-CO2 rendelet (2019/631)", "EU/globális"),
+    "financing_cost": ("Magyar Nemzeti Bank — alapkamat", "HU"),
+    "consumer_sentiment": ("Eurostat — magyar fogyasztói felmérés", "HU"),
+    "purchasing_power": ("KSH — reálkereset, reáljövedelem", "HU"),
+}
+EXAMPLE_SEGMENT = ("BEV", "tomeggyarto", "uj")  # a módszertani példa szegmense
 
 
 def load_json(name: str) -> dict:
@@ -132,6 +150,58 @@ def build_engine_summary() -> dict:
         "top_winners": top_winners,
         "top_losers": top_losers,
         "segments": segments,
+    }
+
+
+def build_methodology(factors_out: list[dict]) -> dict:
+    """A "Hogyan számol a modell?" blokk adatai - minden szám a kódból / az
+    adatokból jön, hogy a magyarázat ne avuljon el a modell változásakor."""
+    _, segments = load_config()
+    results, _ = compute_segments()
+
+    ex = next((r for r in results
+               if (r.drivetrain, r.brand_tier, r.year_bucket) == EXAMPLE_SEGMENT), None)
+    example = None
+    if ex is not None:
+        weight = segments["year_buckets"][ex.year_bucket]["weight"]
+        example = {
+            "label": f"{ex.drivetrain_label} / {ex.brand_tier_label.split(' (')[0]} / {ex.year_bucket_label}",
+            "score": round(ex.scores["alap"] * 100, 1),
+            # az engine driver-címkéiben tizedespont van (pl. "+42.5%/év") -> vessző
+            "top": [{"label": re.sub(r"(\d)\.(\d)", r"\1,\2", lbl).replace("Megfigyelt piaci momentum", "Valós piaci lendület"),
+                     "points": round(c * weight * 100, 1)}
+                    for lbl, c in ex.drivers["alap"][:3]],
+        }
+
+    backtest = None
+    bt_path = DATA_DIR / "backtest.json"
+    if bt_path.exists():
+        bt = json.loads(bt_path.read_text(encoding="utf-8"))
+        labels = {f["key"]: f["label"] for f in factors_out}
+        backtest = {
+            "comparisons": bt["comparisons"],
+            "tested_factors": [labels.get(k, k) for k in bt["tested_factors"]],
+        }
+
+    return {
+        "factors": [{
+            "label": f["label"], "unit": f["unit"], "alap": f["alap"],
+            "source": FACTOR_SOURCES.get(f["key"], ("—", "—"))[0],
+            "scope": FACTOR_SOURCES.get(f["key"], ("—", "—"))[1],
+        } for f in factors_out],
+        "n_segments": len(results),
+        "dimensions": {
+            "drivetrains": [d["label"] for d in segments["drivetrains"].values()],
+            "brand_tiers": [b["label"].split(" (")[0] for b in segments["brand_tiers"].values()],
+            "year_buckets": [{"label": y["label"], "weight": y["weight"]}
+                             for y in segments["year_buckets"].values()],
+        },
+        "momentum": {
+            "stock_weight": MOMENTUM_WEIGHT, "stock_window_years": MOMENTUM_WINDOW_YEARS,
+            "reg_weight": REG_MOMENTUM_WEIGHT,
+        },
+        "example": example,
+        "backtest": backtest,
     }
 
 
@@ -454,6 +524,7 @@ def main():
     }
     combined["top_modellek"] = build_top_modellek(combined["brand_summary"])
     combined["coverage"]["n_factors"] = len(combined["factors"])
+    combined["methodology"] = build_methodology(combined["factors"])
     combined["changes"] = build_changes(run_history[-1] if run_history else None, combined)
 
     DATA_OUT_PATH.write_text(json.dumps(combined, ensure_ascii=False, indent=2), encoding="utf-8")

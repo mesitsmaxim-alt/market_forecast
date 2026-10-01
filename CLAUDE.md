@@ -140,6 +140,14 @@ tab-váltás kliensoldali JS-sel, nincs reload):
 - `build_changes()` az előző NAPI futáshoz viszonyít (szegmens-irányok, alap tényezők, valós
   fő mutatók) → `changes` kulcs, irányváltások elöl.
 
+### Dashboard: "Hogyan számol a modell?" blokk
+A 2. szekció tetején egy natív `<details>` blokk magyarázza a szegmens-pontszámokat (magyar piac,
+48 szegmens, 8 tényező forrással és HU/EU-globális hatókörrel, érzékenység × változás, évjárat-
+súlyok, KSH-lendület, korlátok). Minden száma a `build_methodology()`-ból jön (`methodology`
+kulcs): a tényező-források a `FACTOR_SOURCES` dictből (új tényezőnél ide is fel kell venni!), az
+évjárat-súlyok a `segments.json`-ból, a lendület-súlyok az `engine.py` konstansaiból, a backtest a
+`data/backtest.json`-ból. Ezért a `run_pipeline.sh` a `backtest.py`-t a dashboard ELŐTT futtatja.
+
 ### Piaci hírek ("Amit a piac mond" fül) és legkeresettebb modellek
 - **Hírek** (`fetchers/fetch_hirek.py` → `data/hirek.json` → `hirek_report.py`): 3 magyar RSS-forrás
   (Vezess.hu, Portfolio.hu, Világgazdaság), curl-lal lekérve, `xml.etree.ElementTree`-vel parszolva

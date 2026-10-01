@@ -37,11 +37,13 @@ LOG_FILE="$LOG_DIR/run_$(date +%Y-%m-%d_%H%M%S).log"
   "$PYTHON" realjovedelem_report.py
   "$PYTHON" hirek_report.py
 
-  echo "--- Dashboard adat frissítése ---"
-  "$PYTHON" dashboard/build_dashboard.py
-
+  # A backtest a dashboard ELŐTT fut: a dashboard módszertani blokkja a
+  # data/backtest.json-t olvassa, így a mostani futás eredményét mutatja.
   echo "--- Backtesting ---"
   "$PYTHON" backtest.py
+
+  echo "--- Dashboard adat frissítése ---"
+  "$PYTHON" dashboard/build_dashboard.py
 
   echo "--- Digest ---"
   NOTIF_TEXT="$("$PYTHON" digest_report.py)"
