@@ -693,7 +693,7 @@ __DASHBOARD_DATA__
           <div><span class="dirpill ${dirClass(r.dir)}">${r.dir}</span>${showMw && r.mw != null ? ` <span class="mw">· piacsúlyozottan: <b>${fmt(r.mw * 100, 1)} pont</b></span>` : ''}</div>
         </div>`;
     }).join('');
-    const mwNote = showMw ? `<p class="mw-note">A sáv a csoport ${showMw} szegmensének egyszerű átlaga (minden hajtás egyforma súllyal). A „piacsúlyozott” érték a hajtásokat a hazai autóállomány arányában súlyozza (${mwShares()}).</p>` : '';
+    const mwNote = showMw ? `<p class="mw-note">A sáv a csoport ${showMw} szegmensének egyszerű átlaga (minden hajtás egyforma súllyal). A „piacsúlyozott” érték a hajtásokat a valós piaci arányuk szerint súlyozza (belső égésű: ${iceByYb()}) — részletek a „Hogyan számol a modell?” blokkban.</p>` : '';
     return `<div class="bar-card"><h3>${title}</h3>${mwNote}${bars}${concl ? `<p class="bar-concl"><span class="c-head">Következtetés</span>${concl}</p>` : ''}</div>`;
   }
 
@@ -702,7 +702,19 @@ __DASHBOARD_DATA__
   let scen = 'alap';
   let dtFilter = '';
   // az aggregátumokban az alap értéke "score" néven van, a másik kettő a forgatókönyv nevén
-  const mwShares = () => { const w = data.market_weights || {}; return `belső égésű ${fmtPlain((w.ICE || 0) * 100, 0)}%, hibrid és plug-in hibrid együtt ${fmtPlain(((w.HEV || 0) + (w.PHEV || 0)) * 100, 0)}%, elektromos ${fmtPlain((w.BEV || 0) * 100, 0)}%`; };
+  // évjárat-sávonként: milyen alapon súlyoz és mekkora benne a belső égésű / villamosított arány
+  const mwShares = () => {
+    const m = data.market_weights || {};
+    return Object.keys(m.weights || {}).map(yb => {
+      const w = m.weights[yb];
+      return `${lc(shortLabel(m.labels[yb]))}: ${m.basis[yb]} (belső égésű ${fmtPlain(w.ICE * 100, 0)}%, hibrid ${fmtPlain((w.HEV + w.PHEV) * 100, 0)}%, elektromos ${fmtPlain(w.BEV * 100, 0)}%)`;
+    }).join('; ');
+  };
+  // "új 35%, fiatal használt 51%, idősebb használt 91%" - a belső égésű arány sávonként
+  const iceByYb = () => {
+    const m = data.market_weights || {};
+    return Object.keys(m.weights || {}).map(yb => `${lc(shortLabel(m.labels[yb]))} ${fmtPlain(m.weights[yb].ICE * 100, 0)}%`).join(', ');
+  };
   const aggRow = r => ({ key: r.key, label: r.label, score: scen === 'alap' ? r.score : r[scen],
                          mw: r.market_weighted ? r.market_weighted[scen] : null,
                          dir: (r.dirs && r.dirs[scen]) || r.dir, drivers: (r.drivers && r.drivers[scen]) || [] });
@@ -824,18 +836,19 @@ __DASHBOARD_DATA__
   }
 
   // a piacsúlyozott kép összefoglalása (márka- és évjárat-kártya)
-  function mwSentence(rows, nounPl) {
+  function mwSentence(rows, nounPl, noun) {
     const mws = rows.map(r => r.mw).filter(v => v != null);
     if (mws.length !== rows.length) return '';
     const lo = Math.min(...mws) * 100, hi = Math.max(...mws) * 100;
-    const ice = ((data.market_weights || {}).ICE || 0) * 100;
     const range = `${pts(lo)} és ${pts(hi)} között`;
+    const ice = `a belső égésű aránya sávonként: ${iceByYb()}`;
+    const below = rows.filter(r => r.mw < 0 && r.score > 0);
     if (hi < 0 && rows.every(r => r.score > 0)) {
-      return `<b>A valós piaci arányokkal súlyozva viszont minden ${nounPl} negatív</b> (${range}): a hazai autóállomány kb. ${fmtPlain(ice, 0)}%-a belső égésű, és azt a modell szerint visszahúzzák a tényezők — a pozitív egyszerű átlagot a kis piaci részű elektromos és hibrid szegmensek emelik meg. `;
+      return `<b>A valós piaci arányokkal súlyozva viszont minden ${nounPl} negatív</b> (${range}): a belső égésű még a piac nagy része (${ice}), és azt a modell szerint visszahúzzák a tényezők. `;
     }
-    if (hi < 0) return `Piaci arányokkal súlyozva minden ${nounPl} negatív (${range}), mert a hazai állomány kb. ${fmtPlain(ice, 0)}%-a belső égésű. `;
+    if (hi < 0) return `Piaci arányokkal súlyozva minden ${nounPl} negatív (${range}; ${ice}). `;
     if (lo > 0) return `Piaci arányokkal súlyozva is minden ${nounPl} pozitív (${range}). `;
-    return `Piaci arányokkal súlyozva a kép vegyes (${range}), mert a hazai állomány kb. ${fmtPlain(ice, 0)}%-a belső égésű. `;
+    return `Piaci arányokkal súlyozva a kép <b>vegyes</b> (${range})${below.length ? `: ${below.length > 1 ? below.slice(0, -1).map(r => `${art(lc(shortLabel(r.label)))} <b>${lc(shortLabel(r.label))}</b>`).join(', ') + ' és ' : ''}${art(lc(shortLabel(below[below.length - 1].label)))} <b>${lc(shortLabel(below[below.length - 1].label))}</b> ${noun} az egyszerű átlaggal pozitív, piaci súllyal viszont negatív` : ''}, mert a régebbi autók között még a belső égésű dominál (${ice}). `;
   }
 
   function conclDrivetrain(rows) {
@@ -858,7 +871,7 @@ __DASHBOARD_DATA__
 
   function conclBrand(rows, dtRows) {
     const top = rows[0], bot = rows[rows.length - 1];
-    let s = rankSentence(rows, 'márkakategória') + mwSentence(rows, 'kategória');
+    let s = rankSentence(rows, 'márkakategória') + mwSentence(rows, 'kategória', 'kategória');
     const spread = (top.score - bot.score) * 100;
     const dtSpread = (dtRows[0].score - dtRows[dtRows.length - 1].score) * 100;
     if (dtSpread > 0 && spread < dtSpread / 2) {
@@ -874,7 +887,7 @@ __DASHBOARD_DATA__
     const yb = (data.methodology && data.methodology.dimensions.year_buckets) || [];
     const weights = {};
     yb.forEach(y => { weights[y.label] = y.weight; });
-    let s = rankSentence(rows, 'sáv') + mwSentence(rows, 'évjárat-sáv');
+    let s = rankSentence(rows, 'sáv') + mwSentence(rows, 'évjárat-sáv', 'sáv');
     if (allNeutral(rows) || yb.length !== rows.length) return s;
     // fix sorrendben (új → idősebb), nem a pontszám szerint
     const ordered = yb.map(y => rows.find(r => r.label === y.label)).filter(Boolean);
@@ -1140,7 +1153,7 @@ __DASHBOARD_DATA__
       <ul>
         <li>Minden szegmensnek tényezőnként van egy <b>érzékenysége</b> (−1 és +1 között): mennyire és milyen irányban reagál az adott tényezőre. Például a drágább üzemanyag az elektromos autóknak kedvez, a belső égésűeknek nem.</li>
         <li>A pontszám a <b>tényezőváltozás × érzékenység</b> szorzatok összege, évjárat szerint súlyozva (${yb}).</li>
-        <li>A márkakategória- és évjárat-kártyák sávja a csoport szegmenseinek <b>egyszerű átlaga</b> (minden hajtás egyforma súllyal), mellette a <b>piacsúlyozott</b> érték a hajtásokat a hazai autóállomány arányában súlyozza (${mwShares()}). Az állomány közelítés: hajtás szerinti friss új-eladási bontás nem érhető el, és a KSH a két hibridfajtát nem választja szét, ezért arányukat fele-fele osztjuk el.</li>
+        <li>A márkakategória- és évjárat-kártyák sávja a csoport szegmenseinek <b>egyszerű átlaga</b> (minden hajtás egyforma súllyal), mellette a <b>piacsúlyozott</b> érték a hajtásokat a valós piaci arányuk szerint súlyozza, évjárat-sávonként más alapon — ${mwShares()}. Közelítés: a hazai használt piacon sok a külföldről behozott autó, ezek összetétele eltérhet a hazai új eladásokétól; az állományban a KSH nem választja szét a két hibridfajtát, ezért ott a legkorábbi Eurostat-év arányával osztjuk el.</li>
         <li>Ehhez jön két kisebb súlyú <b>valós piaci lendület</b>: ${m.momentum.drivetrain_source === 'share_pp'
           ? `az egyes hajtások <b>részesedésének változása az új autókon belül</b> (Eurostat, az utolsó ${m.momentum.stock_window_years} év átlaga, százalékpont/év)`
           : `a hajtástípusok állományának ${m.momentum.stock_window_years} éves növekedése (KSH)`} (súly ${fmtPlain(m.momentum.stock_weight, 2)}), és a márkák forgalomba helyezésének éves változása a KSH-adatokból (súly ${fmtPlain(m.momentum.reg_weight, 2)}).</li>

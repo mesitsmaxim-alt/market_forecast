@@ -95,9 +95,9 @@
         "optimista": "Erős növekedés"
       },
       "market_weighted": {
-        "pesszimista": -0.0528,
-        "alap": 0.241,
-        "optimista": 0.5347
+        "pesszimista": -0.0682,
+        "alap": 0.3009,
+        "optimista": 0.6699
       },
       "drivers": {
         "pesszimista": [
@@ -241,9 +241,9 @@
         "optimista": "Erős növekedés"
       },
       "market_weighted": {
-        "pesszimista": 0.0411,
-        "alap": 0.1414,
-        "optimista": 0.2418
+        "pesszimista": 0.047,
+        "alap": 0.1786,
+        "optimista": 0.3101
       },
       "drivers": {
         "pesszimista": [
@@ -387,9 +387,9 @@
         "optimista": "Erős növekedés"
       },
       "market_weighted": {
-        "pesszimista": -0.0341,
-        "alap": 0.1274,
-        "optimista": 0.2889
+        "pesszimista": -0.0449,
+        "alap": 0.1624,
+        "optimista": 0.3698
       },
       "drivers": {
         "pesszimista": [
@@ -533,9 +533,9 @@
         "optimista": "Erős visszaesés"
       },
       "market_weighted": {
-        "pesszimista": -0.1282,
-        "alap": -0.1503,
-        "optimista": -0.1725
+        "pesszimista": -0.1065,
+        "alap": -0.1318,
+        "optimista": -0.157
       },
       "drivers": {
         "pesszimista": [
@@ -681,9 +681,9 @@
         "optimista": "Erős növekedés"
       },
       "market_weighted": {
-        "pesszimista": -0.1641,
-        "alap": -0.1,
-        "optimista": -0.036
+        "pesszimista": -0.0995,
+        "alap": 0.0229,
+        "optimista": 0.1453
       },
       "drivers": {
         "pesszimista": [
@@ -815,9 +815,9 @@
         "optimista": "Erős növekedés"
       },
       "market_weighted": {
-        "pesszimista": -0.1009,
-        "alap": -0.1084,
-        "optimista": -0.1158
+        "pesszimista": -0.0363,
+        "alap": 0.0146,
+        "optimista": 0.0654
       },
       "drivers": {
         "pesszimista": [
@@ -961,9 +961,9 @@
         "optimista": "Erős növekedés"
       },
       "market_weighted": {
-        "pesszimista": -0.1081,
-        "alap": -0.1084,
-        "optimista": -0.1087
+        "pesszimista": -0.0434,
+        "alap": 0.0146,
+        "optimista": 0.0726
       },
       "drivers": {
         "pesszimista": [
@@ -1107,9 +1107,9 @@
         "optimista": "Növekedés"
       },
       "market_weighted": {
-        "pesszimista": -0.0961,
-        "alap": -0.1722,
-        "optimista": -0.2482
+        "pesszimista": -0.0315,
+        "alap": -0.0492,
+        "optimista": -0.0669
       },
       "drivers": {
         "pesszimista": [
@@ -1255,9 +1255,9 @@
         "optimista": "Erős növekedés"
       },
       "market_weighted": {
-        "pesszimista": -0.19,
-        "alap": -0.1747,
-        "optimista": -0.1593
+        "pesszimista": -0.0567,
+        "alap": 0.085,
+        "optimista": 0.2267
       },
       "drivers": {
         "pesszimista": [
@@ -1401,9 +1401,9 @@
         "optimista": "Erős növekedés"
       },
       "market_weighted": {
-        "pesszimista": -0.1045,
-        "alap": -0.1124,
-        "optimista": -0.1203
+        "pesszimista": -0.0452,
+        "alap": -0.0035,
+        "optimista": 0.0382
       },
       "drivers": {
         "pesszimista": [
@@ -1547,9 +1547,9 @@
         "optimista": "Növekedés"
       },
       "market_weighted": {
-        "pesszimista": -0.0573,
-        "alap": -0.0796,
-        "optimista": -0.1019
+        "pesszimista": -0.0561,
+        "alap": -0.0794,
+        "optimista": -0.1026
       },
       "drivers": {
         "pesszimista": [
@@ -2602,10 +2602,36 @@
     }
   ],
   "market_weights": {
-    "ICE": 0.9087,
-    "HEV": 0.0357,
-    "PHEV": 0.0357,
-    "BEV": 0.0199
+    "weights": {
+      "uj": {
+        "ICE": 0.3517,
+        "HEV": 0.5075,
+        "PHEV": 0.0554,
+        "BEV": 0.0854
+      },
+      "fiatal_hasznalt": {
+        "ICE": 0.5123,
+        "HEV": 0.4001,
+        "PHEV": 0.0435,
+        "BEV": 0.044
+      },
+      "idosebb_hasznalt": {
+        "ICE": 0.9087,
+        "HEV": 0.0652,
+        "PHEV": 0.0062,
+        "BEV": 0.0199
+      }
+    },
+    "basis": {
+      "uj": "a 2025. évi új eladások",
+      "fiatal_hasznalt": "a 2021–2023. évi új eladások",
+      "idosebb_hasznalt": "a mostani autóállomány"
+    },
+    "labels": {
+      "uj": "Új (0-2 év)",
+      "fiatal_hasznalt": "Fiatal használt (3-5 év)",
+      "idosebb_hasznalt": "Idősebb használt (6+ év)"
+    }
   },
   "real": {
     "jarmuallomany": {

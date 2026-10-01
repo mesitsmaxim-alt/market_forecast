@@ -166,9 +166,14 @@ a szöveg "semleges tartomány"-t mond, nem rangsorol.
 FONTOS: a márkakategória- és évjárat-aggregátumok `score`-ja a csoport szegmenseinek EGYSZERŰ
 átlaga (minden hajtás egyforma súllyal) — ez a piac ~91%-át adó belső égésűt alulsúlyozza, ezért
 lehet a kártya pozitív, miközben a csoport ICE-szegmensei negatívak. Mellette a
-`market_weighted` mező a hajtásokat a KSH-állomány arányában súlyozza
-(`drivetrain_market_weights()`; hibrid fele-fele HEV/PHEV); a dashboard mindkettőt mutatja, a
-"Mi változott?" és a futástörténet az egyszerű átlagot követi (összevethetőség miatt).
+`market_weighted` mező a hajtásokat a valós piaci arányuk szerint súlyozza, ÉVJÁRAT-SÁVONKÉNT
+más alapon (`drivetrain_market_weights()`, `YEAR_BUCKET_MARKET`): új = a legutóbbi év új eladásai
+(Eurostat, `uj_hajtas.json`), fiatal használt (3–5 év) = a mai év − 5 … − 3 évek új eladásai,
+idősebb használt = a mostani KSH-állomány (a hibridet ott a legkorábbi Eurostat-év PHEV/HEV
+arányával bontjuk). Eurostat-adat híján minden sáv a KSH-állományra esik vissza. Közelítés: a
+használt piacon sok az import, amelynek összetétele eltérhet a hazai új eladásokétól. A dashboard
+mindkét számot mutatja, a "Mi változott?" és a futástörténet az egyszerű átlagot követi
+(összevethetőség miatt).
 
 ### Piaci hírek ("Amit a piac mond" fül) és legkeresettebb modellek
 - **Hírek** (`fetchers/fetch_hirek.py` → `data/hirek.json` → `hirek_report.py`): 3 magyar RSS-forrás

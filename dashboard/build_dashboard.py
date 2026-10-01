@@ -82,27 +82,81 @@ def driver_label(label: str) -> str:
     return label
 
 
-def drivetrain_market_weights() -> dict:
-    """Hajtástípus-súlyok a valós piaci arányhoz: a KSH-állomány legutóbbi évi
-    megoszlása (benzin+dízel -> ICE, hibrid fele-fele HEV/PHEV, mert a KSH nem
-    választja szét őket, elektromos -> BEV; az "egyéb" kimarad). Az állomány
-    közelítés - hajtás szerinti friss ÚJ-eladási bontás nincs."""
-    j = load_json("jarmuallomany.json")
-    fuel = j["fuel_types"]
-    last = {k: v[-1] for k, v in fuel.items()}
-    raw = {
-        "ICE": last.get("benzin", 0) + last.get("dizel", 0),
-        "HEV": last.get("hibrid", 0) / 2,
-        "PHEV": last.get("hibrid", 0) / 2,
-        "BEV": last.get("elektromos", 0),
-    }
+DRIVETRAINS = ("ICE", "HEV", "PHEV", "BEV")
+# Évjárat-sávonként milyen piaci összetétellel súlyozzuk a hajtásokat:
+#   ("new", a, b) = azoknak az éveknek az ÚJ eladásai (Eurostat), amikor a sáv
+#                   autói újként forgalomba kerültek (mai év - b ... mai év - a);
+#                   a=b=0: a legutóbbi elérhető év
+#   ("stock",)    = a mostani KSH-állomány
+# A segments.json-ban ismeretlen sáv a "stock"-ot kapja.
+YEAR_BUCKET_MARKET = {
+    "uj": ("new", 0, 0),
+    "fiatal_hasznalt": ("new", 3, 5),
+    "idosebb_hasznalt": ("stock",),
+}
+
+
+def _normalize(raw: dict) -> dict:
     total = sum(raw.values())
     return {k: v / total for k, v in raw.items()} if total else {}
 
 
+def stock_market_weights(phev_ratio: float = 0.5) -> dict:
+    """Hajtás-arányok a KSH-állományból (benzin+dízel -> ICE, elektromos ->
+    BEV, az "egyéb" kimarad). A KSH a hibridet nem bontja HEV/PHEV-re: a
+    `phev_ratio` arányban osztjuk el (Eurostat-adat híján fele-fele)."""
+    fuel = load_json("jarmuallomany.json")["fuel_types"]
+    last = {k: v[-1] for k, v in fuel.items()}
+    hyb = last.get("hibrid", 0)
+    return _normalize({
+        "ICE": last.get("benzin", 0) + last.get("dizel", 0),
+        "HEV": hyb * (1 - phev_ratio),
+        "PHEV": hyb * phev_ratio,
+        "BEV": last.get("elektromos", 0),
+    })
+
+
+def drivetrain_market_weights(year_buckets: dict) -> dict:
+    """Piaci súlyok évjárat-sávonként: {"weights": {sáv: {hajtás: arány}},
+    "basis": {sáv: leírás}}. Az új és a fiatal használt sávot az Eurostat új-
+    eladási arányai (data/uj_hajtas.json), az idősebbet a KSH-állomány adja.
+    Közelítés: a hazai használt piacon sok a külföldről behozott autó, amelyek
+    összetétele eltérhet a hazai újautó-eladásokétól."""
+    path = DATA_DIR / "uj_hajtas.json"
+    if not path.exists():
+        w = stock_market_weights()
+        return {"weights": {yb: w for yb in year_buckets},
+                "basis": {yb: "a mostani autóállomány" for yb in year_buckets}}
+
+    uh = json.loads(path.read_text(encoding="utf-8"))
+    years, shares = uh["years"], uh["shares_pct"]
+    # a régebbi állomány hibrid-felosztásához a legkorábbi elérhető év aránya
+    first_hyb = shares["HEV"][0] + shares["PHEV"][0]
+    phev_ratio = shares["PHEV"][0] / first_hyb if first_hyb else 0.5
+    this_year = dt.date.today().year
+
+    weights, basis = {}, {}
+    for yb in year_buckets:
+        spec = YEAR_BUCKET_MARKET.get(yb, ("stock",))
+        if spec[0] == "new":
+            if spec[1] == 0:
+                sel = [years[-1]]
+            else:
+                sel = [y for y in years if this_year - spec[2] <= y <= this_year - spec[1]] or [years[0]]
+            idx = [years.index(y) for y in sel]
+            weights[yb] = _normalize({d: sum(shares[d][i] for i in idx) / len(idx) for d in DRIVETRAINS})
+            span = f"{sel[0]}" if len(sel) == 1 else f"{sel[0]}–{sel[-1]}"
+            basis[yb] = f"a {span}. évi új eladások"
+        else:
+            weights[yb] = stock_market_weights(phev_ratio)
+            basis[yb] = "a mostani autóállomány"
+    return {"weights": weights, "basis": basis}
+
+
 def build_engine_summary() -> dict:
     results, factors = compute_segments()
-    mkt_w = drivetrain_market_weights()
+    mkt = drivetrain_market_weights(load_config()[1]["year_buckets"])
+    mkt_w = mkt["weights"]
     _, seg_config = load_config()
     yb_weight = {k: v["weight"] for k, v in seg_config["year_buckets"].items()}
 
@@ -115,13 +169,14 @@ def build_engine_summary() -> dict:
         contrib = defaultdict(lambda: {s: defaultdict(float) for s in SCENARIOS})
         counts = defaultdict(int)
         # piacsúlyozott átlag: a hajtástípusokat a valós állomány-arányuk szerint
-        # súlyozzuk, nem egyformán (ld. drivetrain_market_weights)
+        # súlyozzuk (évjárat-sávonként más összetétel), nem egyformán
+        # (ld. drivetrain_market_weights)
         mw_sum = defaultdict(lambda: defaultdict(float))
         mw_den = defaultdict(float)
         for r in results:
             b = buckets[key_fn(r)]
             counts[key_fn(r)] += 1
-            w = mkt_w.get(r.drivetrain, 0)
+            w = mkt_w.get(r.year_bucket, {}).get(r.drivetrain, 0)
             mw_den[key_fn(r)] += w
             for scenario in SCENARIOS:
                 mw_sum[key_fn(r)][scenario] += r.scores[scenario] * w
@@ -205,7 +260,11 @@ def build_engine_summary() -> dict:
         "top_winners": top_winners,
         "top_losers": top_losers,
         "segments": segments,
-        "market_weights": {k: round(v, 4) for k, v in mkt_w.items()},
+        "market_weights": {
+            "weights": {yb: {d: round(v, 4) for d, v in w.items()} for yb, w in mkt_w.items()},
+            "basis": mkt["basis"],
+            "labels": {k: v["label"] for k, v in load_config()[1]["year_buckets"].items()},
+        },
     }
 
 
