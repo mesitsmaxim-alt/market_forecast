@@ -159,11 +159,13 @@ def build_report(results: list[dict]) -> str:
     lines.append("")
     lines.append(
         "> **Módszertani megjegyzés:** a \"megfigyelt piaci momentum\" tag "
-        "(`engine.py`) szándékosan KI van hagyva ebből a tesztből, mert azt is "
-        "ugyanabból a KSH-idősorból számoljuk, amit itt tényleges kimenetként "
-        "használunk — bevonása körkörös lenne. A backtest tehát kifejezetten "
-        "azt méri, van-e előrejelző ereje a forgatókönyv-tényezőknek ÖNMAGUKBAN, "
-        "a nyers trendtől függetlenül."
+        "(`engine.py`) szándékosan KI van hagyva ebből a tesztből. A hajtás-"
+        "momentum ma már az új autók hajtás szerinti részesedéséből jön "
+        "(Eurostat, csak 2020-tól), nem az itt kimenetként használt KSH-"
+        "állományból, de ugyanazt a piaci átrendeződést méri, így bevonása "
+        "részben körkörös lenne, és a 2020 előtti évekre nincs is adata. A "
+        "backtest tehát kifejezetten azt méri, van-e előrejelző ereje a "
+        "forgatókönyv-tényezőknek ÖNMAGUKBAN, a nyers trendtől függetlenül."
     )
     lines.append("")
 

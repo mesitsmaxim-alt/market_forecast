@@ -2,7 +2,7 @@
 
 A `config/segments.json`-ban kézzel megadott érzékenységi együtthatók visszamérése valós, történeti adaton. **Csak 3 a 8 tényezőből tesztelhető** (finanszírozási költség, vásárlóerő, fogyasztói szándék) — ehhez van elég hosszú, éves bontású valós idősorunk. A többi tényezőhöz (olajár, akkumulátorár, töltőinfra, EV-vám, CO2-szabályozás) nincs elég hosszú visszamenő adat a projektben, ezért ez a backtest **a modell egy részét, nem az egészét** validálja.
 
-> **Módszertani megjegyzés:** a "megfigyelt piaci momentum" tag (`engine.py`) szándékosan KI van hagyva ebből a tesztből, mert azt is ugyanabból a KSH-idősorból számoljuk, amit itt tényleges kimenetként használunk — bevonása körkörös lenne. A backtest tehát kifejezetten azt méri, van-e előrejelző ereje a forgatókönyv-tényezőknek ÖNMAGUKBAN, a nyers trendtől függetlenül.
+> **Módszertani megjegyzés:** a "megfigyelt piaci momentum" tag (`engine.py`) szándékosan KI van hagyva ebből a tesztből. A hajtás-momentum ma már az új autók hajtás szerinti részesedéséből jön (Eurostat, csak 2020-tól), nem az itt kimenetként használt KSH-állományból, de ugyanazt a piaci átrendeződést méri, így bevonása részben körkörös lenne, és a 2020 előtti évekre nincs is adata. A backtest tehát kifejezetten azt méri, van-e előrejelző ereje a forgatókönyv-tényezőknek ÖNMAGUKBAN, a nyers trendtől függetlenül.
 
 ## BEV vs. ICE
 

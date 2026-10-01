@@ -789,6 +789,7 @@ __DASHBOARD_DATA__
   // Szabályalapú szöveg: a kiválasztott forgatókönyv pontszámaiból és a tényezőnkénti
   // hozzájárulásokból (drivers, pontban) - minden frissítéskor és váltáskor újraszámolódik.
   const DRIVER_NAMES = [
+    ['Valós piaci lendület (új autók', 'az új autókon belüli részesedés változása'],
     ['Valós piaci lendület (KSH', 'a KSH-állomány tényleges bővülése'],
     ['Valós piaci lendület (forgalomba', 'a forgalomba helyezések lendülete'],
     ['Üzemanyagár', 'az üzemanyagár'], ['Akkumulátor', 'az akkumulátorár'],
@@ -1072,7 +1073,7 @@ __DASHBOARD_DATA__
     ['Finanszírozási költség', 'Magyar Nemzeti Bank — jegybanki alapkamat idősor', 'Automata, havonta', '✓ kalibrálva'],
     ['Fogyasztói szándék', 'Eurostat — üzleti és fogyasztói felmérés', 'Automata, havonta', '✓ kalibrálva'],
     ['Reáljövedelem / vásárlóerő', 'Központi Statisztikai Hivatal — reáljövedelem- és reálbérindex', 'Automata, évente', '✓ kalibrálva'],
-    ['Szegmens-momentum (hajtástípus szerint)', 'Központi Statisztikai Hivatal — személygépkocsi-állomány hajtás szerint', 'Automata, havonta', '✓ momentum'],
+    ['Szegmens-momentum (hajtástípus szerint)', 'Eurostat — új személyautók hajtásenergia szerint (Magyarország)', 'Automata, évente', '✓ momentum'],
     ['Szegmens-momentum (márkakategória szerint)', 'Központi Statisztikai Hivatal — első forgalomba helyezés márkánként, negyedévente', 'Automata, havonta', '✓ momentum'],
   ];
   document.getElementById('src-tbody').innerHTML = rows.map(r => `
@@ -1140,14 +1141,16 @@ __DASHBOARD_DATA__
         <li>Minden szegmensnek tényezőnként van egy <b>érzékenysége</b> (−1 és +1 között): mennyire és milyen irányban reagál az adott tényezőre. Például a drágább üzemanyag az elektromos autóknak kedvez, a belső égésűeknek nem.</li>
         <li>A pontszám a <b>tényezőváltozás × érzékenység</b> szorzatok összege, évjárat szerint súlyozva (${yb}).</li>
         <li>A márkakategória- és évjárat-kártyák sávja a csoport szegmenseinek <b>egyszerű átlaga</b> (minden hajtás egyforma súllyal), mellette a <b>piacsúlyozott</b> érték a hajtásokat a hazai autóállomány arányában súlyozza (${mwShares()}). Az állomány közelítés: hajtás szerinti friss új-eladási bontás nem érhető el, és a KSH a két hibridfajtát nem választja szét, ezért arányukat fele-fele osztjuk el.</li>
-        <li>Ehhez jön két kisebb súlyú <b>valós piaci lendület</b> a KSH-adatokból: a hajtástípusok állományának ${m.momentum.stock_window_years} éves növekedése (súly ${fmtPlain(m.momentum.stock_weight, 2)}) és a márkák forgalomba helyezésének éves változása (súly ${fmtPlain(m.momentum.reg_weight, 2)}).</li>
+        <li>Ehhez jön két kisebb súlyú <b>valós piaci lendület</b>: ${m.momentum.drivetrain_source === 'share_pp'
+          ? `az egyes hajtások <b>részesedésének változása az új autókon belül</b> (Eurostat, az utolsó ${m.momentum.stock_window_years} év átlaga, százalékpont/év)`
+          : `a hajtástípusok állományának ${m.momentum.stock_window_years} éves növekedése (KSH)`} (súly ${fmtPlain(m.momentum.stock_weight, 2)}), és a márkák forgalomba helyezésének éves változása a KSH-adatokból (súly ${fmtPlain(m.momentum.reg_weight, 2)}).</li>
       </ul>
       ${exText ? `<p>${exText}</p>` : ''}
       <h4>Korlátok</h4>
       <ul>
         <li><b>Az érzékenységek szakértői becslések</b>, nem adatból illesztett értékek — ez a modell legbizonytalanabb része.</li>
         ${btText}
-        <li>A KSH nem különbözteti meg a plug-in hibridet a sima hibridtől, ezért a <b>plug-in hibrid</b> valós lendülete a teljes hibrid kategóriából jön.</li>
+        <li>A hajtások lendülete az Eurostat <b>éves</b> adatából jön, ezért csak évente egyszer mozdul, és egy évvel késik. A „hibrid” kategória az Eurostatban a <b>mild hibrideket</b> is tartalmazza (pl. 12 V-os rásegítésű benzineseket), így a valódi hibridek részesedése ennél kisebb.</li>
         <li>A forgalomba helyezési adatban a <b>használtként behozott autók</b> is benne vannak, nem csak az újak.</li>
       </ul>`;
   }

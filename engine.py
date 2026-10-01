@@ -27,7 +27,15 @@ FACTOR_DIRECTION = {
     "battery_cost": -1,
 }
 
-# Hajtástípus -> KSH sza0025 hajtástípus-kulcs, a valós piaci momentumhoz.
+# A hajtástípus-momentum ELSŐDLEGES forrása az új autók hajtás szerinti
+# megoszlása (Eurostat road_eqr_carpda, data/uj_hajtas.json): a momentum az
+# új autókon belüli RÉSZESEDÉS változása, százalékpont/év. Ez valós keresleti
+# elmozdulást mér. A korábbi állomány-CAGR (KSH sza0025) kis bázisú
+# kategóriáknál bázishatást mért (pl. elektromos: +42%/év, miközben az
+# állomány 2%-a) - ez már csak tartalék, ha az Eurostat-adat hiányzik.
+MOMENTUM_CAP_PP = 10  # részesedés-változás normalizálási sapka (+-10 pp/év fölött nem skálázunk tovább)
+
+# Tartalék (állomány-CAGR): hajtástípus -> KSH sza0025 hajtástípus-kulcs.
 # A KSH nem különbözteti meg a PHEV-et a (nem tölthető) hibridtől, ezért a
 # PHEV-hez is a "hibrid" kategória CAGR-ját használjuk proxyként.
 DRIVETRAIN_TO_KSH = {
@@ -52,7 +60,27 @@ REG_MOMENTUM_CAP_PCT = 40
 
 
 def load_momentum():
-    """Valós hajtástípus-momentum (5 éves KSH CAGR) betöltése, ha van adat."""
+    """Valós hajtástípus-momentum: {hajtás: {"value", "kind"}}.
+
+    Elsődlegesen az új autókon belüli részesedés átlagos éves változása
+    (pp/év, MOMENTUM_WINDOW_YEARS évre, Eurostat) - kind="share_pp".
+    Ha ez az adat nincs meg, tartalékként a KSH-állomány CAGR-ja (%/év) -
+    kind="stock_cagr"."""
+    path = DATA_DIR / "uj_hajtas.json"
+    if path.exists():
+        data = json.loads(path.read_text(encoding="utf-8"))
+        shares = data["shares_pct"]
+        window = min(MOMENTUM_WINDOW_YEARS, len(data["years"]) - 1)
+        if window >= 1:
+            return {
+                dt: {"value": (shares[dt][-1] - shares[dt][-1 - window]) / window, "kind": "share_pp"}
+                for dt in ("ICE", "HEV", "PHEV", "BEV") if dt in shares
+            }
+    return {dt: {"value": v, "kind": "stock_cagr"} for dt, v in load_stock_momentum().items()}
+
+
+def load_stock_momentum():
+    """Tartalék: hajtástípus-momentum a KSH-állomány CAGR-jából (%/év)."""
     path = DATA_DIR / "jarmuallomany.json"
     if not path.exists():
         return {}
@@ -179,13 +207,16 @@ def compute_segments():
                         contribs.append((factor["label"], contribution))
 
                     if dt_key in momentum:
-                        cagr_pct = momentum[dt_key]
-                        normalized = max(-1.0, min(1.0, cagr_pct / MOMENTUM_CAP_PCT))
+                        m = momentum[dt_key]
+                        if m["kind"] == "share_pp":
+                            normalized = max(-1.0, min(1.0, m["value"] / MOMENTUM_CAP_PP))
+                            label = f"Megfigyelt piaci momentum (új autók részesedése, {m['value']:+.1f} pp/év)"
+                        else:
+                            normalized = max(-1.0, min(1.0, m["value"] / MOMENTUM_CAP_PCT))
+                            label = f"Megfigyelt piaci momentum (KSH állomány, {m['value']:+.1f}%/év)"
                         momentum_term = normalized * MOMENTUM_WEIGHT
                         total += momentum_term
-                        contribs.append(
-                            (f"Megfigyelt piaci momentum (KSH állomány, {cagr_pct:+.1f}%/év)", momentum_term)
-                        )
+                        contribs.append((label, momentum_term))
 
                     if bt_key in reg_momentum:
                         yoy_pct = reg_momentum[bt_key]

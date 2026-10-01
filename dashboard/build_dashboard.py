@@ -73,6 +73,8 @@ def load_json(name: str) -> dict:
 def driver_label(label: str) -> str:
     """Az engine momentum-címkéiben szegmensenként más szám van; a csoport-
     átlagoláshoz egységes, látogatóknak szóló címke kell."""
+    if label.startswith("Megfigyelt piaci momentum (új autók részesedése"):
+        return "Valós piaci lendület (új autók részesedése)"
     if label.startswith("Megfigyelt piaci momentum (KSH állomány"):
         return "Valós piaci lendület (KSH-állomány)"
     if label.startswith("Megfigyelt piaci momentum (forgalomba helyezés"):
@@ -222,7 +224,7 @@ def build_methodology(factors_out: list[dict]) -> dict:
             "label": f"{ex.drivetrain_label} / {ex.brand_tier_label.split(' (')[0]} / {ex.year_bucket_label}",
             "score": round(ex.scores["alap"] * 100, 1),
             # az engine driver-címkéiben tizedespont van (pl. "+42.5%/év") -> vessző
-            "top": [{"label": re.sub(r"(\d)\.(\d)", r"\1,\2", lbl).replace("Megfigyelt piaci momentum", "Valós piaci lendület"),
+            "top": [{"label": re.sub(r"(\d)\.(\d)", r"\1,\2", lbl).replace("Megfigyelt piaci momentum", "Valós piaci lendület").replace(" pp/év", " százalékpont/év"),
                      "points": round(c * weight * 100, 1)}
                     for lbl, c in ex.drivers["alap"][:3]],
         }
@@ -253,6 +255,8 @@ def build_methodology(factors_out: list[dict]) -> dict:
         "momentum": {
             "stock_weight": MOMENTUM_WEIGHT, "stock_window_years": MOMENTUM_WINDOW_YEARS,
             "reg_weight": REG_MOMENTUM_WEIGHT,
+            # melyik forrásból jön a hajtás-momentum (Eurostat új autók vagy tartalék KSH-állomány)
+            "drivetrain_source": "share_pp" if (DATA_DIR / "uj_hajtas.json").exists() else "stock_cagr",
         },
         "example": example,
         "backtest": backtest,

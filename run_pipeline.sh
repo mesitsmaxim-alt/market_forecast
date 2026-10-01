@@ -15,6 +15,7 @@ LOG_FILE="$LOG_DIR/run_$(date +%Y-%m-%d_%H%M%S).log"
 
   echo "--- Adatletöltés ---"
   "$PYTHON" fetchers/fetch_jarmuallomany.py
+  "$PYTHON" fetchers/fetch_uj_hajtas.py
   "$PYTHON" fetchers/fetch_uzemanyag_elo.py
   "$PYTHON" fetchers/fetch_uzemanyagar.py
   "$PYTHON" fetchers/fetch_makro.py

@@ -54,8 +54,15 @@ segment's per-factor `sensitivity` coefficient (-1..+1), summed and weighted.
 ### Momentum terms are separate from scenario factors
 `engine.py` adds two "observed market momentum" terms on top of the scenario score, deliberately
 NOT scenario-dependent (they represent what's already happening, not a hypothesis):
-- `load_momentum()` — drivetrain-level, from KSH stock CAGR (`data/jarmuallomany.json`),
-  `MOMENTUM_WEIGHT = 0.15`, capped at `MOMENTUM_CAP_PCT = 50`.
+- `load_momentum()` — drivetrain-level. PRIMARY source: the change of each drivetrain's SHARE
+  of new car registrations (pp/year, avg over `MOMENTUM_WINDOW_YEARS = 3`), from Eurostat
+  `road_eqr_carpda` via `fetchers/fetch_uj_hajtas.py` → `data/uj_hajtas.json` (annual, HU, 2020+;
+  separates PHEV from HEV; Eurostat's "hybrid" includes mild hybrids). `MOMENTUM_WEIGHT = 0.15`,
+  normalized by `MOMENTUM_CAP_PP = 10`. It replaced the KSH stock CAGR (2026-10-01) because stock
+  growth of small-base categories measured a base effect, not demand (BEV +42%/yr while 2% of
+  stock had become the single biggest BEV driver). The stock CAGR (`load_stock_momentum()`,
+  `MOMENTUM_CAP_PCT = 50`) remains only as a fallback if `uj_hajtas.json` is missing; the driver
+  label tells which one ran ("új autók részesedése" vs "KSH állomány").
 - `load_registration_momentum()` — brand_tier-level, from KSH quarterly new-registration YoY
   (`data/forgalomba.json`), `REG_MOMENTUM_WEIGHT = 0.1`, capped at `REG_MOMENTUM_CAP_PCT = 40`.
 
