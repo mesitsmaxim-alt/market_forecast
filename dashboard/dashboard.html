@@ -262,6 +262,9 @@
   :root[data-theme="dark"] .dirpill.warning{ color:#ffd991; }
   :root[data-theme="dark"] .dirpill.serious{ color:#ffb08c; }
 
+  .bar-row .mw{ font-size:11.5px; color:var(--text-muted); }
+  .bar-row .mw b{ font-family:"JetBrains Mono",monospace; font-weight:600; color:var(--text-secondary); }
+  .bar-card .mw-note{ font-size:11.5px; color:var(--text-muted); margin:-6px 0 12px; line-height:1.45; }
   .bar-concl{
     margin:14px 0 0; padding-top:12px; border-top:1px solid var(--border);
     font-size:12.5px; line-height:1.55; color:var(--text-secondary);
@@ -681,6 +684,11 @@
         "alap": "Erős növekedés",
         "optimista": "Erős növekedés"
       },
+      "market_weighted": {
+        "pesszimista": 0.0162,
+        "alap": 0.31,
+        "optimista": 0.6038
+      },
       "drivers": {
         "pesszimista": [
           {
@@ -821,6 +829,11 @@
         "pesszimista": "Stagnálás",
         "alap": "Erős növekedés",
         "optimista": "Erős növekedés"
+      },
+      "market_weighted": {
+        "pesszimista": 0.0122,
+        "alap": 0.1736,
+        "optimista": 0.3351
       },
       "drivers": {
         "pesszimista": [
@@ -963,6 +976,11 @@
         "alap": "Erős növekedés",
         "optimista": "Erős növekedés"
       },
+      "market_weighted": {
+        "pesszimista": 0.0506,
+        "alap": 0.151,
+        "optimista": 0.2514
+      },
       "drivers": {
         "pesszimista": [
           {
@@ -1103,6 +1121,11 @@
         "pesszimista": "Visszaesés",
         "alap": "Visszaesés",
         "optimista": "Visszaesés"
+      },
+      "market_weighted": {
+        "pesszimista": -0.0699,
+        "alap": -0.0921,
+        "optimista": -0.1142
       },
       "drivers": {
         "pesszimista": [
@@ -1247,6 +1270,11 @@
         "alap": "Erős növekedés",
         "optimista": "Erős növekedés"
       },
+      "market_weighted": {
+        "pesszimista": -0.1078,
+        "alap": -0.0437,
+        "optimista": 0.0203
+      },
       "drivers": {
         "pesszimista": [
           {
@@ -1375,6 +1403,11 @@
         "pesszimista": "Stagnálás",
         "alap": "Növekedés",
         "optimista": "Erős növekedés"
+      },
+      "market_weighted": {
+        "pesszimista": -0.0446,
+        "alap": -0.0521,
+        "optimista": -0.0595
       },
       "drivers": {
         "pesszimista": [
@@ -1517,6 +1550,11 @@
         "alap": "Növekedés",
         "optimista": "Erős növekedés"
       },
+      "market_weighted": {
+        "pesszimista": -0.0518,
+        "alap": -0.0521,
+        "optimista": -0.0524
+      },
       "drivers": {
         "pesszimista": [
           {
@@ -1657,6 +1695,11 @@
         "pesszimista": "Stagnálás",
         "alap": "Növekedés",
         "optimista": "Növekedés"
+      },
+      "market_weighted": {
+        "pesszimista": -0.0398,
+        "alap": -0.1159,
+        "optimista": -0.1919
       },
       "drivers": {
         "pesszimista": [
@@ -1801,6 +1844,11 @@
         "alap": "Erős növekedés",
         "optimista": "Erős növekedés"
       },
+      "market_weighted": {
+        "pesszimista": -0.1034,
+        "alap": -0.0881,
+        "optimista": -0.0727
+      },
       "drivers": {
         "pesszimista": [
           {
@@ -1942,6 +1990,11 @@
         "alap": "Növekedés",
         "optimista": "Erős növekedés"
       },
+      "market_weighted": {
+        "pesszimista": -0.0525,
+        "alap": -0.0604,
+        "optimista": -0.0683
+      },
       "drivers": {
         "pesszimista": [
           {
@@ -2082,6 +2135,11 @@
         "pesszimista": "Stagnálás",
         "alap": "Növekedés",
         "optimista": "Növekedés"
+      },
+      "market_weighted": {
+        "pesszimista": -0.027,
+        "alap": -0.0493,
+        "optimista": -0.0716
       },
       "drivers": {
         "pesszimista": [
@@ -3133,6 +3191,12 @@
       }
     }
   ],
+  "market_weights": {
+    "ICE": 0.9087,
+    "HEV": 0.0357,
+    "PHEV": 0.0357,
+    "BEV": 0.0199
+  },
   "real": {
     "jarmuallomany": {
       "last_year": 2025,
@@ -6739,7 +6803,7 @@
     'Visszaesés': 'serious', 'Erős visszaesés': 'critical'
   })[d] || 'warning';
 
-  function barGroup(title, rows, concl) {
+  function barGroup(title, rows, concl, showMw = false) {
     const max = Math.max(...rows.map(r => Math.abs(r.score)), 0.001);
     const bars = rows.map(r => {
       const w = Math.min(48, Math.abs(r.score) / max * 48);
@@ -6754,10 +6818,11 @@
             <div class="bar-zero"></div>
             <div class="bar-fill ${cls}" style="width:${w}%;"></div>
           </div>
-          <div><span class="dirpill ${dirClass(r.dir)}">${r.dir}</span></div>
+          <div><span class="dirpill ${dirClass(r.dir)}">${r.dir}</span>${showMw && r.mw != null ? ` <span class="mw">· piacsúlyozottan: <b>${fmt(r.mw * 100, 1)} pont</b></span>` : ''}</div>
         </div>`;
     }).join('');
-    return `<div class="bar-card"><h3>${title}</h3>${bars}${concl ? `<p class="bar-concl"><span class="c-head">Következtetés</span>${concl}</p>` : ''}</div>`;
+    const mwNote = showMw ? `<p class="mw-note">A sáv a csoport ${showMw} szegmensének egyszerű átlaga (minden hajtás egyforma súllyal). A „piacsúlyozott” érték a hajtásokat a hazai autóállomány arányában súlyozza (${mwShares()}).</p>` : '';
+    return `<div class="bar-card"><h3>${title}</h3>${mwNote}${bars}${concl ? `<p class="bar-concl"><span class="c-head">Következtetés</span>${concl}</p>` : ''}</div>`;
   }
 
   // ---------- forgatókönyv-váltó állapota ----------
@@ -6765,7 +6830,9 @@
   let scen = 'alap';
   let dtFilter = '';
   // az aggregátumokban az alap értéke "score" néven van, a másik kettő a forgatókönyv nevén
+  const mwShares = () => { const w = data.market_weights || {}; return `belső égésű ${fmtPlain((w.ICE || 0) * 100, 0)}%, hibrid és plug-in hibrid együtt ${fmtPlain(((w.HEV || 0) + (w.PHEV || 0)) * 100, 0)}%, elektromos ${fmtPlain((w.BEV || 0) * 100, 0)}%`; };
   const aggRow = r => ({ key: r.key, label: r.label, score: scen === 'alap' ? r.score : r[scen],
+                         mw: r.market_weighted ? r.market_weighted[scen] : null,
                          dir: (r.dirs && r.dirs[scen]) || r.dir, drivers: (r.drivers && r.drivers[scen]) || [] });
   const shortLabel = s => s.split(' (')[0];
   // rövid oszlop-/sorfejlécek a hőtérképhez (a teljes címke a tooltipben látszik)
@@ -6883,6 +6950,21 @@
     return `${np(top, noun, true)} áll a legjobban (${pts(top.score * 100)}), ${np(bot, noun)} a leggyengébb (${pts(bot.score * 100)}). `;
   }
 
+  // a piacsúlyozott kép összefoglalása (márka- és évjárat-kártya)
+  function mwSentence(rows, nounPl) {
+    const mws = rows.map(r => r.mw).filter(v => v != null);
+    if (mws.length !== rows.length) return '';
+    const lo = Math.min(...mws) * 100, hi = Math.max(...mws) * 100;
+    const ice = ((data.market_weights || {}).ICE || 0) * 100;
+    const range = `${pts(lo)} és ${pts(hi)} között`;
+    if (hi < 0 && rows.every(r => r.score > 0)) {
+      return `<b>A valós piaci arányokkal súlyozva viszont minden ${nounPl} negatív</b> (${range}): a hazai autóállomány kb. ${fmtPlain(ice, 0)}%-a belső égésű, és azt a modell szerint visszahúzzák a tényezők — a pozitív egyszerű átlagot a kis piaci részű elektromos és hibrid szegmensek emelik meg. `;
+    }
+    if (hi < 0) return `Piaci arányokkal súlyozva minden ${nounPl} negatív (${range}), mert a hazai állomány kb. ${fmtPlain(ice, 0)}%-a belső égésű. `;
+    if (lo > 0) return `Piaci arányokkal súlyozva is minden ${nounPl} pozitív (${range}). `;
+    return `Piaci arányokkal súlyozva a kép vegyes (${range}), mert a hazai állomány kb. ${fmtPlain(ice, 0)}%-a belső égésű. `;
+  }
+
   function conclDrivetrain(rows) {
     const top = rows[0], bot = rows[rows.length - 1];
     let s = rankSentence(rows, 'hajtás');
@@ -6903,7 +6985,7 @@
 
   function conclBrand(rows, dtRows) {
     const top = rows[0], bot = rows[rows.length - 1];
-    let s = rankSentence(rows, 'márkakategória');
+    let s = rankSentence(rows, 'márkakategória') + mwSentence(rows, 'kategória');
     const spread = (top.score - bot.score) * 100;
     const dtSpread = (dtRows[0].score - dtRows[dtRows.length - 1].score) * 100;
     if (dtSpread > 0 && spread < dtSpread / 2) {
@@ -6919,17 +7001,17 @@
     const yb = (data.methodology && data.methodology.dimensions.year_buckets) || [];
     const weights = {};
     yb.forEach(y => { weights[y.label] = y.weight; });
-    let s = rankSentence(rows, 'sáv');
+    let s = rankSentence(rows, 'sáv') + mwSentence(rows, 'évjárat-sáv');
     if (allNeutral(rows) || yb.length !== rows.length) return s;
     // fix sorrendben (új → idősebb), nem a pontszám szerint
     const ordered = yb.map(y => rows.find(r => r.label === y.label)).filter(Boolean);
     const unweighted = ordered.map(r => r.score * 100 / weights[r.label]);
     const weightedSpread = Math.abs(rows[0].score - rows[rows.length - 1].score) * 100;
     const close = Math.max(...unweighted) - Math.min(...unweighted) < weightedSpread / 2;
-    s += `A modell a használt sávokhoz kisebb súlyt rendel (${yb.map(y => `${lc(shortLabel(y.label))} ×${fmtPlain(y.weight, 2)}`).join(', ')}), mert a külső tényezők elsősorban az újautó-vásárlást mozgatják. `;
+    s += `A sávok közti különbség oka: a modell a használt sávokhoz kisebb <b>évjárat-súlyt</b> rendel (${yb.map(y => `${lc(shortLabel(y.label))} ×${fmtPlain(y.weight, 2)}`).join(', ')}), mert a külső tényezők elsősorban az újautó-vásárlást mozgatják. `;
     s += close
-      ? `A különbség nagy része ebből a súlyozásból jön: súlyozás nélkül a sávok közel azonos szinten lennének (${unweighted.map(v => fmtPlain(v, 1)).join(' / ')} pont), vagyis a tényezők minden évjáratban hasonló irányba hatnak.`
-      : `Súlyozás nélkül is marad különbség (${unweighted.map(v => fmtPlain(v, 1)).join(' / ')} pont, új → idősebb).`;
+      ? `Évjárat-súly nélkül a sávok egyszerű átlaga közel azonos lenne (${unweighted.map(v => fmtPlain(v, 1)).join(' / ')} pont, új → idősebb), vagyis a tényezők minden évjáratban hasonló irányba hatnak.`
+      : `Évjárat-súly nélkül is marad különbség (${unweighted.map(v => fmtPlain(v, 1)).join(' / ')} pont, új → idősebb).`;
     return s;
   }
 
@@ -6942,8 +7024,9 @@
     const ybRows = data.year_summary.map(aggRow).sort(byScore);
     document.getElementById('bar-groups').innerHTML =
       barGroup('Hajtástípus szerint', dtRows, conclDrivetrain(dtRows)) +
-      barGroup('Márkakategória szerint', btRows, conclBrand(btRows, dtRows)) +
-      barGroup('Évjárat-sáv szerint', ybRows, conclYear(ybRows));
+      // showMw = a csoportonkénti szegmensszám (márkakategória: 4 hajtás × 3 évjárat, évjárat: 4 × 4)
+      barGroup('Márkakategória szerint', btRows, conclBrand(btRows, dtRows), data.segments.length / btRows.length) +
+      barGroup('Évjárat-sáv szerint', ybRows, conclYear(ybRows), data.segments.length / ybRows.length);
     renderHeatmap();
 
     const rows = data.segments
@@ -7184,6 +7267,7 @@
       <ul>
         <li>Minden szegmensnek tényezőnként van egy <b>érzékenysége</b> (−1 és +1 között): mennyire és milyen irányban reagál az adott tényezőre. Például a drágább üzemanyag az elektromos autóknak kedvez, a belső égésűeknek nem.</li>
         <li>A pontszám a <b>tényezőváltozás × érzékenység</b> szorzatok összege, évjárat szerint súlyozva (${yb}).</li>
+        <li>A márkakategória- és évjárat-kártyák sávja a csoport szegmenseinek <b>egyszerű átlaga</b> (minden hajtás egyforma súllyal), mellette a <b>piacsúlyozott</b> érték a hajtásokat a hazai autóállomány arányában súlyozza (${mwShares()}). Az állomány közelítés: hajtás szerinti friss új-eladási bontás nem érhető el, és a KSH a két hibridfajtát nem választja szét, ezért arányukat fele-fele osztjuk el.</li>
         <li>Ehhez jön két kisebb súlyú <b>valós piaci lendület</b> a KSH-adatokból: a hajtástípusok állományának ${m.momentum.stock_window_years} éves növekedése (súly ${fmtPlain(m.momentum.stock_weight, 2)}) és a márkák forgalomba helyezésének éves változása (súly ${fmtPlain(m.momentum.reg_weight, 2)}).</li>
       </ul>
       ${exText ? `<p>${exText}</p>` : ''}

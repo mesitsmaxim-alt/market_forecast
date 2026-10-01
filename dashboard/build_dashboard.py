@@ -80,8 +80,27 @@ def driver_label(label: str) -> str:
     return label
 
 
+def drivetrain_market_weights() -> dict:
+    """Hajtástípus-súlyok a valós piaci arányhoz: a KSH-állomány legutóbbi évi
+    megoszlása (benzin+dízel -> ICE, hibrid fele-fele HEV/PHEV, mert a KSH nem
+    választja szét őket, elektromos -> BEV; az "egyéb" kimarad). Az állomány
+    közelítés - hajtás szerinti friss ÚJ-eladási bontás nincs."""
+    j = load_json("jarmuallomany.json")
+    fuel = j["fuel_types"]
+    last = {k: v[-1] for k, v in fuel.items()}
+    raw = {
+        "ICE": last.get("benzin", 0) + last.get("dizel", 0),
+        "HEV": last.get("hibrid", 0) / 2,
+        "PHEV": last.get("hibrid", 0) / 2,
+        "BEV": last.get("elektromos", 0),
+    }
+    total = sum(raw.values())
+    return {k: v / total for k, v in raw.items()} if total else {}
+
+
 def build_engine_summary() -> dict:
     results, factors = compute_segments()
+    mkt_w = drivetrain_market_weights()
     _, seg_config = load_config()
     yb_weight = {k: v["weight"] for k, v in seg_config["year_buckets"].items()}
 
@@ -93,9 +112,17 @@ def build_engine_summary() -> dict:
         # kártyák konklúzióját ("mi hajtja")
         contrib = defaultdict(lambda: {s: defaultdict(float) for s in SCENARIOS})
         counts = defaultdict(int)
+        # piacsúlyozott átlag: a hajtástípusokat a valós állomány-arányuk szerint
+        # súlyozzuk, nem egyformán (ld. drivetrain_market_weights)
+        mw_sum = defaultdict(lambda: defaultdict(float))
+        mw_den = defaultdict(float)
         for r in results:
             b = buckets[key_fn(r)]
             counts[key_fn(r)] += 1
+            w = mkt_w.get(r.drivetrain, 0)
+            mw_den[key_fn(r)] += w
+            for scenario in SCENARIOS:
+                mw_sum[key_fn(r)][scenario] += r.scores[scenario] * w
             for scenario in SCENARIOS:
                 b[scenario].append(r.scores[scenario])
                 for lbl, c in r.drivers[scenario]:
@@ -109,6 +136,8 @@ def build_engine_summary() -> dict:
                 "pesszimista": round(avg["pesszimista"], 4),
                 "optimista": round(avg["optimista"], 4),
                 "dirs": {s: classify(avg[s]) for s in SCENARIOS},
+                "market_weighted": ({s: round(mw_sum[k][s] / mw_den[k], 4) for s in SCENARIOS}
+                                    if mw_den[k] else None),
                 "drivers": {s: sorted(
                     ({"label": lbl, "points": round(v / counts[k], 2)} for lbl, v in contrib[k][s].items()),
                     key=lambda x: -abs(x["points"]),
@@ -174,6 +203,7 @@ def build_engine_summary() -> dict:
         "top_winners": top_winners,
         "top_losers": top_losers,
         "segments": segments,
+        "market_weights": {k: round(v, 4) for k, v in mkt_w.items()},
     }
 
 

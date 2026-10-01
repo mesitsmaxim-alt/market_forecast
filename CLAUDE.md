@@ -156,6 +156,13 @@ Nem kézzel írt szöveg: havonta és forgatókönyv-váltáskor magától friss
 `DRIVER_NAMES` listába (template) is fel kell venni a rövid nevét. ±5 pont alatti értékeknél
 a szöveg "semleges tartomány"-t mond, nem rangsorol.
 
+FONTOS: a márkakategória- és évjárat-aggregátumok `score`-ja a csoport szegmenseinek EGYSZERŰ
+átlaga (minden hajtás egyforma súllyal) — ez a piac ~91%-át adó belső égésűt alulsúlyozza, ezért
+lehet a kártya pozitív, miközben a csoport ICE-szegmensei negatívak. Mellette a
+`market_weighted` mező a hajtásokat a KSH-állomány arányában súlyozza
+(`drivetrain_market_weights()`; hibrid fele-fele HEV/PHEV); a dashboard mindkettőt mutatja, a
+"Mi változott?" és a futástörténet az egyszerű átlagot követi (összevethetőség miatt).
+
 ### Piaci hírek ("Amit a piac mond" fül) és legkeresettebb modellek
 - **Hírek** (`fetchers/fetch_hirek.py` → `data/hirek.json` → `hirek_report.py`): 3 magyar RSS-forrás
   (Vezess.hu, Portfolio.hu, Világgazdaság), curl-lal lekérve, `xml.etree.ElementTree`-vel parszolva

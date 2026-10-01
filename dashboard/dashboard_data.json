@@ -94,6 +94,11 @@
         "alap": "Erős növekedés",
         "optimista": "Erős növekedés"
       },
+      "market_weighted": {
+        "pesszimista": 0.0162,
+        "alap": 0.31,
+        "optimista": 0.6038
+      },
       "drivers": {
         "pesszimista": [
           {
@@ -234,6 +239,11 @@
         "pesszimista": "Stagnálás",
         "alap": "Erős növekedés",
         "optimista": "Erős növekedés"
+      },
+      "market_weighted": {
+        "pesszimista": 0.0122,
+        "alap": 0.1736,
+        "optimista": 0.3351
       },
       "drivers": {
         "pesszimista": [
@@ -376,6 +386,11 @@
         "alap": "Erős növekedés",
         "optimista": "Erős növekedés"
       },
+      "market_weighted": {
+        "pesszimista": 0.0506,
+        "alap": 0.151,
+        "optimista": 0.2514
+      },
       "drivers": {
         "pesszimista": [
           {
@@ -516,6 +531,11 @@
         "pesszimista": "Visszaesés",
         "alap": "Visszaesés",
         "optimista": "Visszaesés"
+      },
+      "market_weighted": {
+        "pesszimista": -0.0699,
+        "alap": -0.0921,
+        "optimista": -0.1142
       },
       "drivers": {
         "pesszimista": [
@@ -660,6 +680,11 @@
         "alap": "Erős növekedés",
         "optimista": "Erős növekedés"
       },
+      "market_weighted": {
+        "pesszimista": -0.1078,
+        "alap": -0.0437,
+        "optimista": 0.0203
+      },
       "drivers": {
         "pesszimista": [
           {
@@ -788,6 +813,11 @@
         "pesszimista": "Stagnálás",
         "alap": "Növekedés",
         "optimista": "Erős növekedés"
+      },
+      "market_weighted": {
+        "pesszimista": -0.0446,
+        "alap": -0.0521,
+        "optimista": -0.0595
       },
       "drivers": {
         "pesszimista": [
@@ -930,6 +960,11 @@
         "alap": "Növekedés",
         "optimista": "Erős növekedés"
       },
+      "market_weighted": {
+        "pesszimista": -0.0518,
+        "alap": -0.0521,
+        "optimista": -0.0524
+      },
       "drivers": {
         "pesszimista": [
           {
@@ -1070,6 +1105,11 @@
         "pesszimista": "Stagnálás",
         "alap": "Növekedés",
         "optimista": "Növekedés"
+      },
+      "market_weighted": {
+        "pesszimista": -0.0398,
+        "alap": -0.1159,
+        "optimista": -0.1919
       },
       "drivers": {
         "pesszimista": [
@@ -1214,6 +1254,11 @@
         "alap": "Erős növekedés",
         "optimista": "Erős növekedés"
       },
+      "market_weighted": {
+        "pesszimista": -0.1034,
+        "alap": -0.0881,
+        "optimista": -0.0727
+      },
       "drivers": {
         "pesszimista": [
           {
@@ -1355,6 +1400,11 @@
         "alap": "Növekedés",
         "optimista": "Erős növekedés"
       },
+      "market_weighted": {
+        "pesszimista": -0.0525,
+        "alap": -0.0604,
+        "optimista": -0.0683
+      },
       "drivers": {
         "pesszimista": [
           {
@@ -1495,6 +1545,11 @@
         "pesszimista": "Stagnálás",
         "alap": "Növekedés",
         "optimista": "Növekedés"
+      },
+      "market_weighted": {
+        "pesszimista": -0.027,
+        "alap": -0.0493,
+        "optimista": -0.0716
       },
       "drivers": {
         "pesszimista": [
@@ -2546,6 +2601,12 @@
       }
     }
   ],
+  "market_weights": {
+    "ICE": 0.9087,
+    "HEV": 0.0357,
+    "PHEV": 0.0357,
+    "BEV": 0.0199
+  },
   "real": {
     "jarmuallomany": {
       "last_year": 2025,
