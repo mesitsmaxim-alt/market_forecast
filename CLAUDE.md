@@ -148,6 +148,14 @@ kulcs): a tényező-források a `FACTOR_SOURCES` dictből (új tényezőnél ide
 évjárat-súlyok a `segments.json`-ból, a lendület-súlyok az `engine.py` konstansaiból, a backtest a
 `data/backtest.json`-ból. Ezért a `run_pipeline.sh` a `backtest.py`-t a dashboard ELŐTT futtatja.
 
+A három sávdiagram-kártya alján lévő "Következtetés" szövegeket a template SZABÁLYALAPÚAN
+generálja (`conclDrivetrain` / `conclBrand` / `conclYear`) a kiválasztott forgatókönyv
+pontszámaiból és az aggregátumok `drivers` mezőjéből (tényezőnkénti átlagos hozzájárulás
+pontban, évjárat-súllyal — az összegük kiadja a pontszámot; `build_engine_summary()` számolja).
+Nem kézzel írt szöveg: havonta és forgatókönyv-váltáskor magától frissül. Új tényezőnél a
+`DRIVER_NAMES` listába (template) is fel kell venni a rövid nevét. ±5 pont alatti értékeknél
+a szöveg "semleges tartomány"-t mond, nem rangsorol.
+
 ### Piaci hírek ("Amit a piac mond" fül) és legkeresettebb modellek
 - **Hírek** (`fetchers/fetch_hirek.py` → `data/hirek.json` → `hirek_report.py`): 3 magyar RSS-forrás
   (Vezess.hu, Portfolio.hu, Világgazdaság), curl-lal lekérve, `xml.etree.ElementTree`-vel parszolva

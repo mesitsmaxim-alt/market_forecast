@@ -70,16 +70,36 @@ def load_json(name: str) -> dict:
     return json.loads((DATA_DIR / name).read_text(encoding="utf-8"))
 
 
+def driver_label(label: str) -> str:
+    """Az engine momentum-címkéiben szegmensenként más szám van; a csoport-
+    átlagoláshoz egységes, látogatóknak szóló címke kell."""
+    if label.startswith("Megfigyelt piaci momentum (KSH állomány"):
+        return "Valós piaci lendület (KSH-állomány)"
+    if label.startswith("Megfigyelt piaci momentum (forgalomba helyezés"):
+        return "Valós piaci lendület (forgalomba helyezés)"
+    return label
+
+
 def build_engine_summary() -> dict:
     results, factors = compute_segments()
+    _, seg_config = load_config()
+    yb_weight = {k: v["weight"] for k, v in seg_config["year_buckets"].items()}
 
     def agg(key_fn, label_fn):
         from collections import defaultdict
         buckets = defaultdict(lambda: {"pesszimista": [], "alap": [], "optimista": []})
+        # tényezőnkénti hozzájárulás (pontban, évjárat-súllyal - ugyanúgy, ahogy a
+        # pontszámba kerül), csoportonként átlagolva: ebből írja a dashboard a
+        # kártyák konklúzióját ("mi hajtja")
+        contrib = defaultdict(lambda: {s: defaultdict(float) for s in SCENARIOS})
+        counts = defaultdict(int)
         for r in results:
             b = buckets[key_fn(r)]
+            counts[key_fn(r)] += 1
             for scenario in SCENARIOS:
                 b[scenario].append(r.scores[scenario])
+                for lbl, c in r.drivers[scenario]:
+                    contrib[key_fn(r)][scenario][driver_label(lbl)] += c * yb_weight[r.year_bucket] * 100
         out = []
         for k, scenario_scores in buckets.items():
             avg = {s: sum(vals) / len(vals) for s, vals in scenario_scores.items()}
@@ -89,6 +109,10 @@ def build_engine_summary() -> dict:
                 "pesszimista": round(avg["pesszimista"], 4),
                 "optimista": round(avg["optimista"], 4),
                 "dirs": {s: classify(avg[s]) for s in SCENARIOS},
+                "drivers": {s: sorted(
+                    ({"label": lbl, "points": round(v / counts[k], 2)} for lbl, v in contrib[k][s].items()),
+                    key=lambda x: -abs(x["points"]),
+                ) for s in SCENARIOS},
             })
         out.sort(key=lambda x: -x["score"])
         return out

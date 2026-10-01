@@ -262,6 +262,12 @@
   :root[data-theme="dark"] .dirpill.warning{ color:#ffd991; }
   :root[data-theme="dark"] .dirpill.serious{ color:#ffb08c; }
 
+  .bar-concl{
+    margin:14px 0 0; padding-top:12px; border-top:1px solid var(--border);
+    font-size:12.5px; line-height:1.55; color:var(--text-secondary);
+  }
+  .bar-concl .c-head{ display:block; font-size:11px; text-transform:uppercase; letter-spacing:.06em; font-weight:700; color:var(--text-muted); margin-bottom:4px; }
+  .bar-concl b{ color:var(--text-primary); }
   .segment-filters{ margin-bottom:14px; display:flex; flex-wrap:wrap; gap:12px 20px; align-items:center; }
   .seg-control{ display:inline-flex; background:var(--surface-2); border:1px solid var(--border); border-radius:999px; padding:3px; gap:2px; }
   .seg-control button{
@@ -666,7 +672,7 @@ __DASHBOARD_DATA__
     'Visszaesés': 'serious', 'Erős visszaesés': 'critical'
   })[d] || 'warning';
 
-  function barGroup(title, rows) {
+  function barGroup(title, rows, concl) {
     const max = Math.max(...rows.map(r => Math.abs(r.score)), 0.001);
     const bars = rows.map(r => {
       const w = Math.min(48, Math.abs(r.score) / max * 48);
@@ -684,7 +690,7 @@ __DASHBOARD_DATA__
           <div><span class="dirpill ${dirClass(r.dir)}">${r.dir}</span></div>
         </div>`;
     }).join('');
-    return `<div class="bar-card"><h3>${title}</h3>${bars}</div>`;
+    return `<div class="bar-card"><h3>${title}</h3>${bars}${concl ? `<p class="bar-concl"><span class="c-head">Következtetés</span>${concl}</p>` : ''}</div>`;
   }
 
   // ---------- forgatókönyv-váltó állapota ----------
@@ -692,7 +698,8 @@ __DASHBOARD_DATA__
   let scen = 'alap';
   let dtFilter = '';
   // az aggregátumokban az alap értéke "score" néven van, a másik kettő a forgatókönyv nevén
-  const aggRow = r => ({ label: r.label, score: scen === 'alap' ? r.score : r[scen], dir: (r.dirs && r.dirs[scen]) || r.dir });
+  const aggRow = r => ({ key: r.key, label: r.label, score: scen === 'alap' ? r.score : r[scen],
+                         dir: (r.dirs && r.dirs[scen]) || r.dir, drivers: (r.drivers && r.drivers[scen]) || [] });
   const shortLabel = s => s.split(' (')[0];
   // rövid oszlop-/sorfejlécek a hőtérképhez (a teljes címke a tooltipben látszik)
   const HEAT_SHORT = { tomeggyarto: 'Tömeg­gyártó', premium: 'Prémium', budget: 'Budget', kinai_belepo: 'Kínai belépő',
@@ -772,14 +779,104 @@ __DASHBOARD_DATA__
   heatEl.addEventListener('focusin', e => { const c = e.target.closest('.heat-cell'); if (c) { const r = c.getBoundingClientRect(); showTip(c, r.left, r.bottom); } });
   heatEl.addEventListener('focusout', () => { tip.style.display = 'none'; });
 
+  // ---------- kártyánkénti konklúzió (az aktuális adatokból generálva) ----------
+  // Szabályalapú szöveg: a kiválasztott forgatókönyv pontszámaiból és a tényezőnkénti
+  // hozzájárulásokból (drivers, pontban) - minden frissítéskor és váltáskor újraszámolódik.
+  const DRIVER_NAMES = [
+    ['Valós piaci lendület (KSH', 'a KSH-állomány tényleges bővülése'],
+    ['Valós piaci lendület (forgalomba', 'a forgalomba helyezések lendülete'],
+    ['Üzemanyagár', 'az üzemanyagár'], ['Akkumulátor', 'az akkumulátorár'],
+    ['Nyilvános töltő', 'a töltőhálózat'], ['EV importvámok', 'az EV-vámok'],
+    ['EU CO2', 'a CO2-szabályozás'], ['Finanszírozási', 'a finanszírozási költség'],
+    ['Fogyasztói vásárlási', 'a vásárlási szándék'], ['Reáljövedelem', 'a vásárlóerő'],
+  ];
+  const driverName = l => (DRIVER_NAMES.find(([p]) => l.startsWith(p)) || [null, shortLabel(l).toLowerCase()])[1];
+  const pts = v => `${fmt(v, 1)} pont`;
+  const lc = t => t.charAt(0).toLowerCase() + t.slice(1);
+  const ucFirst = t => t.charAt(0).toUpperCase() + t.slice(1);
+  const art = w => /^[aáeéiíoóöőuúüű]/i.test(w) ? 'az' : 'a';        // névelő: a / az
+  // "a(z) <b>tisztán elektromos</b> hajtás" - a mondat elején nagy kezdőbetűvel
+  const np = (r, noun, start = false) => { const w = lc(shortLabel(r.label)); const a = art(w); return `${start ? ucFirst(a) : a} <b>${w}</b> ${noun}`; };
+  const listDrivers = ds => ds.map(d => `${driverName(d.label)} (${pts(d.points)})`).join(' és ');
+  const scenPhrase = () => scen === 'alap' ? 'a jelenlegi trendek folytatódása esetén' : `${art(SCEN_LABELS[scen])} ${SCEN_LABELS[scen]} forgatókönyvben`;
+  const allNeutral = rows => rows.every(r => Math.abs(r.score * 100) < 5);
+  // a két csoport közötti különbséget leginkább magyarázó tényezők
+  function differentiators(a, b, n = 2) {
+    const m = {};
+    a.drivers.forEach(d => { m[d.label] = (m[d.label] || 0) + d.points; });
+    b.drivers.forEach(d => { m[d.label] = (m[d.label] || 0) - d.points; });
+    return Object.entries(m).map(([label, points]) => ({ label, points }))
+      .filter(d => d.points > 0.05).sort((x, y) => y.points - x.points).slice(0, n);
+  }
+  function rankSentence(rows, noun) {
+    const top = rows[0], bot = rows[rows.length - 1];
+    if (allNeutral(rows)) {
+      return `${ucFirst(scenPhrase())} minden ${noun} a semleges tartományban van (±5 pont alatt, ${pts(bot.score * 100)} és ${pts(top.score * 100)} között) — érdemi különbség nincs köztük. `;
+    }
+    return `${np(top, noun, true)} áll a legjobban (${pts(top.score * 100)}), ${np(bot, noun)} a leggyengébb (${pts(bot.score * 100)}). `;
+  }
+
+  function conclDrivetrain(rows) {
+    const top = rows[0], bot = rows[rows.length - 1];
+    let s = rankSentence(rows, 'hajtás');
+    if (allNeutral(rows)) return s;
+    const ice = rows.find(r => r.key === 'ICE');
+    const elec = rows.filter(r => r.key !== 'ICE');
+    if (ice && ice.score < 0 && elec.every(r => r.score > 0)) {
+      s += `A villamosított hajtások mind pozitívak, a belső égésű negatív: ${scenPhrase()} a körülmények <b>az elektrifikáció felé terelik</b> a keresletet. `;
+    } else if (rows.every(r => r.score > 0)) {
+      s += `Minden hajtás pozitív, a különbség a mértékben van. `;
+    }
+    const topPos = top.drivers.filter(d => d.points > 0).slice(0, 2);
+    if (topPos.length) s += `${ucFirst(np(top, 'hajtás'))} legnagyobb támasza ${listDrivers(topPos)}. `;
+    const botNeg = bot.drivers.filter(d => d.points < 0).sort((a, b) => a.points - b.points).slice(0, 2);
+    if (botNeg.length) s += `${ucFirst(np(bot, 'hajtást'))} leginkább ${listDrivers(botNeg)} húzza vissza.`;
+    return s;
+  }
+
+  function conclBrand(rows, dtRows) {
+    const top = rows[0], bot = rows[rows.length - 1];
+    let s = rankSentence(rows, 'márkakategória');
+    const spread = (top.score - bot.score) * 100;
+    const dtSpread = (dtRows[0].score - dtRows[dtRows.length - 1].score) * 100;
+    if (dtSpread > 0 && spread < dtSpread / 2) {
+      s += `A márkakategóriák közti különbség (${fmtPlain(spread, 1)} pont) jóval kisebb, mint a hajtások közötti (${fmtPlain(dtSpread, 1)} pont): a kitettséget <b>elsősorban a hajtáslánc határozza meg, nem a márka</b>. `;
+    }
+    if (allNeutral(rows)) return s;
+    const diff = differentiators(top, bot);
+    if (diff.length) s += `A legjobb és a leggyengébb kategória közti különbséget főleg ${diff.map(d => `${driverName(d.label)} (${fmtPlain(d.points, 1)} pont)`).join(' és ')} adja.`;
+    return s;
+  }
+
+  function conclYear(rows) {
+    const yb = (data.methodology && data.methodology.dimensions.year_buckets) || [];
+    const weights = {};
+    yb.forEach(y => { weights[y.label] = y.weight; });
+    let s = rankSentence(rows, 'sáv');
+    if (allNeutral(rows) || yb.length !== rows.length) return s;
+    // fix sorrendben (új → idősebb), nem a pontszám szerint
+    const ordered = yb.map(y => rows.find(r => r.label === y.label)).filter(Boolean);
+    const unweighted = ordered.map(r => r.score * 100 / weights[r.label]);
+    const weightedSpread = Math.abs(rows[0].score - rows[rows.length - 1].score) * 100;
+    const close = Math.max(...unweighted) - Math.min(...unweighted) < weightedSpread / 2;
+    s += `A modell a használt sávokhoz kisebb súlyt rendel (${yb.map(y => `${lc(shortLabel(y.label))} ×${fmtPlain(y.weight, 2)}`).join(', ')}), mert a külső tényezők elsősorban az újautó-vásárlást mozgatják. `;
+    s += close
+      ? `A különbség nagy része ebből a súlyozásból jön: súlyozás nélkül a sávok közel azonos szinten lennének (${unweighted.map(v => fmtPlain(v, 1)).join(' / ')} pont), vagyis a tényezők minden évjáratban hasonló irányba hatnak.`
+      : `Súlyozás nélkül is marad különbség (${unweighted.map(v => fmtPlain(v, 1)).join(' / ')} pont, új → idősebb).`;
+    return s;
+  }
+
   // ---------- szegmens-szekció (sávok + hőtérkép + nyertesek/vesztesek) ----------
   function renderSegments() {
     document.getElementById('segments-title').textContent = `2. Szegmens-pontszámok (${SCEN_LABELS[scen]} forgatókönyv)`;
     const byScore = (a, b) => b.score - a.score;
+    const dtRows = data.drivetrain_summary.map(aggRow).sort(byScore);
+    const btRows = data.brand_summary.map(aggRow).sort(byScore);
+    const ybRows = data.year_summary.map(aggRow).sort(byScore);
     document.getElementById('bar-groups').innerHTML =
-      barGroup('Hajtástípus szerint', data.drivetrain_summary.map(aggRow).sort(byScore)) +
-      barGroup('Márkakategória szerint', data.brand_summary.map(aggRow).sort(byScore)) +
-      barGroup('Évjárat-sáv szerint', data.year_summary.map(aggRow).sort(byScore));
+      barGroup('Hajtástípus szerint', dtRows, conclDrivetrain(dtRows)) +
+      barGroup('Márkakategória szerint', btRows, conclBrand(btRows, dtRows)) +
+      barGroup('Évjárat-sáv szerint', ybRows, conclYear(ybRows));
     renderHeatmap();
 
     const rows = data.segments
