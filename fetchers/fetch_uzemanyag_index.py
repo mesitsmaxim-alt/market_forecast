@@ -4,8 +4,14 @@
 fogyasztói árindexének (HICP) "Üzemanyagok és kenőanyagok személyszállító
 járművekhez" tétele (COICOP CP0722), havi 12 havi változás (%).
 
-Forrás: Eurostat prc_hicp_manr, publikus REST API, autentikáció nélkül.
-    https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_manr
+Forrás: Eurostat prc_hicp_minr (COICOP 2018 szerinti HICP), unit=RCH_A,
+publikus REST API, autentikáció nélkül.
+    https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr
+
+Az Eurostat 2026-tól a COICOP 2018 osztályozásra állt át: a korábbi
+prc_hicp_manr adatsor 2025-12-vel lezárult, a frissítések a prc_hicp_minr-ben
+jönnek (ugyanaz a CP0722 kód, a teljes múlttal; a két adatsor az átfedő
+időszakon átlagosan 0,1 százalékponton belül egyezik).
 
 Mire kell: az élő kútár (holtankoljak.hu) csak a mai, az 1 hónapos és az 1
 éves árat adja - a calibrate_factors.py oil_price tényezőjének forgatókönyv-
@@ -27,9 +33,9 @@ from pathlib import Path
 
 API_URL = (
     "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/"
-    "prc_hicp_manr?format=JSON&lang=EN&geo=HU&coicop=CP0722"
+    "prc_hicp_minr?format=JSON&lang=EN&geo=HU&coicop18=CP0722&unit=RCH_A"
 )
-SOURCE_PAGE = "https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_manr"
+SOURCE_PAGE = "https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr"
 DATA_DIR = Path(__file__).parent.parent / "data"
 RAW_PATH = DATA_DIR / "_raw_uzemanyag_index.json"
 OUT_PATH = DATA_DIR / "uzemanyag_index.json"
@@ -47,7 +53,7 @@ def download():
 
 def parse() -> dict:
     raw = json.loads(RAW_PATH.read_text(encoding="utf-8"))
-    assert raw["id"] == ["freq", "unit", "coicop", "geo", "time"], raw["id"]
+    assert raw["id"] == ["freq", "unit", "coicop18", "geo", "time"], raw["id"]
     assert raw["size"][:4] == [1, 1, 1, 1], raw["size"]
     time_index = raw["dimension"]["time"]["category"]["index"]
     values = raw["value"]
@@ -66,7 +72,7 @@ def parse() -> dict:
     years = sorted(y for y, vals in by_year.items() if len(vals) == 12)
 
     return {
-        "source": "Eurostat prc_hicp_manr — HICP, üzemanyagok (CP0722), HU, 12 havi változás",
+        "source": "Eurostat prc_hicp_minr — HICP (COICOP 2018), üzemanyagok (CP0722), HU, 12 havi változás",
         "source_page": SOURCE_PAGE,
         "unit": "% (az előző év azonos hónapjához képest)",
         "months": months,

@@ -34,7 +34,10 @@ HU = "Magyarország"
 
 def build_live_section() -> list[str]:
     d = json.loads(LIVE_DATA_PATH.read_text(encoding="utf-8"))
-    current, month_ago, year_ago = d["periods"]
+    # A forrás 3 oszlopot ad; a középső jelentése nem stabil (a saját címkéje
+    # szerint hol ~1 hónappal korábbi, hol a mostanihoz közeli időszak), ezért
+    # "havi" változásként NEM használjuk - csak a mostani és az 1 éves oszlopot.
+    current, _middle, year_ago = d["periods"]
     fuels = d["fuels"]
 
     lines = ["## Élő adat (holtankoljak.hu, mindig aktuális)", ""]
@@ -45,13 +48,12 @@ def build_live_section() -> list[str]:
     )
     lines.append(f"- Gázolaj (mai országos átlag): **{d['headline']['gazolaj']} Ft/liter**")
     lines.append("")
-    lines.append(f"| Üzemanyag | {current} | {month_ago} | {year_ago} | Havi Δ | Éves (YoY) Δ |")
-    lines.append("|---|---|---|---|---|---|")
+    lines.append(f"| Üzemanyag | {current} | {year_ago} | Éves (YoY) Δ |")
+    lines.append("|---|---|---|---|")
     for name, vals in fuels.items():
-        now, m_ago, y_ago = vals[current], vals[month_ago], vals[year_ago]
-        m_delta = (now / m_ago - 1) * 100 if m_ago else float("nan")
+        now, y_ago = vals[current], vals[year_ago]
         y_delta = (now / y_ago - 1) * 100 if y_ago else float("nan")
-        lines.append(f"| {name} | {now} Ft | {m_ago} Ft | {y_ago} Ft | {m_delta:+.1f}% | {y_delta:+.1f}% |")
+        lines.append(f"| {name} | {now} Ft | {y_ago} Ft | {y_delta:+.1f}% |")
     lines.append("")
     lines.append(
         "> Ez az adat minden futáskor a ténylegesen aktuális árat tükrözi "

@@ -9,7 +9,7 @@
   "comparisons": [
     {
       "label": "BEV vs. ICE",
-      "correlation": 0.149,
+      "correlation": 0.147,
       "hit_rate": 0.609,
       "n": 23,
       "first_year": 2003,
@@ -17,7 +17,7 @@
     },
     {
       "label": "Hibrid vs. ICE",
-      "correlation": 0.168,
+      "correlation": 0.167,
       "hit_rate": 0.522,
       "n": 23,
       "first_year": 2003,

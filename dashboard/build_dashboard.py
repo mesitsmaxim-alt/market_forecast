@@ -65,6 +65,21 @@ FACTOR_SOURCES = {
 }
 EXAMPLE_SEGMENT = ("BEV", "tomeggyarto", "uj")  # a módszertani példa szegmense
 
+# Az automatikusan (minden pipeline-futáskor) frissülő adatforrások - a run_pipeline.sh
+# fetchereivel összhangban. Ebből számolja a dashboard és a digest a forrásszámot
+# (korábban beégetett "6" volt). Új automata fetchernél ide is fel kell venni.
+AUTOMATED_SOURCES = [
+    "KSH személygépkocsi-állomány (sza0025)",
+    "KSH forgalomba helyezés márkánként (sza0070)",
+    "KSH reáljövedelem / reálkereset (gdp0035)",
+    "KSH régiós üzemanyagárak",
+    "MNB alapkamat és EUR/HUF",
+    "holtankoljak.hu élő kútárak",
+    "Eurostat fogyasztói felmérés (ei_bsco_m)",
+    "Eurostat új autók hajtás szerint (road_eqr_carpda)",
+    "Eurostat HICP üzemanyag-árindex (prc_hicp_minr)",
+]
+
 
 def load_json(name: str) -> dict:
     return json.loads((DATA_DIR / name).read_text(encoding="utf-8"))
@@ -361,15 +376,18 @@ def build_real_snapshot() -> dict:
     # Élő üzemanyagár (holtankoljak.hu) - mindig a jelenlegi árat mutatja,
     # nem a befagyott KSH-kiadvány pillanatképét.
     ue = load_json("uzemanyagar_elo.json")
-    current, month_ago, year_ago = ue["periods"]
+    # a forrás középső oszlopa nem megbízhatóan "1 hónappal korábbi" (ld.
+    # fuel_report.py) - csak az 1 évvel korábbi és a mostani érték kerül át
+    current, _middle, year_ago = ue["periods"]
     benzin_row = ue["fuels"]["95-ös Benzin E10"]
     dizel_row = ue["fuels"]["Gázolaj"]
     out["uzemanyagar"] = {
         "last_week": ue["headline_date"],
         "benzin_last": ue["headline"]["benzin_95"],
         "dizel_last": ue["headline"]["gazolaj"],
-        "benzin_series": [benzin_row[year_ago], benzin_row[month_ago], benzin_row[current]],
-        "dizel_series": [dizel_row[year_ago], dizel_row[month_ago], dizel_row[current]],
+        "benzin_series": [benzin_row[year_ago], benzin_row[current]],
+        "dizel_series": [dizel_row[year_ago], dizel_row[current]],
+        "year_ago_period": year_ago,
     }
 
     m = load_json("makro.json")
@@ -631,7 +649,8 @@ def main():
             "n_factors": None,  # kitöltve lent
             "n_calibrated": len(CALIBRATED_FACTORS),
             "n_manual": len(MANUAL_SOURCE_FACTORS),
-            "n_real_sources": 6,
+            "n_real_sources": len(AUTOMATED_SOURCES),
+            "real_sources_label": " / ".join(sorted({s.split(" ")[0] for s in AUTOMATED_SOURCES})),
             "automation": "havonta, minden hónap 1-jén 10:00 (launchd) - adat-előkészítés automata, publikálás kézi kérésre",
         },
         **build_engine_summary(),

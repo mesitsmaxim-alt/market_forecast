@@ -594,7 +594,8 @@
     "n_factors": 8,
     "n_calibrated": 5,
     "n_manual": 3,
-    "n_real_sources": 6,
+    "n_real_sources": 9,
+    "real_sources_label": "Eurostat / KSH / MNB / holtankoljak.hu",
     "automation": "havonta, minden hónap 1-jén 10:00 (launchd) - adat-előkészítés automata, publikálás kézi kérésre"
   },
   "factors": [
@@ -603,9 +604,9 @@
       "label": "Üzemanyagár (HU, benzin + dízel)",
       "unit": "%",
       "calibrated": "auto",
-      "pesszimista": -0.0,
+      "pesszimista": 0.6,
       "alap": 12.9,
-      "optimista": 25.8
+      "optimista": 25.2
     },
     {
       "key": "battery_cost",
@@ -621,9 +622,9 @@
       "label": "Nyilvános töltőpont-sűrűség növekedése",
       "unit": "%",
       "calibrated": "auto",
-      "pesszimista": -15.0,
-      "alap": -2.6,
-      "optimista": 9.8
+      "pesszimista": -5.3,
+      "alap": 5.7,
+      "optimista": 16.7
     },
     {
       "key": "ev_tariffs",
@@ -675,26 +676,22 @@
     {
       "key": "BEV",
       "label": "Tisztán elektromos",
-      "score": 0.2777,
+      "score": 0.3309,
       "dir": "Erős növekedés",
-      "pesszimista": -0.0662,
-      "optimista": 0.6215,
+      "pesszimista": -0.001,
+      "optimista": 0.6629,
       "dirs": {
-        "pesszimista": "Visszaesés",
+        "pesszimista": "Stagnálás",
         "alap": "Erős növekedés",
         "optimista": "Erős növekedés"
       },
       "market_weighted": {
-        "pesszimista": -0.0832,
-        "alap": 0.3482,
-        "optimista": 0.7795
+        "pesszimista": -0.0033,
+        "alap": 0.4134,
+        "optimista": 0.83
       },
       "drivers": {
         "pesszimista": [
-          {
-            "label": "Nyilvános töltőpont-sűrűség növekedése",
-            "points": -9.63
-          },
           {
             "label": "EU CO2-szabályozás szigorodása / ICE-tiltás közeledése",
             "points": 4.27
@@ -702,6 +699,10 @@
           {
             "label": "EV importvámok (elsősorban kínai gyártmányú BEV-ekre)",
             "points": -4.09
+          },
+          {
+            "label": "Nyilvános töltőpont-sűrűség növekedése",
+            "points": -3.4
           },
           {
             "label": "Valós piaci lendület (forgalomba helyezés)",
@@ -729,7 +730,7 @@
           },
           {
             "label": "Üzemanyagár (HU, benzin + dízel)",
-            "points": 0.0
+            "points": 0.29
           }
         ],
         "alap": [
@@ -750,12 +751,12 @@
             "points": 4.94
           },
           {
-            "label": "Valós piaci lendület (forgalomba helyezés)",
-            "points": 2.34
+            "label": "Nyilvános töltőpont-sűrűség növekedése",
+            "points": 3.66
           },
           {
-            "label": "Nyilvános töltőpont-sűrűség növekedése",
-            "points": -1.67
+            "label": "Valós piaci lendület (forgalomba helyezés)",
+            "points": 2.34
           },
           {
             "label": "Valós piaci lendület (új autók részesedése)",
@@ -781,7 +782,11 @@
           },
           {
             "label": "Üzemanyagár (HU, benzin + dízel)",
-            "points": 12.39
+            "points": 12.11
+          },
+          {
+            "label": "Nyilvános töltőpont-sűrűség növekedése",
+            "points": 10.72
           },
           {
             "label": "Akkumulátorcsomag ár ($/kWh index)",
@@ -790,10 +795,6 @@
           {
             "label": "EU CO2-szabályozás szigorodása / ICE-tiltás közeledése",
             "points": 7.52
-          },
-          {
-            "label": "Nyilvános töltőpont-sűrűség növekedése",
-            "points": 6.29
           },
           {
             "label": "EV importvámok (elsősorban kínai gyártmányú BEV-ekre)",
@@ -819,21 +820,167 @@
       }
     },
     {
-      "key": "HEV",
-      "label": "Hibrid (nem tölthető)",
-      "score": 0.1662,
+      "key": "PHEV",
+      "label": "Plug-in hibrid",
+      "score": 0.181,
       "dir": "Erős növekedés",
-      "pesszimista": 0.0438,
-      "optimista": 0.2887,
+      "pesszimista": 0.0002,
+      "optimista": 0.3618,
       "dirs": {
         "pesszimista": "Stagnálás",
         "alap": "Erős növekedés",
         "optimista": "Erős növekedés"
       },
       "market_weighted": {
-        "pesszimista": 0.0513,
-        "alap": 0.2109,
-        "optimista": 0.3705
+        "pesszimista": -0.0018,
+        "alap": 0.2303,
+        "optimista": 0.4624
+      },
+      "drivers": {
+        "pesszimista": [
+          {
+            "label": "Valós piaci lendület (forgalomba helyezés)",
+            "points": 2.34
+          },
+          {
+            "label": "EV importvámok (elsősorban kínai gyártmányú BEV-ekre)",
+            "points": -1.75
+          },
+          {
+            "label": "EU CO2-szabályozás szigorodása / ICE-tiltás közeledése",
+            "points": 1.54
+          },
+          {
+            "label": "Finanszírozási költség (jegybanki alapkamat várható elmozdulása)",
+            "points": -1.37
+          },
+          {
+            "label": "Nyilvános töltőpont-sűrűség növekedése",
+            "points": -1.33
+          },
+          {
+            "label": "Reáljövedelem / vásárlóerő változása",
+            "points": -1.04
+          },
+          {
+            "label": "Fogyasztói vásárlási szándék (tartós fogyasztási cikk, EU-felmérés)",
+            "points": 0.59
+          },
+          {
+            "label": "Akkumulátorcsomag ár ($/kWh index)",
+            "points": 0.58
+          },
+          {
+            "label": "Valós piaci lendület (új autók részesedése)",
+            "points": 0.37
+          },
+          {
+            "label": "Üzemanyagár (HU, benzin + dízel)",
+            "points": 0.09
+          }
+        ],
+        "alap": [
+          {
+            "label": "Fogyasztói vásárlási szándék (tartós fogyasztási cikk, EU-felmérés)",
+            "points": 6.22
+          },
+          {
+            "label": "Valós piaci lendület (forgalomba helyezés)",
+            "points": 2.34
+          },
+          {
+            "label": "Akkumulátorcsomag ár ($/kWh index)",
+            "points": 2.34
+          },
+          {
+            "label": "EU CO2-szabályozás szigorodása / ICE-tiltás közeledése",
+            "points": 2.12
+          },
+          {
+            "label": "Üzemanyagár (HU, benzin + dízel)",
+            "points": 2.0
+          },
+          {
+            "label": "Nyilvános töltőpont-sűrűség növekedése",
+            "points": 1.44
+          },
+          {
+            "label": "Reáljövedelem / vásárlóerő változása",
+            "points": 0.55
+          },
+          {
+            "label": "Finanszírozási költség (jegybanki alapkamat várható elmozdulása)",
+            "points": 0.53
+          },
+          {
+            "label": "Valós piaci lendület (új autók részesedése)",
+            "points": 0.37
+          },
+          {
+            "label": "EV importvámok (elsősorban kínai gyártmányú BEV-ekre)",
+            "points": 0.2
+          }
+        ],
+        "optimista": [
+          {
+            "label": "Fogyasztói vásárlási szándék (tartós fogyasztási cikk, EU-felmérés)",
+            "points": 11.85
+          },
+          {
+            "label": "Nyilvános töltőpont-sűrűség növekedése",
+            "points": 4.21
+          },
+          {
+            "label": "Akkumulátorcsomag ár ($/kWh index)",
+            "points": 4.1
+          },
+          {
+            "label": "Üzemanyagár (HU, benzin + dízel)",
+            "points": 3.92
+          },
+          {
+            "label": "EU CO2-szabályozás szigorodása / ICE-tiltás közeledése",
+            "points": 2.71
+          },
+          {
+            "label": "Finanszírozási költség (jegybanki alapkamat várható elmozdulása)",
+            "points": 2.42
+          },
+          {
+            "label": "Valós piaci lendület (forgalomba helyezés)",
+            "points": 2.34
+          },
+          {
+            "label": "EV importvámok (elsősorban kínai gyártmányú BEV-ekre)",
+            "points": 2.15
+          },
+          {
+            "label": "Reáljövedelem / vásárlóerő változása",
+            "points": 2.14
+          },
+          {
+            "label": "Valós piaci lendület (új autók részesedése)",
+            "points": 0.37
+          }
+        ]
+      }
+    },
+    {
+      "key": "HEV",
+      "label": "Hibrid (nem tölthető)",
+      "score": 0.1683,
+      "dir": "Erős növekedés",
+      "pesszimista": 0.0479,
+      "optimista": 0.2886,
+      "dirs": {
+        "pesszimista": "Stagnálás",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      },
+      "market_weighted": {
+        "pesszimista": 0.0564,
+        "alap": 0.2134,
+        "optimista": 0.3703
       },
       "drivers": {
         "pesszimista": [
@@ -862,20 +1009,20 @@
             "points": 0.45
           },
           {
-            "label": "Nyilvános töltőpont-sűrűség növekedése",
-            "points": -0.37
-          },
-          {
             "label": "Akkumulátorcsomag ár ($/kWh index)",
             "points": 0.2
+          },
+          {
+            "label": "Üzemanyagár (HU, benzin + dízel)",
+            "points": 0.17
           },
           {
             "label": "EU CO2-szabályozás szigorodása / ICE-tiltás közeledése",
             "points": 0.17
           },
           {
-            "label": "Üzemanyagár (HU, benzin + dízel)",
-            "points": 0.0
+            "label": "Nyilvános töltőpont-sűrűség növekedése",
+            "points": -0.13
           }
         ],
         "alap": [
@@ -912,12 +1059,12 @@
             "points": 0.24
           },
           {
-            "label": "EV importvámok (elsősorban kínai gyártmányú BEV-ekre)",
-            "points": 0.07
+            "label": "Nyilvános töltőpont-sűrűség növekedése",
+            "points": 0.14
           },
           {
-            "label": "Nyilvános töltőpont-sűrűség növekedése",
-            "points": -0.06
+            "label": "EV importvámok (elsősorban kínai gyártmányú BEV-ekre)",
+            "points": 0.07
           }
         ],
         "optimista": [
@@ -927,7 +1074,7 @@
           },
           {
             "label": "Üzemanyagár (HU, benzin + dízel)",
-            "points": 7.36
+            "points": 7.19
           },
           {
             "label": "Valós piaci lendület (új autók részesedése)",
@@ -954,158 +1101,12 @@
             "points": 0.71
           },
           {
-            "label": "EU CO2-szabályozás szigorodása / ICE-tiltás közeledése",
-            "points": 0.3
-          },
-          {
             "label": "Nyilvános töltőpont-sűrűség növekedése",
-            "points": 0.24
-          }
-        ]
-      }
-    },
-    {
-      "key": "PHEV",
-      "label": "Plug-in hibrid",
-      "score": 0.1601,
-      "dir": "Erős növekedés",
-      "pesszimista": -0.0252,
-      "optimista": 0.3454,
-      "dirs": {
-        "pesszimista": "Stagnálás",
-        "alap": "Erős növekedés",
-        "optimista": "Erős növekedés"
-      },
-      "market_weighted": {
-        "pesszimista": -0.033,
-        "alap": 0.2047,
-        "optimista": 0.4424
-      },
-      "drivers": {
-        "pesszimista": [
-          {
-            "label": "Nyilvános töltőpont-sűrűség növekedése",
-            "points": -3.78
-          },
-          {
-            "label": "Valós piaci lendület (forgalomba helyezés)",
-            "points": 2.34
-          },
-          {
-            "label": "EV importvámok (elsősorban kínai gyártmányú BEV-ekre)",
-            "points": -1.75
+            "points": 0.41
           },
           {
             "label": "EU CO2-szabályozás szigorodása / ICE-tiltás közeledése",
-            "points": 1.54
-          },
-          {
-            "label": "Finanszírozási költség (jegybanki alapkamat várható elmozdulása)",
-            "points": -1.37
-          },
-          {
-            "label": "Reáljövedelem / vásárlóerő változása",
-            "points": -1.04
-          },
-          {
-            "label": "Fogyasztói vásárlási szándék (tartós fogyasztási cikk, EU-felmérés)",
-            "points": 0.59
-          },
-          {
-            "label": "Akkumulátorcsomag ár ($/kWh index)",
-            "points": 0.58
-          },
-          {
-            "label": "Valós piaci lendület (új autók részesedése)",
-            "points": 0.37
-          },
-          {
-            "label": "Üzemanyagár (HU, benzin + dízel)",
-            "points": 0.0
-          }
-        ],
-        "alap": [
-          {
-            "label": "Fogyasztói vásárlási szándék (tartós fogyasztási cikk, EU-felmérés)",
-            "points": 6.22
-          },
-          {
-            "label": "Valós piaci lendület (forgalomba helyezés)",
-            "points": 2.34
-          },
-          {
-            "label": "Akkumulátorcsomag ár ($/kWh index)",
-            "points": 2.34
-          },
-          {
-            "label": "EU CO2-szabályozás szigorodása / ICE-tiltás közeledése",
-            "points": 2.12
-          },
-          {
-            "label": "Üzemanyagár (HU, benzin + dízel)",
-            "points": 2.0
-          },
-          {
-            "label": "Nyilvános töltőpont-sűrűség növekedése",
-            "points": -0.65
-          },
-          {
-            "label": "Reáljövedelem / vásárlóerő változása",
-            "points": 0.55
-          },
-          {
-            "label": "Finanszírozási költség (jegybanki alapkamat várható elmozdulása)",
-            "points": 0.53
-          },
-          {
-            "label": "Valós piaci lendület (új autók részesedése)",
-            "points": 0.37
-          },
-          {
-            "label": "EV importvámok (elsősorban kínai gyártmányú BEV-ekre)",
-            "points": 0.2
-          }
-        ],
-        "optimista": [
-          {
-            "label": "Fogyasztói vásárlási szándék (tartós fogyasztási cikk, EU-felmérés)",
-            "points": 11.85
-          },
-          {
-            "label": "Akkumulátorcsomag ár ($/kWh index)",
-            "points": 4.1
-          },
-          {
-            "label": "Üzemanyagár (HU, benzin + dízel)",
-            "points": 4.01
-          },
-          {
-            "label": "EU CO2-szabályozás szigorodása / ICE-tiltás közeledése",
-            "points": 2.71
-          },
-          {
-            "label": "Nyilvános töltőpont-sűrűség növekedése",
-            "points": 2.47
-          },
-          {
-            "label": "Finanszírozási költség (jegybanki alapkamat várható elmozdulása)",
-            "points": 2.42
-          },
-          {
-            "label": "Valós piaci lendület (forgalomba helyezés)",
-            "points": 2.34
-          },
-          {
-            "label": "EV importvámok (elsősorban kínai gyártmányú BEV-ekre)",
-            "points": 2.15
-          },
-          {
-            "label": "Reáljövedelem / vásárlóerő változása",
-            "points": 2.14
-          },
-          {
-            "label": "Valós piaci lendület (új autók részesedése)",
-            "points": 0.37
+            "points": 0.3
           }
         ]
       }
@@ -1113,19 +1114,19 @@
     {
       "key": "ICE",
       "label": "Belső égésű (benzin/dízel)",
-      "score": -0.1295,
+      "score": -0.1302,
       "dir": "Visszaesés",
-      "pesszimista": -0.0831,
-      "optimista": -0.176,
+      "pesszimista": -0.0876,
+      "optimista": -0.1728,
       "dirs": {
         "pesszimista": "Visszaesés",
         "alap": "Visszaesés",
         "optimista": "Erős visszaesés"
       },
       "market_weighted": {
-        "pesszimista": -0.069,
-        "alap": -0.1156,
-        "optimista": -0.1623
+        "pesszimista": -0.0729,
+        "alap": -0.1162,
+        "optimista": -0.1595
       },
       "drivers": {
         "pesszimista": [
@@ -1158,16 +1159,16 @@
             "points": 0.38
           },
           {
-            "label": "Nyilvános töltőpont-sűrűség növekedése",
-            "points": 0.12
+            "label": "Üzemanyagár (HU, benzin + dízel)",
+            "points": -0.37
           },
           {
             "label": "Akkumulátorcsomag ár ($/kWh index)",
             "points": 0.07
           },
           {
-            "label": "Üzemanyagár (HU, benzin + dízel)",
-            "points": 0.0
+            "label": "Nyilvános töltőpont-sűrűség növekedése",
+            "points": 0.04
           }
         ],
         "alap": [
@@ -1209,13 +1210,13 @@
           },
           {
             "label": "Nyilvános töltőpont-sűrűség növekedése",
-            "points": 0.02
+            "points": -0.05
           }
         ],
         "optimista": [
           {
             "label": "Üzemanyagár (HU, benzin + dízel)",
-            "points": -16.11
+            "points": -15.74
           },
           {
             "label": "EU CO2-szabályozás szigorodása / ICE-tiltás közeledése",
@@ -1251,7 +1252,7 @@
           },
           {
             "label": "Nyilvános töltőpont-sűrűség növekedése",
-            "points": -0.08
+            "points": -0.14
           }
         ]
       }
@@ -1261,19 +1262,19 @@
     {
       "key": "kinai_belepo",
       "label": "Kínai eredetű, EV-fókuszú belépő (pl. BYD, MG)",
-      "score": 0.1398,
-      "dir": "Növekedés",
-      "pesszimista": -0.0868,
-      "optimista": 0.3664,
+      "score": 0.1648,
+      "dir": "Erős növekedés",
+      "pesszimista": -0.0567,
+      "optimista": 0.3863,
       "dirs": {
         "pesszimista": "Visszaesés",
-        "alap": "Növekedés",
+        "alap": "Erős növekedés",
         "optimista": "Erős növekedés"
       },
       "market_weighted": {
-        "pesszimista": -0.0836,
-        "alap": 0.0458,
-        "optimista": 0.1751
+        "pesszimista": -0.0716,
+        "alap": 0.0565,
+        "optimista": 0.1845
       },
       "drivers": {
         "pesszimista": [
@@ -1282,12 +1283,12 @@
             "points": -5.56
           },
           {
-            "label": "Nyilvános töltőpont-sűrűség növekedése",
-            "points": -4.51
-          },
-          {
             "label": "EU CO2-szabályozás szigorodása / ICE-tiltás közeledése",
             "points": 2.22
+          },
+          {
+            "label": "Nyilvános töltőpont-sűrűség növekedése",
+            "points": -1.59
           },
           {
             "label": "Finanszírozási költség (jegybanki alapkamat várható elmozdulása)",
@@ -1306,12 +1307,12 @@
             "points": 0.5
           },
           {
-            "label": "Valós piaci lendület (új autók részesedése)",
-            "points": 0.02
+            "label": "Üzemanyagár (HU, benzin + dízel)",
+            "points": 0.09
           },
           {
-            "label": "Üzemanyagár (HU, benzin + dízel)",
-            "points": 0.0
+            "label": "Valós piaci lendület (új autók részesedése)",
+            "points": 0.02
           }
         ],
         "alap": [
@@ -1333,7 +1334,7 @@
           },
           {
             "label": "Nyilvános töltőpont-sűrűség növekedése",
-            "points": -0.78
+            "points": 1.71
           },
           {
             "label": "EV importvámok (elsősorban kínai gyártmányú BEV-ekre)",
@@ -1362,20 +1363,20 @@
             "points": 6.79
           },
           {
+            "label": "Nyilvános töltőpont-sűrűség növekedése",
+            "points": 5.02
+          },
+          {
             "label": "Akkumulátorcsomag ár ($/kWh index)",
             "points": 5.01
           },
           {
             "label": "Üzemanyagár (HU, benzin + dízel)",
-            "points": 4.01
+            "points": 3.92
           },
           {
             "label": "EU CO2-szabályozás szigorodása / ICE-tiltás közeledése",
             "points": 3.91
-          },
-          {
-            "label": "Nyilvános töltőpont-sűrűség növekedése",
-            "points": 2.95
           },
           {
             "label": "Finanszírozási költség (jegybanki alapkamat várható elmozdulása)",
@@ -1395,26 +1396,22 @@
     {
       "key": "premium",
       "label": "Prémium (pl. BMW, Mercedes, Audi)",
-      "score": 0.1394,
-      "dir": "Növekedés",
-      "pesszimista": -0.0146,
-      "optimista": 0.2935,
+      "score": 0.1617,
+      "dir": "Erős növekedés",
+      "pesszimista": 0.0119,
+      "optimista": 0.3115,
       "dirs": {
         "pesszimista": "Stagnálás",
-        "alap": "Növekedés",
+        "alap": "Erős növekedés",
         "optimista": "Erős növekedés"
       },
       "market_weighted": {
-        "pesszimista": -0.0114,
-        "alap": 0.0454,
-        "optimista": 0.1022
+        "pesszimista": -0.003,
+        "alap": 0.0533,
+        "optimista": 0.1097
       },
       "drivers": {
         "pesszimista": [
-          {
-            "label": "Nyilvános töltőpont-sűrűség növekedése",
-            "points": -4.02
-          },
           {
             "label": "Valós piaci lendület (forgalomba helyezés)",
             "points": 3.96
@@ -1422,6 +1419,10 @@
           {
             "label": "Reáljövedelem / vásárlóerő változása",
             "points": -1.45
+          },
+          {
+            "label": "Nyilvános töltőpont-sűrűség növekedése",
+            "points": -1.42
           },
           {
             "label": "Finanszírozási költség (jegybanki alapkamat várható elmozdulása)",
@@ -1440,15 +1441,15 @@
             "points": -0.17
           },
           {
+            "label": "Üzemanyagár (HU, benzin + dízel)",
+            "points": 0.05
+          },
+          {
             "label": "Valós piaci lendület (új autók részesedése)",
             "points": 0.02
           },
           {
             "label": "EV importvámok (elsősorban kínai gyártmányú BEV-ekre)",
-            "points": 0.0
-          },
-          {
-            "label": "Üzemanyagár (HU, benzin + dízel)",
             "points": 0.0
           }
         ],
@@ -1466,16 +1467,16 @@
             "points": 1.82
           },
           {
+            "label": "Nyilvános töltőpont-sűrűség növekedése",
+            "points": 1.53
+          },
+          {
             "label": "Üzemanyagár (HU, benzin + dízel)",
             "points": 1.17
           },
           {
             "label": "Reáljövedelem / vásárlóerő változása",
             "points": 0.77
-          },
-          {
-            "label": "Nyilvános töltőpont-sűrűség növekedése",
-            "points": -0.7
           },
           {
             "label": "Finanszírozási költség (jegybanki alapkamat várható elmozdulása)",
@@ -1500,6 +1501,10 @@
             "points": 12.93
           },
           {
+            "label": "Nyilvános töltőpont-sűrűség növekedése",
+            "points": 4.48
+          },
+          {
             "label": "Valós piaci lendület (forgalomba helyezés)",
             "points": 3.96
           },
@@ -1512,12 +1517,8 @@
             "points": 3.0
           },
           {
-            "label": "Nyilvános töltőpont-sűrűség növekedése",
-            "points": 2.63
-          },
-          {
             "label": "Üzemanyagár (HU, benzin + dízel)",
-            "points": 2.33
+            "points": 2.28
           },
           {
             "label": "Finanszírozási költség (jegybanki alapkamat várható elmozdulása)",
@@ -1541,19 +1542,19 @@
     {
       "key": "tomeggyarto",
       "label": "Tömeggyártó (pl. Volkswagen, Toyota, Hyundai, Ford)",
-      "score": 0.1315,
-      "dir": "Növekedés",
-      "pesszimista": -0.0182,
-      "optimista": 0.2811,
+      "score": 0.151,
+      "dir": "Erős növekedés",
+      "pesszimista": 0.0052,
+      "optimista": 0.2969,
       "dirs": {
         "pesszimista": "Stagnálás",
-        "alap": "Növekedés",
+        "alap": "Erős növekedés",
         "optimista": "Erős növekedés"
       },
       "market_weighted": {
-        "pesszimista": -0.0149,
-        "alap": 0.0374,
-        "optimista": 0.0898
+        "pesszimista": -0.0097,
+        "alap": 0.0427,
+        "optimista": 0.0951
       },
       "drivers": {
         "pesszimista": [
@@ -1563,7 +1564,7 @@
           },
           {
             "label": "Nyilvános töltőpont-sűrűség növekedése",
-            "points": -3.53
+            "points": -1.25
           },
           {
             "label": "Finanszírozási költség (jegybanki alapkamat várható elmozdulása)",
@@ -1590,12 +1591,12 @@
             "points": 0.17
           },
           {
-            "label": "Valós piaci lendület (új autók részesedése)",
-            "points": 0.02
+            "label": "Üzemanyagár (HU, benzin + dízel)",
+            "points": 0.05
           },
           {
-            "label": "Üzemanyagár (HU, benzin + dízel)",
-            "points": 0.0
+            "label": "Valós piaci lendület (új autók részesedése)",
+            "points": 0.02
           }
         ],
         "alap": [
@@ -1612,12 +1613,12 @@
             "points": 2.34
           },
           {
-            "label": "Üzemanyagár (HU, benzin + dízel)",
-            "points": 1.17
+            "label": "Nyilvános töltőpont-sűrűség növekedése",
+            "points": 1.34
           },
           {
-            "label": "Nyilvános töltőpont-sűrűség növekedése",
-            "points": -0.61
+            "label": "Üzemanyagár (HU, benzin + dízel)",
+            "points": 1.17
           },
           {
             "label": "Reáljövedelem / vásárlóerő változása",
@@ -1650,16 +1651,16 @@
             "points": 4.09
           },
           {
+            "label": "Nyilvános töltőpont-sűrűség növekedése",
+            "points": 3.93
+          },
+          {
             "label": "Valós piaci lendület (forgalomba helyezés)",
             "points": 3.59
           },
           {
             "label": "Üzemanyagár (HU, benzin + dízel)",
-            "points": 2.33
-          },
-          {
-            "label": "Nyilvános töltőpont-sűrűség növekedése",
-            "points": 2.31
+            "points": 2.28
           },
           {
             "label": "Finanszírozási költség (jegybanki alapkamat várható elmozdulása)",
@@ -1687,29 +1688,25 @@
     {
       "key": "budget",
       "label": "Belépő szintű / budget (pl. Dacia)",
-      "score": 0.0637,
+      "score": 0.0725,
       "dir": "Növekedés",
-      "pesszimista": -0.011,
-      "optimista": 0.1385,
+      "pesszimista": -0.001,
+      "optimista": 0.146,
       "dirs": {
         "pesszimista": "Stagnálás",
         "alap": "Növekedés",
         "optimista": "Növekedés"
       },
       "market_weighted": {
-        "pesszimista": -0.0078,
-        "alap": -0.0303,
-        "optimista": -0.0528
+        "pesszimista": -0.0159,
+        "alap": -0.0358,
+        "optimista": -0.0558
       },
       "drivers": {
         "pesszimista": [
           {
             "label": "Valós piaci lendület (forgalomba helyezés)",
             "points": 1.79
-          },
-          {
-            "label": "Nyilvános töltőpont-sűrűség növekedése",
-            "points": -1.58
           },
           {
             "label": "Finanszírozási költség (jegybanki alapkamat várható elmozdulása)",
@@ -1722,6 +1719,10 @@
           {
             "label": "EV importvámok (elsősorban kínai gyártmányú BEV-ekre)",
             "points": 0.58
+          },
+          {
+            "label": "Nyilvános töltőpont-sűrűség növekedése",
+            "points": -0.56
           },
           {
             "label": "Fogyasztói vásárlási szándék (tartós fogyasztási cikk, EU-felmérés)",
@@ -1741,7 +1742,7 @@
           },
           {
             "label": "Üzemanyagár (HU, benzin + dízel)",
-            "points": 0.0
+            "points": -0.02
           }
         ],
         "alap": [
@@ -1762,16 +1763,16 @@
             "points": -1.18
           },
           {
+            "label": "Nyilvános töltőpont-sűrűség növekedése",
+            "points": 0.6
+          },
+          {
             "label": "Finanszírozási költség (jegybanki alapkamat várható elmozdulása)",
             "points": 0.54
           },
           {
             "label": "Üzemanyagár (HU, benzin + dízel)",
             "points": -0.51
-          },
-          {
-            "label": "Nyilvános töltőpont-sűrűség növekedése",
-            "points": -0.27
           },
           {
             "label": "Reáljövedelem / vásárlóerő változása",
@@ -1804,16 +1805,16 @@
             "points": 1.79
           },
           {
+            "label": "Nyilvános töltőpont-sűrűség növekedése",
+            "points": 1.76
+          },
+          {
             "label": "EU CO2-szabályozás szigorodása / ICE-tiltás közeledése",
             "points": -1.5
           },
           {
-            "label": "Nyilvános töltőpont-sűrűség növekedése",
-            "points": 1.04
-          },
-          {
             "label": "Üzemanyagár (HU, benzin + dízel)",
-            "points": -1.02
+            "points": -1.0
           },
           {
             "label": "Reáljövedelem / vásárlóerő változása",
@@ -1835,26 +1836,22 @@
     {
       "key": "uj",
       "label": "Új (0-2 év)",
-      "score": 0.202,
+      "score": 0.231,
       "dir": "Erős növekedés",
-      "pesszimista": -0.0557,
-      "optimista": 0.4596,
+      "pesszimista": -0.0209,
+      "optimista": 0.4829,
       "dirs": {
-        "pesszimista": "Visszaesés",
+        "pesszimista": "Stagnálás",
         "alap": "Erős növekedés",
         "optimista": "Erős növekedés"
       },
       "market_weighted": {
-        "pesszimista": -0.0271,
-        "alap": 0.1293,
-        "optimista": 0.2857
+        "pesszimista": -0.0154,
+        "alap": 0.1393,
+        "optimista": 0.294
       },
       "drivers": {
         "pesszimista": [
-          {
-            "label": "Nyilvános töltőpont-sűrűség növekedése",
-            "points": -5.25
-          },
           {
             "label": "Valós piaci lendület (forgalomba helyezés)",
             "points": 3.59
@@ -1872,6 +1869,10 @@
             "points": -1.92
           },
           {
+            "label": "Nyilvános töltőpont-sűrűség növekedése",
+            "points": -1.85
+          },
+          {
             "label": "Fogyasztói vásárlási szándék (tartós fogyasztási cikk, EU-felmérés)",
             "points": 0.91
           },
@@ -1884,12 +1885,12 @@
             "points": 0.53
           },
           {
-            "label": "Valós piaci lendület (új autók részesedése)",
-            "points": 0.04
+            "label": "Üzemanyagár (HU, benzin + dízel)",
+            "points": 0.09
           },
           {
-            "label": "Üzemanyagár (HU, benzin + dízel)",
-            "points": 0.0
+            "label": "Valós piaci lendület (új autók részesedése)",
+            "points": 0.04
           }
         ],
         "alap": [
@@ -1906,16 +1907,16 @@
             "points": 3.2
           },
           {
+            "label": "Nyilvános töltőpont-sűrűség növekedése",
+            "points": 1.99
+          },
+          {
             "label": "Üzemanyagár (HU, benzin + dízel)",
             "points": 1.94
           },
           {
             "label": "Reáljövedelem / vásárlóerő változása",
             "points": 1.02
-          },
-          {
-            "label": "Nyilvános töltőpont-sűrűség növekedése",
-            "points": -0.91
           },
           {
             "label": "Finanszírozási költség (jegybanki alapkamat várható elmozdulása)",
@@ -1940,6 +1941,10 @@
             "points": 18.23
           },
           {
+            "label": "Nyilvános töltőpont-sűrűség növekedése",
+            "points": 5.84
+          },
+          {
             "label": "Akkumulátorcsomag ár ($/kWh index)",
             "points": 5.6
           },
@@ -1949,7 +1954,7 @@
           },
           {
             "label": "Üzemanyagár (HU, benzin + dízel)",
-            "points": 3.87
+            "points": 3.78
           },
           {
             "label": "Valós piaci lendület (forgalomba helyezés)",
@@ -1958,10 +1963,6 @@
           {
             "label": "Finanszírozási költség (jegybanki alapkamat várható elmozdulása)",
             "points": 3.57
-          },
-          {
-            "label": "Nyilvános töltőpont-sűrűség növekedése",
-            "points": 3.43
           },
           {
             "label": "EV importvámok (elsősorban kínai gyártmányú BEV-ekre)",
@@ -1981,26 +1982,22 @@
     {
       "key": "fiatal_hasznalt",
       "label": "Fiatal használt (3-5 év)",
-      "score": 0.1081,
+      "score": 0.1255,
       "dir": "Növekedés",
-      "pesszimista": -0.029,
-      "optimista": 0.2452,
+      "pesszimista": -0.0081,
+      "optimista": 0.2592,
       "dirs": {
         "pesszimista": "Stagnálás",
         "alap": "Növekedés",
         "optimista": "Erős növekedés"
       },
       "market_weighted": {
-        "pesszimista": -0.0257,
-        "alap": 0.0165,
-        "optimista": 0.0586
+        "pesszimista": -0.0225,
+        "alap": 0.0199,
+        "optimista": 0.0623
       },
       "drivers": {
         "pesszimista": [
-          {
-            "label": "Nyilvános töltőpont-sűrűség növekedése",
-            "points": -3.15
-          },
           {
             "label": "Valós piaci lendület (forgalomba helyezés)",
             "points": 2.16
@@ -2008,6 +2005,10 @@
           {
             "label": "EV importvámok (elsősorban kínai gyártmányú BEV-ekre)",
             "points": -1.35
+          },
+          {
+            "label": "Nyilvános töltőpont-sűrűség növekedése",
+            "points": -1.11
           },
           {
             "label": "Finanszírozási költség (jegybanki alapkamat várható elmozdulása)",
@@ -2030,12 +2031,12 @@
             "points": 0.31
           },
           {
-            "label": "Valós piaci lendület (új autók részesedése)",
-            "points": 0.02
+            "label": "Üzemanyagár (HU, benzin + dízel)",
+            "points": 0.05
           },
           {
-            "label": "Üzemanyagár (HU, benzin + dízel)",
-            "points": 0.0
+            "label": "Valós piaci lendület (új autók részesedése)",
+            "points": 0.02
           }
         ],
         "alap": [
@@ -2052,12 +2053,12 @@
             "points": 1.92
           },
           {
-            "label": "Üzemanyagár (HU, benzin + dízel)",
-            "points": 1.16
+            "label": "Nyilvános töltőpont-sűrűség növekedése",
+            "points": 1.2
           },
           {
-            "label": "Nyilvános töltőpont-sűrűség növekedése",
-            "points": -0.55
+            "label": "Üzemanyagár (HU, benzin + dízel)",
+            "points": 1.16
           },
           {
             "label": "EU CO2-szabályozás szigorodása / ICE-tiltás közeledése",
@@ -2086,20 +2087,20 @@
             "points": 8.95
           },
           {
+            "label": "Nyilvános töltőpont-sűrűség növekedése",
+            "points": 3.51
+          },
+          {
             "label": "Akkumulátorcsomag ár ($/kWh index)",
             "points": 3.36
           },
           {
             "label": "Üzemanyagár (HU, benzin + dízel)",
-            "points": 2.32
+            "points": 2.27
           },
           {
             "label": "Valós piaci lendület (forgalomba helyezés)",
             "points": 2.16
-          },
-          {
-            "label": "Nyilvános töltőpont-sűrűség növekedése",
-            "points": 2.06
           },
           {
             "label": "Finanszírozási költség (jegybanki alapkamat várható elmozdulása)",
@@ -2127,26 +2128,22 @@
     {
       "key": "idosebb_hasznalt",
       "label": "Idősebb használt (6+ év)",
-      "score": 0.0458,
-      "dir": "Stagnálás",
-      "pesszimista": -0.0132,
-      "optimista": 0.1048,
+      "score": 0.056,
+      "dir": "Növekedés",
+      "pesszimista": -0.0015,
+      "optimista": 0.1134,
       "dirs": {
         "pesszimista": "Stagnálás",
-        "alap": "Stagnálás",
+        "alap": "Növekedés",
         "optimista": "Növekedés"
       },
       "market_weighted": {
-        "pesszimista": -0.0356,
-        "alap": -0.0721,
-        "optimista": -0.1087
+        "pesszimista": -0.0372,
+        "alap": -0.0717,
+        "optimista": -0.1063
       },
       "drivers": {
         "pesszimista": [
-          {
-            "label": "Nyilvános töltőpont-sűrűség növekedése",
-            "points": -1.84
-          },
           {
             "label": "Valós piaci lendület (forgalomba helyezés)",
             "points": 1.26
@@ -2154,6 +2151,10 @@
           {
             "label": "EV importvámok (elsősorban kínai gyártmányú BEV-ekre)",
             "points": -0.79
+          },
+          {
+            "label": "Nyilvános töltőpont-sűrűség növekedése",
+            "points": -0.65
           },
           {
             "label": "Finanszírozási költség (jegybanki alapkamat várható elmozdulása)",
@@ -2181,7 +2182,7 @@
           },
           {
             "label": "Üzemanyagár (HU, benzin + dízel)",
-            "points": 0.0
+            "points": -0.01
           }
         ],
         "alap": [
@@ -2199,7 +2200,7 @@
           },
           {
             "label": "Nyilvános töltőpont-sűrűség növekedése",
-            "points": -0.32
+            "points": 0.7
           },
           {
             "label": "EU CO2-szabályozás szigorodása / ICE-tiltás közeledése",
@@ -2232,16 +2233,16 @@
             "points": 4.06
           },
           {
+            "label": "Nyilvános töltőpont-sűrűség növekedése",
+            "points": 2.05
+          },
+          {
             "label": "Akkumulátorcsomag ár ($/kWh index)",
             "points": 1.96
           },
           {
             "label": "Valós piaci lendület (forgalomba helyezés)",
             "points": 1.26
-          },
-          {
-            "label": "Nyilvános töltőpont-sűrűség növekedése",
-            "points": 1.2
           },
           {
             "label": "EV importvámok (elsősorban kínai gyártmányú BEV-ekre)",
@@ -2253,7 +2254,7 @@
           },
           {
             "label": "Üzemanyagár (HU, benzin + dízel)",
-            "points": -0.45
+            "points": -0.44
           },
           {
             "label": "EU CO2-szabályozás szigorodása / ICE-tiltás közeledése",
@@ -2274,39 +2275,39 @@
   "top_winners": [
     {
       "label": "Tisztán elektromos / Kínai eredetű, EV-fókuszú belépő (pl. BYD, MG) / Új (0-2 év)",
-      "score": 0.4793,
+      "score": 0.5706,
       "dir": "Erős növekedés"
     },
     {
       "label": "Tisztán elektromos / Prémium (pl. BMW, Mercedes, Audi) / Új (0-2 év)",
-      "score": 0.4787,
+      "score": 0.5658,
       "dir": "Erős növekedés"
     },
     {
       "label": "Tisztán elektromos / Tömeggyártó (pl. Volkswagen, Toyota, Hyundai, Ford) / Új (0-2 év)",
-      "score": 0.4665,
+      "score": 0.5495,
       "dir": "Erős növekedés"
     },
     {
       "label": "Tisztán elektromos / Belépő szintű / budget (pl. Dacia) / Új (0-2 év)",
-      "score": 0.3622,
+      "score": 0.4286,
       "dir": "Erős növekedés"
     },
     {
-      "label": "Hibrid (nem tölthető) / Kínai eredetű, EV-fókuszú belépő (pl. BYD, MG) / Új (0-2 év)",
-      "score": 0.3079,
+      "label": "Plug-in hibrid / Kínai eredetű, EV-fókuszú belépő (pl. BYD, MG) / Új (0-2 év)",
+      "score": 0.3399,
       "dir": "Erős növekedés"
     }
   ],
   "top_losers": [
     {
       "label": "Belső égésű (benzin/dízel) / Belépő szintű / budget (pl. Dacia) / Új (0-2 év)",
-      "score": -0.2642,
+      "score": -0.2808,
       "dir": "Erős visszaesés"
     },
     {
       "label": "Belső égésű (benzin/dízel) / Belépő szintű / budget (pl. Dacia) / Fiatal használt (3-5 év)",
-      "score": -0.1716,
+      "score": -0.1816,
       "dir": "Erős visszaesés"
     },
     {
@@ -2316,12 +2317,12 @@
     },
     {
       "label": "Belső égésű (benzin/dízel) / Prémium (pl. BMW, Mercedes, Audi) / Új (0-2 év)",
-      "score": -0.1478,
+      "score": -0.1436,
       "dir": "Visszaesés"
     },
     {
       "label": "Belső égésű (benzin/dízel) / Kínai eredetű, EV-fókuszú belépő (pl. BYD, MG) / Új (0-2 év)",
-      "score": -0.1471,
+      "score": -0.1388,
       "dir": "Visszaesés"
     }
   ],
@@ -2334,9 +2335,9 @@
       "year_bucket": "uj",
       "year_bucket_label": "Új (0-2 év)",
       "scores": {
-        "pesszimista": -0.111,
+        "pesszimista": -0.1164,
         "alap": -0.16,
-        "optimista": -0.209
+        "optimista": -0.2036
       },
       "dirs": {
         "pesszimista": "Visszaesés",
@@ -2352,9 +2353,9 @@
       "year_bucket": "fiatal_hasznalt",
       "year_bucket_label": "Fiatal használt (3-5 év)",
       "scores": {
-        "pesszimista": -0.0622,
+        "pesszimista": -0.0654,
         "alap": -0.1091,
-        "optimista": -0.156
+        "optimista": -0.1527
       },
       "dirs": {
         "pesszimista": "Visszaesés",
@@ -2370,9 +2371,9 @@
       "year_bucket": "idosebb_hasznalt",
       "year_bucket_label": "Idősebb használt (6+ év)",
       "scores": {
-        "pesszimista": -0.0326,
+        "pesszimista": -0.0349,
         "alap": -0.0809,
-        "optimista": -0.1292
+        "optimista": -0.1269
       },
       "dirs": {
         "pesszimista": "Stagnálás",
@@ -2388,9 +2389,9 @@
       "year_bucket": "uj",
       "year_bucket_label": "Új (0-2 év)",
       "scores": {
-        "pesszimista": -0.1056,
-        "alap": -0.1478,
-        "optimista": -0.19
+        "pesszimista": -0.1061,
+        "alap": -0.1436,
+        "optimista": -0.1811
       },
       "dirs": {
         "pesszimista": "Visszaesés",
@@ -2406,9 +2407,9 @@
       "year_bucket": "fiatal_hasznalt",
       "year_bucket_label": "Fiatal használt (3-5 év)",
       "scores": {
-        "pesszimista": -0.0589,
-        "alap": -0.1018,
-        "optimista": -0.1446
+        "pesszimista": -0.0593,
+        "alap": -0.0993,
+        "optimista": -0.1393
       },
       "dirs": {
         "pesszimista": "Visszaesés",
@@ -2424,9 +2425,9 @@
       "year_bucket": "idosebb_hasznalt",
       "year_bucket_label": "Idősebb használt (6+ év)",
       "scores": {
-        "pesszimista": -0.0307,
-        "alap": -0.0766,
-        "optimista": -0.1225
+        "pesszimista": -0.0313,
+        "alap": -0.0752,
+        "optimista": -0.119
       },
       "dirs": {
         "pesszimista": "Stagnálás",
@@ -2442,9 +2443,9 @@
       "year_bucket": "uj",
       "year_bucket_label": "Új (0-2 év)",
       "scores": {
-        "pesszimista": -0.1,
-        "alap": -0.2642,
-        "optimista": -0.4284
+        "pesszimista": -0.126,
+        "alap": -0.2808,
+        "optimista": -0.4356
       },
       "dirs": {
         "pesszimista": "Visszaesés",
@@ -2460,9 +2461,9 @@
       "year_bucket": "fiatal_hasznalt",
       "year_bucket_label": "Fiatal használt (3-5 év)",
       "scores": {
-        "pesszimista": -0.0556,
-        "alap": -0.1716,
-        "optimista": -0.2876
+        "pesszimista": -0.0712,
+        "alap": -0.1816,
+        "optimista": -0.292
       },
       "dirs": {
         "pesszimista": "Visszaesés",
@@ -2478,9 +2479,9 @@
       "year_bucket": "idosebb_hasznalt",
       "year_bucket_label": "Idősebb használt (6+ év)",
       "scores": {
-        "pesszimista": -0.0288,
-        "alap": -0.1174,
-        "optimista": -0.206
+        "pesszimista": -0.0383,
+        "alap": -0.1232,
+        "optimista": -0.2081
       },
       "dirs": {
         "pesszimista": "Stagnálás",
@@ -2496,9 +2497,9 @@
       "year_bucket": "uj",
       "year_bucket_label": "Új (0-2 év)",
       "scores": {
-        "pesszimista": -0.2165,
-        "alap": -0.1471,
-        "optimista": -0.0777
+        "pesszimista": -0.2117,
+        "alap": -0.1388,
+        "optimista": -0.066
       },
       "dirs": {
         "pesszimista": "Erős visszaesés",
@@ -2514,9 +2515,9 @@
       "year_bucket": "fiatal_hasznalt",
       "year_bucket_label": "Fiatal használt (3-5 év)",
       "scores": {
-        "pesszimista": -0.1255,
-        "alap": -0.1014,
-        "optimista": -0.0772
+        "pesszimista": -0.1226,
+        "alap": -0.0964,
+        "optimista": -0.0702
       },
       "dirs": {
         "pesszimista": "Visszaesés",
@@ -2532,9 +2533,9 @@
       "year_bucket": "idosebb_hasznalt",
       "year_bucket_label": "Idősebb használt (6+ év)",
       "scores": {
-        "pesszimista": -0.0695,
-        "alap": -0.0764,
-        "optimista": -0.0832
+        "pesszimista": -0.0682,
+        "alap": -0.0735,
+        "optimista": -0.0787
       },
       "dirs": {
         "pesszimista": "Visszaesés",
@@ -2550,9 +2551,9 @@
       "year_bucket": "uj",
       "year_bucket_label": "Új (0-2 év)",
       "scores": {
-        "pesszimista": 0.0842,
-        "alap": 0.295,
-        "optimista": 0.5058
+        "pesszimista": 0.0921,
+        "alap": 0.2992,
+        "optimista": 0.5063
       },
       "dirs": {
         "pesszimista": "Növekedés",
@@ -2568,9 +2569,9 @@
       "year_bucket": "fiatal_hasznalt",
       "year_bucket_label": "Fiatal használt (3-5 év)",
       "scores": {
-        "pesszimista": 0.0549,
-        "alap": 0.1639,
-        "optimista": 0.2729
+        "pesszimista": 0.0596,
+        "alap": 0.1664,
+        "optimista": 0.2732
       },
       "dirs": {
         "pesszimista": "Növekedés",
@@ -2586,9 +2587,9 @@
       "year_bucket": "idosebb_hasznalt",
       "year_bucket_label": "Idősebb használt (6+ év)",
       "scores": {
-        "pesszimista": 0.0357,
-        "alap": 0.0784,
-        "optimista": 0.121
+        "pesszimista": 0.0381,
+        "alap": 0.0798,
+        "optimista": 0.1216
       },
       "dirs": {
         "pesszimista": "Stagnálás",
@@ -2604,9 +2605,9 @@
       "year_bucket": "uj",
       "year_bucket_label": "Új (0-2 év)",
       "scores": {
-        "pesszimista": 0.0896,
-        "alap": 0.3072,
-        "optimista": 0.5248
+        "pesszimista": 0.1023,
+        "alap": 0.3155,
+        "optimista": 0.5287
       },
       "dirs": {
         "pesszimista": "Növekedés",
@@ -2622,9 +2623,9 @@
       "year_bucket": "fiatal_hasznalt",
       "year_bucket_label": "Fiatal használt (3-5 év)",
       "scores": {
-        "pesszimista": 0.0582,
-        "alap": 0.1712,
-        "optimista": 0.2843
+        "pesszimista": 0.0658,
+        "alap": 0.1762,
+        "optimista": 0.2867
       },
       "dirs": {
         "pesszimista": "Növekedés",
@@ -2640,9 +2641,9 @@
       "year_bucket": "idosebb_hasznalt",
       "year_bucket_label": "Idősebb használt (6+ év)",
       "scores": {
-        "pesszimista": 0.0376,
-        "alap": 0.0826,
-        "optimista": 0.1277
+        "pesszimista": 0.0417,
+        "alap": 0.0855,
+        "optimista": 0.1294
       },
       "dirs": {
         "pesszimista": "Stagnálás",
@@ -2658,9 +2659,9 @@
       "year_bucket": "uj",
       "year_bucket_label": "Új (0-2 év)",
       "scores": {
-        "pesszimista": 0.0952,
-        "alap": 0.1908,
-        "optimista": 0.2864
+        "pesszimista": 0.0824,
+        "alap": 0.1783,
+        "optimista": 0.2742
       },
       "dirs": {
         "pesszimista": "Növekedés",
@@ -2676,9 +2677,9 @@
       "year_bucket": "fiatal_hasznalt",
       "year_bucket_label": "Fiatal használt (3-5 év)",
       "scores": {
-        "pesszimista": 0.0615,
-        "alap": 0.1014,
-        "optimista": 0.1412
+        "pesszimista": 0.0539,
+        "alap": 0.0939,
+        "optimista": 0.134
       },
       "dirs": {
         "pesszimista": "Növekedés",
@@ -2694,9 +2695,9 @@
       "year_bucket": "idosebb_hasznalt",
       "year_bucket_label": "Idősebb használt (6+ év)",
       "scores": {
-        "pesszimista": 0.0396,
-        "alap": 0.0419,
-        "optimista": 0.0442
+        "pesszimista": 0.0347,
+        "alap": 0.0375,
+        "optimista": 0.0404
       },
       "dirs": {
         "pesszimista": "Stagnálás",
@@ -2712,9 +2713,9 @@
       "year_bucket": "uj",
       "year_bucket_label": "Új (0-2 év)",
       "scores": {
-        "pesszimista": -0.0213,
-        "alap": 0.3079,
-        "optimista": 0.6371
+        "pesszimista": -0.0032,
+        "alap": 0.3203,
+        "optimista": 0.6438
       },
       "dirs": {
         "pesszimista": "Stagnálás",
@@ -2730,9 +2731,9 @@
       "year_bucket": "fiatal_hasznalt",
       "year_bucket_label": "Fiatal használt (3-5 év)",
       "scores": {
-        "pesszimista": -0.0084,
-        "alap": 0.1716,
-        "optimista": 0.3517
+        "pesszimista": 0.0025,
+        "alap": 0.1791,
+        "optimista": 0.3557
       },
       "dirs": {
         "pesszimista": "Stagnálás",
@@ -2748,9 +2749,9 @@
       "year_bucket": "idosebb_hasznalt",
       "year_bucket_label": "Idősebb használt (6+ év)",
       "scores": {
-        "pesszimista": -0.0012,
-        "alap": 0.0829,
-        "optimista": 0.1669
+        "pesszimista": 0.0047,
+        "alap": 0.0872,
+        "optimista": 0.1697
       },
       "dirs": {
         "pesszimista": "Stagnálás",
@@ -2766,9 +2767,9 @@
       "year_bucket": "uj",
       "year_bucket_label": "Új (0-2 év)",
       "scores": {
-        "pesszimista": -0.0219,
-        "alap": 0.2856,
-        "optimista": 0.5931
+        "pesszimista": 0.0187,
+        "alap": 0.3188,
+        "optimista": 0.6189
       },
       "dirs": {
         "pesszimista": "Stagnálás",
@@ -2784,9 +2785,9 @@
       "year_bucket": "fiatal_hasznalt",
       "year_bucket_label": "Fiatal használt (3-5 év)",
       "scores": {
-        "pesszimista": -0.0088,
-        "alap": 0.1583,
-        "optimista": 0.3253
+        "pesszimista": 0.0156,
+        "alap": 0.1782,
+        "optimista": 0.3407
       },
       "dirs": {
         "pesszimista": "Stagnálás",
@@ -2802,9 +2803,9 @@
       "year_bucket": "idosebb_hasznalt",
       "year_bucket_label": "Idősebb használt (6+ év)",
       "scores": {
-        "pesszimista": -0.0014,
-        "alap": 0.0751,
-        "optimista": 0.1515
+        "pesszimista": 0.0124,
+        "alap": 0.0867,
+        "optimista": 0.161
       },
       "dirs": {
         "pesszimista": "Stagnálás",
@@ -2820,9 +2821,9 @@
       "year_bucket": "uj",
       "year_bucket_label": "Új (0-2 év)",
       "scores": {
-        "pesszimista": -0.0165,
-        "alap": 0.2978,
-        "optimista": 0.6121
+        "pesszimista": 0.0289,
+        "alap": 0.3351,
+        "optimista": 0.6413
       },
       "dirs": {
         "pesszimista": "Stagnálás",
@@ -2838,9 +2839,9 @@
       "year_bucket": "fiatal_hasznalt",
       "year_bucket_label": "Fiatal használt (3-5 év)",
       "scores": {
-        "pesszimista": -0.0055,
-        "alap": 0.1656,
-        "optimista": 0.3367
+        "pesszimista": 0.0218,
+        "alap": 0.188,
+        "optimista": 0.3542
       },
       "dirs": {
         "pesszimista": "Stagnálás",
@@ -2856,9 +2857,9 @@
       "year_bucket": "idosebb_hasznalt",
       "year_bucket_label": "Idősebb használt (6+ év)",
       "scores": {
-        "pesszimista": 0.0005,
-        "alap": 0.0793,
-        "optimista": 0.1582
+        "pesszimista": 0.016,
+        "alap": 0.0924,
+        "optimista": 0.1688
       },
       "dirs": {
         "pesszimista": "Stagnálás",
@@ -2874,9 +2875,9 @@
       "year_bucket": "uj",
       "year_bucket_label": "Új (0-2 év)",
       "scores": {
-        "pesszimista": -0.011,
-        "alap": 0.1813,
-        "optimista": 0.3736
+        "pesszimista": 0.009,
+        "alap": 0.1979,
+        "optimista": 0.3868
       },
       "dirs": {
         "pesszimista": "Stagnálás",
@@ -2892,9 +2893,9 @@
       "year_bucket": "fiatal_hasznalt",
       "year_bucket_label": "Fiatal használt (3-5 év)",
       "scores": {
-        "pesszimista": -0.0022,
-        "alap": 0.0957,
-        "optimista": 0.1936
+        "pesszimista": 0.0098,
+        "alap": 0.1057,
+        "optimista": 0.2015
       },
       "dirs": {
         "pesszimista": "Stagnálás",
@@ -2910,9 +2911,9 @@
       "year_bucket": "idosebb_hasznalt",
       "year_bucket_label": "Idősebb használt (6+ év)",
       "scores": {
-        "pesszimista": 0.0024,
-        "alap": 0.0386,
-        "optimista": 0.0747
+        "pesszimista": 0.009,
+        "alap": 0.0444,
+        "optimista": 0.0798
       },
       "dirs": {
         "pesszimista": "Stagnálás",
@@ -2928,9 +2929,9 @@
       "year_bucket": "uj",
       "year_bucket_label": "Új (0-2 év)",
       "scores": {
-        "pesszimista": -0.1275,
-        "alap": 0.2984,
-        "optimista": 0.7243
+        "pesszimista": -0.0766,
+        "alap": 0.3399,
+        "optimista": 0.7564
       },
       "dirs": {
         "pesszimista": "Visszaesés",
@@ -2946,12 +2947,12 @@
       "year_bucket": "fiatal_hasznalt",
       "year_bucket_label": "Fiatal használt (3-5 év)",
       "scores": {
-        "pesszimista": -0.0721,
-        "alap": 0.166,
-        "optimista": 0.404
+        "pesszimista": -0.0415,
+        "alap": 0.1909,
+        "optimista": 0.4233
       },
       "dirs": {
-        "pesszimista": "Visszaesés",
+        "pesszimista": "Stagnálás",
         "alap": "Erős növekedés",
         "optimista": "Erős növekedés"
       }
@@ -2964,9 +2965,9 @@
       "year_bucket": "idosebb_hasznalt",
       "year_bucket_label": "Idősebb használt (6+ év)",
       "scores": {
-        "pesszimista": -0.0384,
-        "alap": 0.0796,
-        "optimista": 0.1975
+        "pesszimista": -0.021,
+        "alap": 0.0941,
+        "optimista": 0.2091
       },
       "dirs": {
         "pesszimista": "Stagnálás",
@@ -2982,12 +2983,12 @@
       "year_bucket": "uj",
       "year_bucket_label": "Új (0-2 év)",
       "scores": {
-        "pesszimista": -0.0849,
-        "alap": 0.4665,
-        "optimista": 1.0179
+        "pesszimista": 0.0169,
+        "alap": 0.5495,
+        "optimista": 1.0821
       },
       "dirs": {
-        "pesszimista": "Visszaesés",
+        "pesszimista": "Stagnálás",
         "alap": "Erős növekedés",
         "optimista": "Erős növekedés"
       }
@@ -3000,9 +3001,9 @@
       "year_bucket": "fiatal_hasznalt",
       "year_bucket_label": "Fiatal használt (3-5 év)",
       "scores": {
-        "pesszimista": -0.0466,
-        "alap": 0.2668,
-        "optimista": 0.5801
+        "pesszimista": 0.0145,
+        "alap": 0.3166,
+        "optimista": 0.6187
       },
       "dirs": {
         "pesszimista": "Stagnálás",
@@ -3018,13 +3019,13 @@
       "year_bucket": "idosebb_hasznalt",
       "year_bucket_label": "Idősebb használt (6+ év)",
       "scores": {
-        "pesszimista": -0.0235,
-        "alap": 0.1384,
-        "optimista": 0.3002
+        "pesszimista": 0.0117,
+        "alap": 0.1674,
+        "optimista": 0.3231
       },
       "dirs": {
         "pesszimista": "Stagnálás",
-        "alap": "Növekedés",
+        "alap": "Erős növekedés",
         "optimista": "Erős növekedés"
       }
     },
@@ -3036,12 +3037,12 @@
       "year_bucket": "uj",
       "year_bucket_label": "Új (0-2 év)",
       "scores": {
-        "pesszimista": -0.0795,
-        "alap": 0.4787,
-        "optimista": 1.0369
+        "pesszimista": 0.0271,
+        "alap": 0.5658,
+        "optimista": 1.1045
       },
       "dirs": {
-        "pesszimista": "Visszaesés",
+        "pesszimista": "Stagnálás",
         "alap": "Erős növekedés",
         "optimista": "Erős növekedés"
       }
@@ -3054,9 +3055,9 @@
       "year_bucket": "fiatal_hasznalt",
       "year_bucket_label": "Fiatal használt (3-5 év)",
       "scores": {
-        "pesszimista": -0.0433,
-        "alap": 0.2741,
-        "optimista": 0.5915
+        "pesszimista": 0.0207,
+        "alap": 0.3264,
+        "optimista": 0.6321
       },
       "dirs": {
         "pesszimista": "Stagnálás",
@@ -3069,124 +3070,124 @@
       "drivetrain_label": "Tisztán elektromos",
       "brand_tier": "premium",
       "brand_tier_label": "Prémium (pl. BMW, Mercedes, Audi)",
+      "year_bucket": "idosebb_hasznalt",
+      "year_bucket_label": "Idősebb használt (6+ év)",
+      "scores": {
+        "pesszimista": 0.0153,
+        "alap": 0.1732,
+        "optimista": 0.331
+      },
+      "dirs": {
+        "pesszimista": "Stagnálás",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "BEV",
+      "drivetrain_label": "Tisztán elektromos",
+      "brand_tier": "budget",
+      "brand_tier_label": "Belépő szintű / budget (pl. Dacia)",
+      "year_bucket": "uj",
+      "year_bucket_label": "Új (0-2 év)",
+      "scores": {
+        "pesszimista": 0.0072,
+        "alap": 0.4286,
+        "optimista": 0.85
+      },
+      "dirs": {
+        "pesszimista": "Stagnálás",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "BEV",
+      "drivetrain_label": "Tisztán elektromos",
+      "brand_tier": "budget",
+      "brand_tier_label": "Belépő szintű / budget (pl. Dacia)",
+      "year_bucket": "fiatal_hasznalt",
+      "year_bucket_label": "Fiatal használt (3-5 év)",
+      "scores": {
+        "pesszimista": 0.0087,
+        "alap": 0.2441,
+        "optimista": 0.4794
+      },
+      "dirs": {
+        "pesszimista": "Stagnálás",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "BEV",
+      "drivetrain_label": "Tisztán elektromos",
+      "brand_tier": "budget",
+      "brand_tier_label": "Belépő szintű / budget (pl. Dacia)",
+      "year_bucket": "idosebb_hasznalt",
+      "year_bucket_label": "Idősebb használt (6+ év)",
+      "scores": {
+        "pesszimista": 0.0084,
+        "alap": 0.1251,
+        "optimista": 0.2419
+      },
+      "dirs": {
+        "pesszimista": "Stagnálás",
+        "alap": "Növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "BEV",
+      "drivetrain_label": "Tisztán elektromos",
+      "brand_tier": "kinai_belepo",
+      "brand_tier_label": "Kínai eredetű, EV-fókuszú belépő (pl. BYD, MG)",
+      "year_bucket": "uj",
+      "year_bucket_label": "Új (0-2 év)",
+      "scores": {
+        "pesszimista": -0.0784,
+        "alap": 0.5706,
+        "optimista": 1.2196
+      },
+      "dirs": {
+        "pesszimista": "Visszaesés",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "BEV",
+      "drivetrain_label": "Tisztán elektromos",
+      "brand_tier": "kinai_belepo",
+      "brand_tier_label": "Kínai eredetű, EV-fókuszú belépő (pl. BYD, MG)",
+      "year_bucket": "fiatal_hasznalt",
+      "year_bucket_label": "Fiatal használt (3-5 év)",
+      "scores": {
+        "pesszimista": -0.0426,
+        "alap": 0.3293,
+        "optimista": 0.7012
+      },
+      "dirs": {
+        "pesszimista": "Stagnálás",
+        "alap": "Erős növekedés",
+        "optimista": "Erős növekedés"
+      }
+    },
+    {
+      "drivetrain": "BEV",
+      "drivetrain_label": "Tisztán elektromos",
+      "brand_tier": "kinai_belepo",
+      "brand_tier_label": "Kínai eredetű, EV-fókuszú belépő (pl. BYD, MG)",
       "year_bucket": "idosebb_hasznalt",
       "year_bucket_label": "Idősebb használt (6+ év)",
       "scores": {
         "pesszimista": -0.0216,
-        "alap": 0.1426,
-        "optimista": 0.3069
-      },
-      "dirs": {
-        "pesszimista": "Stagnálás",
-        "alap": "Növekedés",
-        "optimista": "Erős növekedés"
-      }
-    },
-    {
-      "drivetrain": "BEV",
-      "drivetrain_label": "Tisztán elektromos",
-      "brand_tier": "budget",
-      "brand_tier_label": "Belépő szintű / budget (pl. Dacia)",
-      "year_bucket": "uj",
-      "year_bucket_label": "Új (0-2 év)",
-      "scores": {
-        "pesszimista": -0.074,
-        "alap": 0.3622,
-        "optimista": 0.7984
-      },
-      "dirs": {
-        "pesszimista": "Visszaesés",
-        "alap": "Erős növekedés",
-        "optimista": "Erős növekedés"
-      }
-    },
-    {
-      "drivetrain": "BEV",
-      "drivetrain_label": "Tisztán elektromos",
-      "brand_tier": "budget",
-      "brand_tier_label": "Belépő szintű / budget (pl. Dacia)",
-      "year_bucket": "fiatal_hasznalt",
-      "year_bucket_label": "Fiatal használt (3-5 év)",
-      "scores": {
-        "pesszimista": -0.04,
-        "alap": 0.2042,
-        "optimista": 0.4485
+        "alap": 0.1748,
+        "optimista": 0.3712
       },
       "dirs": {
         "pesszimista": "Stagnálás",
         "alap": "Erős növekedés",
-        "optimista": "Erős növekedés"
-      }
-    },
-    {
-      "drivetrain": "BEV",
-      "drivetrain_label": "Tisztán elektromos",
-      "brand_tier": "budget",
-      "brand_tier_label": "Belépő szintű / budget (pl. Dacia)",
-      "year_bucket": "idosebb_hasznalt",
-      "year_bucket_label": "Idősebb használt (6+ év)",
-      "scores": {
-        "pesszimista": -0.0196,
-        "alap": 0.1019,
-        "optimista": 0.2234
-      },
-      "dirs": {
-        "pesszimista": "Stagnálás",
-        "alap": "Növekedés",
-        "optimista": "Erős növekedés"
-      }
-    },
-    {
-      "drivetrain": "BEV",
-      "drivetrain_label": "Tisztán elektromos",
-      "brand_tier": "kinai_belepo",
-      "brand_tier_label": "Kínai eredetű, EV-fókuszú belépő (pl. BYD, MG)",
-      "year_bucket": "uj",
-      "year_bucket_label": "Új (0-2 év)",
-      "scores": {
-        "pesszimista": -0.1905,
-        "alap": 0.4793,
-        "optimista": 1.1491
-      },
-      "dirs": {
-        "pesszimista": "Erős visszaesés",
-        "alap": "Erős növekedés",
-        "optimista": "Erős növekedés"
-      }
-    },
-    {
-      "drivetrain": "BEV",
-      "drivetrain_label": "Tisztán elektromos",
-      "brand_tier": "kinai_belepo",
-      "brand_tier_label": "Kínai eredetű, EV-fókuszú belépő (pl. BYD, MG)",
-      "year_bucket": "fiatal_hasznalt",
-      "year_bucket_label": "Fiatal használt (3-5 év)",
-      "scores": {
-        "pesszimista": -0.1099,
-        "alap": 0.2745,
-        "optimista": 0.6589
-      },
-      "dirs": {
-        "pesszimista": "Visszaesés",
-        "alap": "Erős növekedés",
-        "optimista": "Erős növekedés"
-      }
-    },
-    {
-      "drivetrain": "BEV",
-      "drivetrain_label": "Tisztán elektromos",
-      "brand_tier": "kinai_belepo",
-      "brand_tier_label": "Kínai eredetű, EV-fókuszú belépő (pl. BYD, MG)",
-      "year_bucket": "idosebb_hasznalt",
-      "year_bucket_label": "Idősebb használt (6+ év)",
-      "scores": {
-        "pesszimista": -0.0604,
-        "alap": 0.1429,
-        "optimista": 0.3462
-      },
-      "dirs": {
-        "pesszimista": "Visszaesés",
-        "alap": "Növekedés",
         "optimista": "Erős növekedés"
       }
     }
@@ -3489,14 +3490,13 @@
       "dizel_last": 709,
       "benzin_series": [
         588,
-        634,
         630
       ],
       "dizel_series": [
         591,
-        708,
         701
-      ]
+      ],
+      "year_ago_period": "2025-09-28 - 2025-10-04"
     },
     "makro": {
       "alapkamat_last": 5.5,
@@ -3981,10 +3981,11 @@
       }
     },
     "toltoinfra": {
-      "last_quarter": "2026 Q3",
-      "ac_last": 3397.0,
-      "dc_last": 1604.0,
+      "last_quarter": "2026 Q2",
+      "ac_last": 3806.0,
+      "dc_last": 1675.0,
       "total_series": [
+        3493.0,
         3317.0,
         3566.0,
         3870.0,
@@ -3995,10 +3996,10 @@
         5134.0,
         5083.0,
         5440.0,
-        5481.0,
-        5001.0
+        5481.0
       ],
       "ac_series": [
+        2892.0,
         2742.0,
         2903.0,
         3079.0,
@@ -4009,10 +4010,10 @@
         3824.0,
         3580.0,
         3813.0,
-        3806.0,
-        3397.0
+        3806.0
       ],
       "dc_series": [
+        601.0,
         575.0,
         663.0,
         791.0,
@@ -4023,8 +4024,7 @@
         1310.0,
         1503.0,
         1627.0,
-        1675.0,
-        1604.0
+        1675.0
       ],
       "total_series_full": [
         451.0,
@@ -4052,30 +4052,29 @@
         5134.0,
         5083.0,
         5440.0,
-        5481.0,
-        5001.0
+        5481.0
       ],
       "forecast": {
         "horizon_label": "4 negyedév múlva (becsült, az utolsó 8 negyedév trendje alapján)",
         "points": [
-          5559.0,
-          5673.167,
-          5787.333,
-          5901.5
+          5849.179,
+          6055.857,
+          6262.536,
+          6469.214
         ],
         "lower": [
-          5280.407,
-          5394.574,
-          5508.74,
-          5622.907
+          5638.707,
+          5845.386,
+          6052.064,
+          6258.743
         ],
         "upper": [
-          5837.593,
-          5951.76,
-          6065.926,
-          6180.093
+          6059.65,
+          6266.328,
+          6473.007,
+          6679.686
         ],
-        "slope": 114.1667
+        "slope": 206.6786
       }
     },
     "forgalomba": {
@@ -6484,10 +6483,10 @@
     },
     "increment_label": "aug.",
     "tier_scores": {
-      "tomeggyarto": 0.1315,
-      "premium": 0.1394,
-      "budget": 0.0637,
-      "kinai_belepo": 0.1398
+      "tomeggyarto": 0.151,
+      "premium": 0.1617,
+      "budget": 0.0725,
+      "kinai_belepo": 0.1648
     },
     "tier_labels": {
       "tomeggyarto": "Tömeggyártó",
@@ -6515,7 +6514,7 @@
       {
         "label": "Nyilvános töltőpont-sűrűség növekedése",
         "unit": "%",
-        "alap": -2.6,
+        "alap": 5.7,
         "source": "EAFO — magyarországi nyilvános töltőpontok",
         "scope": "HU"
       },
@@ -6592,7 +6591,7 @@
     },
     "example": {
       "label": "Tisztán elektromos / Tömeggyártó / Új (0-2 év)",
-      "score": 46.6,
+      "score": 54.9,
       "top": [
         {
           "label": "Fogyasztói vásárlási szándék (tartós fogyasztási cikk, EU-felmérés)",
@@ -6612,7 +6611,7 @@
       "comparisons": [
         {
           "label": "BEV vs. ICE",
-          "correlation": 0.149,
+          "correlation": 0.147,
           "hit_rate": 0.609,
           "n": 23,
           "first_year": 2003,
@@ -6620,7 +6619,7 @@
         },
         {
           "label": "Hibrid vs. ICE",
-          "correlation": 0.168,
+          "correlation": 0.167,
           "hit_rate": 0.522,
           "n": 23,
           "first_year": 2003,
@@ -6639,51 +6638,11 @@
     "since": "2026-09-28",
     "items": [
       {
-        "group": "Márkakategória",
-        "label": "Kínai eredetű, EV-fókuszú belépő (pl. BYD, MG)",
-        "unit": "pont",
-        "from": 20.2,
-        "to": 14.0,
-        "from_dir": "Erős növekedés",
-        "to_dir": "Növekedés",
-        "dir_changed": true
-      },
-      {
-        "group": "Márkakategória",
-        "label": "Prémium (pl. BMW, Mercedes, Audi)",
-        "unit": "pont",
-        "from": 21.0,
-        "to": 13.9,
-        "from_dir": "Erős növekedés",
-        "to_dir": "Növekedés",
-        "dir_changed": true
-      },
-      {
-        "group": "Márkakategória",
-        "label": "Tömeggyártó (pl. Volkswagen, Toyota, Hyundai, Ford)",
-        "unit": "pont",
-        "from": 19.6,
-        "to": 13.2,
-        "from_dir": "Erős növekedés",
-        "to_dir": "Növekedés",
-        "dir_changed": true
-      },
-      {
         "group": "Hajtástípus",
         "label": "Tisztán elektromos",
         "unit": "pont",
         "from": 37.0,
-        "to": 27.8,
-        "from_dir": "Erős növekedés",
-        "to_dir": "Erős növekedés",
-        "dir_changed": false
-      },
-      {
-        "group": "Hajtástípus",
-        "label": "Hibrid (nem tölthető)",
-        "unit": "pont",
-        "from": 19.1,
-        "to": 16.6,
+        "to": 33.1,
         "from_dir": "Erős növekedés",
         "to_dir": "Erős növekedés",
         "dir_changed": false
@@ -6693,7 +6652,17 @@
         "label": "Plug-in hibrid",
         "unit": "pont",
         "from": 22.6,
-        "to": 16.0,
+        "to": 18.1,
+        "from_dir": "Erős növekedés",
+        "to_dir": "Erős növekedés",
+        "dir_changed": false
+      },
+      {
+        "group": "Hajtástípus",
+        "label": "Hibrid (nem tölthető)",
+        "unit": "pont",
+        "from": 19.1,
+        "to": 16.8,
         "from_dir": "Erős növekedés",
         "to_dir": "Erős növekedés",
         "dir_changed": false
@@ -6710,12 +6679,50 @@
       },
       {
         "group": "Márkakategória",
+        "label": "Kínai eredetű, EV-fókuszú belépő (pl. BYD, MG)",
+        "unit": "pont",
+        "from": 20.2,
+        "to": 16.5,
+        "from_dir": "Erős növekedés",
+        "to_dir": "Erős növekedés",
+        "dir_changed": false
+      },
+      {
+        "group": "Márkakategória",
+        "label": "Prémium (pl. BMW, Mercedes, Audi)",
+        "unit": "pont",
+        "from": 21.0,
+        "to": 16.2,
+        "from_dir": "Erős növekedés",
+        "to_dir": "Erős növekedés",
+        "dir_changed": false
+      },
+      {
+        "group": "Márkakategória",
+        "label": "Tömeggyártó (pl. Volkswagen, Toyota, Hyundai, Ford)",
+        "unit": "pont",
+        "from": 19.6,
+        "to": 15.1,
+        "from_dir": "Erős növekedés",
+        "to_dir": "Erős növekedés",
+        "dir_changed": false
+      },
+      {
+        "group": "Márkakategória",
         "label": "Belépő szintű / budget (pl. Dacia)",
         "unit": "pont",
         "from": 12.1,
-        "to": 6.4,
+        "to": 7.2,
         "from_dir": "Növekedés",
         "to_dir": "Növekedés",
+        "dir_changed": false
+      },
+      {
+        "group": "Tényező (alap)",
+        "label": "Nyilvános töltőpont-sűrűség növekedése",
+        "unit": "%",
+        "from": -2.6,
+        "to": 5.7,
         "dir_changed": false
       },
       {
@@ -6791,7 +6798,7 @@
   const tiles = [
     { fig: data.coverage.n_factors, suf: ' tényező', label: 'a forgatókönyv-modellben' },
     { fig: data.coverage.n_calibrated + data.coverage.n_manual, suf: ' / ' + data.coverage.n_factors, label: `tényező kalibrálva valós adattal (ebből ${data.coverage.n_manual} kézi forrásból)` },
-    { fig: data.coverage.n_real_sources, suf: ' forrás', label: 'KSH / MNB / Eurostat, automatizált' },
+    { fig: data.coverage.n_real_sources, suf: ' forrás', label: `${data.coverage.real_sources_label || 'KSH / MNB / Eurostat'}, automatizált` },
     { fig: '3', suf: ' dimenzió', label: 'hajtástípus · márka · évjárat, valós momentummal' },
   ];
   document.getElementById('tiles').innerHTML = tiles.map(t => `
@@ -7151,8 +7158,8 @@
     desc: 'Mennyibe kerül ma átlagosan egy liter 95-ös benzin, országos átlagban.',
     v: r.uzemanyagar.benzin_last, u: 'forint/liter',
     cap: `Mai országos átlagár — ${r.uzemanyagar.last_week}`,
-    series: [r.uzemanyagar.benzin_series[0], r.uzemanyagar.benzin_series[1], r.uzemanyagar.benzin_last],
-    sparkLabels: ['1 évvel ezelőtt', '1 hónapja', 'ma'],
+    series: [r.uzemanyagar.benzin_series[0], r.uzemanyagar.benzin_last],
+    sparkLabels: [`1 éve (${(r.uzemanyagar.year_ago_period || '').slice(0, 10)})`, 'ma'],
     delta: deltaTag(r.uzemanyagar.benzin_last, r.uzemanyagar.benzin_series[0], ' forint', false, 'az elmúlt 1 évben')
   });
   cards.push({
@@ -7160,8 +7167,8 @@
     desc: 'Mennyibe kerül ma átlagosan egy liter dízel, országos átlagban.',
     v: r.uzemanyagar.dizel_last, u: 'forint/liter',
     cap: `Mai országos átlagár — ${r.uzemanyagar.last_week}`,
-    series: [r.uzemanyagar.dizel_series[0], r.uzemanyagar.dizel_series[1], r.uzemanyagar.dizel_last],
-    sparkLabels: ['1 évvel ezelőtt', '1 hónapja', 'ma'],
+    series: [r.uzemanyagar.dizel_series[0], r.uzemanyagar.dizel_last],
+    sparkLabels: [`1 éve (${(r.uzemanyagar.year_ago_period || '').slice(0, 10)})`, 'ma'],
     delta: deltaTag(r.uzemanyagar.dizel_last, r.uzemanyagar.dizel_series[0], ' forint', false, 'az elmúlt 1 évben')
   });
   cards.push({

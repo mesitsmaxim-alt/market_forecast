@@ -635,7 +635,7 @@ __DASHBOARD_DATA__
   const tiles = [
     { fig: data.coverage.n_factors, suf: ' tényező', label: 'a forgatókönyv-modellben' },
     { fig: data.coverage.n_calibrated + data.coverage.n_manual, suf: ' / ' + data.coverage.n_factors, label: `tényező kalibrálva valós adattal (ebből ${data.coverage.n_manual} kézi forrásból)` },
-    { fig: data.coverage.n_real_sources, suf: ' forrás', label: 'KSH / MNB / Eurostat, automatizált' },
+    { fig: data.coverage.n_real_sources, suf: ' forrás', label: `${data.coverage.real_sources_label || 'KSH / MNB / Eurostat'}, automatizált` },
     { fig: '3', suf: ' dimenzió', label: 'hajtástípus · márka · évjárat, valós momentummal' },
   ];
   document.getElementById('tiles').innerHTML = tiles.map(t => `
@@ -995,8 +995,8 @@ __DASHBOARD_DATA__
     desc: 'Mennyibe kerül ma átlagosan egy liter 95-ös benzin, országos átlagban.',
     v: r.uzemanyagar.benzin_last, u: 'forint/liter',
     cap: `Mai országos átlagár — ${r.uzemanyagar.last_week}`,
-    series: [r.uzemanyagar.benzin_series[0], r.uzemanyagar.benzin_series[1], r.uzemanyagar.benzin_last],
-    sparkLabels: ['1 évvel ezelőtt', '1 hónapja', 'ma'],
+    series: [r.uzemanyagar.benzin_series[0], r.uzemanyagar.benzin_last],
+    sparkLabels: [`1 éve (${(r.uzemanyagar.year_ago_period || '').slice(0, 10)})`, 'ma'],
     delta: deltaTag(r.uzemanyagar.benzin_last, r.uzemanyagar.benzin_series[0], ' forint', false, 'az elmúlt 1 évben')
   });
   cards.push({
@@ -1004,8 +1004,8 @@ __DASHBOARD_DATA__
     desc: 'Mennyibe kerül ma átlagosan egy liter dízel, országos átlagban.',
     v: r.uzemanyagar.dizel_last, u: 'forint/liter',
     cap: `Mai országos átlagár — ${r.uzemanyagar.last_week}`,
-    series: [r.uzemanyagar.dizel_series[0], r.uzemanyagar.dizel_series[1], r.uzemanyagar.dizel_last],
-    sparkLabels: ['1 évvel ezelőtt', '1 hónapja', 'ma'],
+    series: [r.uzemanyagar.dizel_series[0], r.uzemanyagar.dizel_last],
+    sparkLabels: [`1 éve (${(r.uzemanyagar.year_ago_period || '').slice(0, 10)})`, 'ma'],
     delta: deltaTag(r.uzemanyagar.dizel_last, r.uzemanyagar.dizel_series[0], ' forint', false, 'az elmúlt 1 évben')
   });
   cards.push({

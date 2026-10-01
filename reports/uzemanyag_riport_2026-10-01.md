@@ -7,15 +7,15 @@ Utolsó frissítés: **2026. október 1.**
 - 95-ös benzin (mai országos átlag): **636 Ft/liter**
 - Gázolaj (mai országos átlag): **709 Ft/liter**
 
-| Üzemanyag | 2026-09-28 - 2026-10-04 | 2026-09-28 - 2026-10-05 | 2025-09-28 - 2025-10-04 | Havi Δ | Éves (YoY) Δ |
-|---|---|---|---|---|---|
-| 95-ös Benzin E10 | 630 Ft | 634 Ft | 588 Ft | -0.6% | +7.1% |
-| Prémium Benzin E10 | 673 Ft | 675 Ft | 620 Ft | -0.3% | +8.5% |
-| 100-As Benzin E10 | 705 Ft | 706 Ft | 639 Ft | -0.1% | +10.3% |
-| 100-As Benzin E5 | 718 Ft | 721 Ft | 644 Ft | -0.4% | +11.5% |
-| Gázolaj | 701 Ft | 708 Ft | 591 Ft | -1.0% | +18.6% |
-| Prémium Gázolaj | 797 Ft | 799 Ft | 653 Ft | -0.3% | +22.1% |
-| Lpg | 352 Ft | 327 Ft | 316 Ft | +7.6% | +11.4% |
+| Üzemanyag | 2026-09-28 - 2026-10-04 | 2025-09-28 - 2025-10-04 | Éves (YoY) Δ |
+|---|---|---|---|
+| 95-ös Benzin E10 | 630 Ft | 588 Ft | +7.1% |
+| Prémium Benzin E10 | 673 Ft | 620 Ft | +8.5% |
+| 100-As Benzin E10 | 705 Ft | 639 Ft | +10.3% |
+| 100-As Benzin E5 | 718 Ft | 644 Ft | +11.5% |
+| Gázolaj | 701 Ft | 591 Ft | +18.6% |
+| Prémium Gázolaj | 797 Ft | 653 Ft | +22.1% |
+| Lpg | 352 Ft | 316 Ft | +11.4% |
 
 > Ez az adat minden futáskor a ténylegesen aktuális árat tükrözi (nem egy régi pillanatfelvételt) — ez táplálja az `oil_price` forgatókönyv-tényező kalibrációját is.
 

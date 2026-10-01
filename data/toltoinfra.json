@@ -1,6 +1,8 @@
 {
   "source_page": "https://alternative-fuels-observatory.ec.europa.eu/transport-mode/road/hungary/infrastructure",
   "note": "Kézzel exportált CSV-k az EAFO dashboardról (nincs publikus API). Frissítéshez: töltsd le újra a CSV-ket a fenti oldalról, másold a data/raw_eafo/ mappába, majd futtasd újra ezt a scriptet.",
+  "export_date": "2026-09-14",
+  "export_date_source": "export_date.txt",
   "quarterly_counts": {
     "quarters": [
       "2020 Q1",
@@ -28,8 +30,7 @@
       "2025 Q3",
       "2025 Q4",
       "2026 Q1",
-      "2026 Q2",
-      "2026 Q3"
+      "2026 Q2"
     ],
     "ac": [
       392.0,
@@ -57,8 +58,7 @@
       3824.0,
       3580.0,
       3813.0,
-      3806.0,
-      3397.0
+      3806.0
     ],
     "dc": [
       59.0,
@@ -86,8 +86,7 @@
       1310.0,
       1503.0,
       1627.0,
-      1675.0,
-      1604.0
+      1675.0
     ]
   },
   "quarterly_yoy": {
@@ -117,8 +116,7 @@
       "2025 Q3",
       "2025 Q4",
       "2026 Q1",
-      "2026 Q2",
-      "2026 Q3"
+      "2026 Q2"
     ],
     "ac_pct": [
       23.66,
@@ -146,8 +144,7 @@
       -2.82,
       -6.38,
       6.51,
-      -0.18,
-      -10.75
+      -0.18
     ],
     "dc_pct": [
       -28.05,
@@ -175,8 +172,7 @@
       4.63,
       14.73,
       8.25,
-      2.95,
-      -4.24
+      2.95
     ]
   },
   "ac_by_power_yearly": {
@@ -186,8 +182,7 @@
       "2022",
       "2023",
       "2024",
-      "2025",
-      "2026"
+      "2025"
     ],
     "series": {
       "Slow AC recharging point, single-phase (P < 7.4kW)": [
@@ -196,8 +191,7 @@
         53.0,
         26.0,
         212.0,
-        337.0,
-        320.0
+        337.0
       ],
       "Medium-speed AC recharging point, triple-phase (7.4kW ≤ P ≤ 22kW)": [
         1004.0,
@@ -205,8 +199,7 @@
         2667.0,
         2689.0,
         2943.0,
-        3229.0,
-        3065.0
+        3229.0
       ],
       "Fast AC recharging point, triple-phase (P > 22kW)": [
         38.0,
@@ -214,8 +207,7 @@
         148.0,
         27.0,
         15.0,
-        14.0,
-        12.0
+        14.0
       ]
     }
   },
@@ -226,8 +218,7 @@
       "2022",
       "2023",
       "2024",
-      "2025",
-      "2026"
+      "2025"
     ],
     "series": {
       "Slow DC recharging point (P < 50kW)": [
@@ -236,8 +227,7 @@
         180.0,
         204.0,
         233.0,
-        299.0,
-        324.0
+        299.0
       ],
       "Fast DC recharging point (50kW ≤ P < 150kW)": [
         109.0,
@@ -245,8 +235,7 @@
         205.0,
         196.0,
         321.0,
-        468.0,
-        496.0
+        468.0
       ],
       "Level 1 - Ultra-fast DC recharging point (150kW ≤ P < 350kW)": [
         22.0,
@@ -254,8 +243,7 @@
         56.0,
         151.0,
         419.0,
-        663.0,
-        691.0
+        663.0
       ],
       "Level 2 - Ultra-fast DC recharging point (P ≥ 350kW)": [
         19.0,
@@ -263,9 +251,11 @@
         20.0,
         24.0,
         32.0,
-        73.0,
-        93.0
+        73.0
       ]
     }
-  }
+  },
+  "dropped_incomplete_quarters": [
+    "2026 Q3"
+  ]
 }

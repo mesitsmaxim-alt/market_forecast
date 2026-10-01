@@ -81,6 +81,19 @@ NOT scenario-dependent (they represent what's already happening, not a hypothesi
 The weights were deliberately reduced (from 0.4) after a quality review found momentum could
 dominate the scenario signal — see README.md "minőség ellenőrzés" section before changing them.
 
+### Data-quality rules learned from the 2026-10-01 audit
+- **EAFO (manual export):** write the export day to `data/raw_eafo/export_date.txt`.
+  `import_eafo_charging.py` drops every quarter/year that had not ended by then — EAFO exports the
+  running quarter with partial data (the 2026-09-14 export's "2026 Q3" showed a fake −10.75%,
+  flipping `charging_infra` from +5.7% to −2.6%). File mtimes are NOT a reliable export date.
+- **Eurostat HICP:** switched to COICOP 2018 in 2026 — `prc_hicp_manr` froze at 2025-12; use
+  `prc_hicp_minr` (`coicop18=CP0722`, `unit=RCH_A`, full history). Check other Eurostat
+  datasets for similar series breaks if one stops updating.
+- **holtankoljak.hu middle column** is NOT reliably "1 month ago" (its own date label varies) —
+  only the current and the 1-year-ago columns are used (calibration, dashboard card, fuel report).
+- **Source count** on the dashboard/digest comes from `AUTOMATED_SOURCES` in
+  `build_dashboard.py` — add new automated fetchers there.
+
 ### Live vs. frozen data: fuel prices
 `data/uzemanyagar_elo.json` (via `fetchers/fetch_uzemanyag_elo.py`, scraping holtankoljak.hu) is
 the LIVE, always-current fuel price source and is what `oil_price` calibration and the dashboard
