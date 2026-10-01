@@ -18,6 +18,7 @@ LOG_FILE="$LOG_DIR/run_$(date +%Y-%m-%d_%H%M%S).log"
   "$PYTHON" fetchers/fetch_uj_hajtas.py
   "$PYTHON" fetchers/fetch_uzemanyag_elo.py
   "$PYTHON" fetchers/fetch_uzemanyagar.py
+  "$PYTHON" fetchers/fetch_uzemanyag_index.py
   "$PYTHON" fetchers/fetch_makro.py
   "$PYTHON" fetchers/fetch_forgalomba.py
   "$PYTHON" fetchers/fetch_szentiment.py

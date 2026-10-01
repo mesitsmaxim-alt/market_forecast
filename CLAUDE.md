@@ -51,6 +51,18 @@ segment's per-factor `sensitivity` coefficient (-1..+1), summed and weighted.
   (`"auto"` for fetcher-backed ones, via `MANUAL_SOURCE_FACTORS` / `CALIBRATED_FACTORS` in
   `build_dashboard.py`). When updating these files, verify the facts by web search first.
 
+### Scenario bands come from each factor's own volatility
+For the 5 auto-calibrated factors, `calibrate_factors.py` sets pesszimista/optimista = alap ± the
+population std of the factor's historical 12-month changes over `VOL_WINDOW_YEARS = 10`
+(`hist_spread()` and the `*_spread()` helpers): fuel from the Eurostat HICP fuel index
+(`fetchers/fetch_uzemanyag_index.py` → `data/uzemanyag_index.json`), base rate monthly 12m
+changes, charging infra only the last `CHARGING_VOL_WINDOW_Q = 12` quarters (the 2020-21 small-base
+growth would blow the std up to ~57), sentiment on 3-month averages, real wage year-to-year
+differences. The old fixed `*_SPREAD_*` constants are only fallbacks (< `VOL_MIN_POINTS` history);
+the 3 manual factors keep fixed bands. Each factor's `note` states its band and basis.
+`consumer_sentiment.alap` compares the latest 3-month average with the same 3 months a year
+earlier (a single noisy survey month used to swing it, e.g. +13.5 → +5.5 in one update).
+
 ### Momentum terms are separate from scenario factors
 `engine.py` adds two "observed market momentum" terms on top of the scenario score, deliberately
 NOT scenario-dependent (they represent what's already happening, not a hypothesis):
@@ -97,12 +109,14 @@ maintenance text (script names, "ask Claude", launchd) in visible copy — that 
 files' `note` fields or here.
 
 ### Backtesting is intentionally narrow
-`backtest.py` only validates the 3 factors with enough historical depth (`financing_cost`,
-`purchasing_power`, `consumer_sentiment`) against actual KSH stock-share changes 2003-2024, and
-deliberately excludes the momentum term to avoid circularity (momentum is itself derived from the
-same stock data being predicted). Current results (~+0.05 correlation, 64% hit rate, n=22) are
-weak-but-directionally-consistent — report this honestly rather than overstating validation
-coverage when extending it.
+`backtest.py` only validates the 4 factors with enough historical depth (`financing_cost`,
+`purchasing_power`, `consumer_sentiment`, and since 2026-10-01 `oil_price` via the Eurostat HICP fuel
+index annual average) against actual KSH stock-share changes 2003-2025, and
+deliberately excludes the momentum term (it measures the same market shift being predicted, and the
+Eurostat new-registration data only starts in 2020). Results as of 2026-10-01 (n=23): BEV vs ICE
+corr +0.15, hit 61%; Hybrid vs ICE corr +0.17, hit 52% (= chance). Adding fuel price raised
+correlation (+0.04 → ~+0.16) but lowered hit rate. The report's "Értelmezés" is generated from the
+numbers (no fixed "better than chance" claim) — keep it that way and report results honestly.
 
 ### Segment sensitivities
 `config/segments.json` defines drivetrains (ICE/HEV/PHEV/BEV), brand_tiers (tomeggyarto/premium/

@@ -371,12 +371,15 @@ előrejelzéssel. Eredmény (`reports/backtest_riport.md`):
   (relatív súlyuk egymáshoz képest) nincs jól kalibrálva.
 
 **Fontos korlátok, amiket a riport is explicit módon leír:**
-- Csak 3 a 8 tényezőből tesztelhető (finanszírozási költség, vásárlóerő,
-  fogyasztói szándék) — ezekhez van elég hosszú, éves valós idősor. Az
-  olajár, akkumulátorár, töltőinfra, EV-vám és CO2-szabályozás — pont a
-  BEV-térnyerés legvalószínűbb tényleges mozgatórugói — nincsenek
-  visszatesztelve, mert nincs hozzájuk elég hosszú történeti adat a
-  projektben.
+- Csak 4 a 8 tényezőből tesztelhető (finanszírozási költség, vásárlóerő,
+  fogyasztói szándék, és 2026-10-01 óta az üzemanyagár az Eurostat HICP-
+  üzemanyagindexéből, `fetchers/fetch_uzemanyag_index.py`) — ezekhez van elég
+  hosszú, éves valós idősor. Az akkumulátorár, töltőinfra, EV-vám és CO2-
+  szabályozás — a BEV-térnyerés további valószínű mozgatórugói — nincsenek
+  visszatesztelve, mert nincs hozzájuk elég hosszú történeti adat.
+- Az üzemanyagár bevonása a korrelációt javította (+0,04 → +0,15/+0,17), a
+  találati arányt viszont rontotta (hibrid vs. ICE: 52%, a véletlen szintje) —
+  a riport "Értelmezés" része ezt már a tényleges számokból írja.
 - A "megfigyelt piaci momentum" tag (`engine.py`) szándékosan **ki van
   hagyva** a backtestből, mert ugyanabból a KSH-idősorból számol, amit itt
   tényleges kimenetként használunk — bevonása körkörös lenne.

@@ -3,21 +3,22 @@
   "tested_factors": [
     "financing_cost",
     "purchasing_power",
-    "consumer_sentiment"
+    "consumer_sentiment",
+    "oil_price"
   ],
   "comparisons": [
     {
       "label": "BEV vs. ICE",
-      "correlation": 0.039,
-      "hit_rate": 0.652,
+      "correlation": 0.149,
+      "hit_rate": 0.609,
       "n": 23,
       "first_year": 2003,
       "last_year": 2025
     },
     {
       "label": "Hibrid vs. ICE",
-      "correlation": 0.039,
-      "hit_rate": 0.652,
+      "correlation": 0.168,
+      "hit_rate": 0.522,
       "n": 23,
       "first_year": 2003,
       "last_year": 2025

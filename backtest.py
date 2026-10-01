@@ -49,7 +49,7 @@ DATA_DIR = Path(__file__).parent / "data"
 CONFIG_DIR = Path(__file__).parent / "config"
 REPORTS_DIR = Path(__file__).parent / "reports"
 
-TESTED_FACTORS = ["financing_cost", "purchasing_power", "consumer_sentiment"]
+TESTED_FACTORS = ["financing_cost", "purchasing_power", "consumer_sentiment", "oil_price"]
 
 
 def load_json(name: str, base: Path = DATA_DIR) -> dict:
@@ -81,6 +81,11 @@ def build_year_factor_deltas():
         vals = [v for k, v in mp_by_month.items() if k.startswith(str(year)) and v is not None]
         return sum(vals) / len(vals) if vals else None
 
+    # üzemanyagár: az Eurostat HICP-üzemanyag éves átlagos változása (%) - az
+    # élő kútár-adatnak (oil_price kalibráció) nincs hosszú múltja
+    fuel = load_json("uzemanyag_index.json")
+    fuel_by_year = dict(zip(fuel["annual_years"], fuel["annual_avg_yoy_pct"]))
+
     j = load_json("jarmuallomany.json")
     years = j["years"]
 
@@ -96,12 +101,15 @@ def build_year_factor_deltas():
         sy, sy0 = mp_avg_year(y), mp_avg_year(y0)
         sent_delta = (sy - sy0) if sy is not None and sy0 is not None else None
 
-        if None in (fin_delta, pp_delta, sent_delta):
+        oil_delta = fuel_by_year.get(y)
+
+        if None in (fin_delta, pp_delta, sent_delta, oil_delta):
             continue
         out[y] = {
             "financing_cost": fin_delta,
             "purchasing_power": pp_delta,
             "consumer_sentiment": sent_delta,
+            "oil_price": oil_delta,
         }
     return out, j
 
@@ -149,10 +157,11 @@ def build_report(results: list[dict]) -> str:
     lines.append("")
     lines.append(
         "A `config/segments.json`-ban kézzel megadott érzékenységi együtthatók "
-        "visszamérése valós, történeti adaton. **Csak 3 a 8 tényezőből tesztelhető** "
-        "(finanszírozási költség, vásárlóerő, fogyasztói szándék) — ehhez van elég "
-        "hosszú, éves bontású valós idősorunk. A többi tényezőhöz (olajár, "
-        "akkumulátorár, töltőinfra, EV-vám, CO2-szabályozás) nincs elég hosszú "
+        "visszamérése valós, történeti adaton. **Csak 4 a 8 tényezőből tesztelhető** "
+        "(finanszírozási költség, vásárlóerő, fogyasztói szándék, üzemanyagár — az "
+        "utóbbi az Eurostat HICP-üzemanyagindexéből) — ehhez van elég hosszú, éves "
+        "bontású valós idősorunk. A többi tényezőhöz (akkumulátorár, töltőinfra, "
+        "EV-vám, CO2-szabályozás) nincs elég hosszú "
         "visszamenő adat a projektben, ezért ez a backtest **a modell egy "
         "részét, nem az egészét** validálja."
     )
@@ -188,16 +197,31 @@ def build_report(results: list[dict]) -> str:
 
     lines.append("## Értelmezés")
     lines.append("")
+    # Az értelmezés a tényleges számokból készül, nem fix szöveg - különben egy
+    # romló eredmény mellett is "a véletlennél jobb"-at állítana.
+    for res in results:
+        corr, hit = res["correlation"], res["hit_rate"]
+        if corr is None or hit is None:
+            continue
+        hit_txt = (
+            "érdemben jobb a véletlennél (50%)" if hit >= 0.6
+            else "alig jobb a véletlennél (50%)" if hit > 0.55
+            else "a véletlen szintjén van (50%) — az irányt ebben az összevetésben nem találja el megbízhatóan"
+        )
+        corr_txt = (
+            "közepes" if abs(corr) >= 0.3 else "gyenge" if abs(corr) >= 0.1 else "gyakorlatilag nulla"
+        )
+        lines.append(
+            f"- **{res['label']}:** a találati arány ({hit*100:.0f}%) {hit_txt}; a korreláció "
+            f"({corr:+.2f}) {corr_txt}, vagyis a pontszámok nagyságrendje "
+            f"{'részben' if abs(corr) >= 0.1 else 'nem'} követi a tényleges elmozdulást."
+        )
+    lines.append("")
     lines.append(
-        "A hit rate a véletlennél (50%) jobb, de a korreláció gyenge — ez azt "
-        "jelzi, hogy az érzékenységi együtthatók **iránya** részben helyes "
-        "megérzés volt, de a **nagyságrendjük** (relatív súlyuk egymáshoz "
-        "képest) nincs jól kalibrálva a valósághoz. Ennek egy valószínű oka: "
-        "a BEV-térnyerés tényleges mozgatórugói (akkumulátorár, töltőinfra, "
-        "EU-szabályozás) pont azok, amikhez nincs hosszú történeti adatunk — "
-        "ez a backtest szükségszerűen vak foltokkal dolgozik. A korrelációt "
-        "és hit rate-et érdemes újraszámolni, ha sikerül a hiányzó "
-        "tényezőkhöz is valós történeti idősort szerezni."
+        "Az érzékenységi együtthatók szakértői becslések; a gyenge eredmény egyik "
+        "valószínű oka, hogy a BEV-térnyerés tényleges mozgatórugói (akkumulátorár, "
+        "töltőinfra, EU-szabályozás) pont azok, amikhez nincs hosszú történeti "
+        "adatunk — ez a backtest szükségszerűen vak foltokkal dolgozik."
     )
 
     return "\n".join(lines)

@@ -5,11 +5,11 @@
     "oil_price": {
       "label": "Üzemanyagár (HU, benzin + dízel)",
       "unit": "%",
-      "note": "Kalibrálva: holtankoljak.hu ÉLŐ, napi frissülő adatából, a HU 95-ös benzin+gázolaj átlagár tényleges éves (YoY) változása (2026-09-28 - 2026-10-04 vs. 2025-09-28 - 2025-10-04: +12.9%). Forrás: data/uzemanyagar_elo.json (fetchers/fetch_uzemanyag_elo.py, majd calibrate_factors.py futtatásának eredménye) - ez MINDIG a legfrissebb elérhető árat használja, nem egy befagyott pillanatfelvételt.",
+      "note": "Kalibrálva: holtankoljak.hu ÉLŐ, napi frissülő adatából, a HU 95-ös benzin+gázolaj átlagár tényleges éves (YoY) változása (2026-09-28 - 2026-10-04 vs. 2025-09-28 - 2025-10-04: +12.9%). Forrás: data/uzemanyagar_elo.json (fetchers/fetch_uzemanyag_elo.py, majd calibrate_factors.py futtatásának eredménye) - ez MINDIG a legfrissebb elérhető árat használja, nem egy befagyott pillanatfelvételt. Forgatókönyv-sáv: ±12.9 (a 12 havi változások szórása, Eurostat HICP üzemanyag, 2016-01–2025-12, n=120).",
       "scenarios": {
-        "pesszimista": 4.9,
+        "pesszimista": -0.0,
         "alap": 12.9,
-        "optimista": 20.9
+        "optimista": 25.8
       }
     },
     "battery_cost": {
@@ -25,11 +25,11 @@
     "charging_infra": {
       "label": "Nyilvános töltőpont-sűrűség növekedése",
       "unit": "%",
-      "note": "Kalibrálva: EAFO adat alapján (kézzel importálva, 2026 Q3-ig), a magyarországi nyilvános AC+DC töltőpontszám éves (YoY) növekedése (-2.6%). Forrás: data/toltoinfra.json (import_eafo_charging.py, majd calibrate_factors.py futtatásának eredménye). Megjegyzés: ez az adat NEM automatikusan frissül — az EAFO dashboard JS-alapú, kézi CSV-export szükséges hozzá (ld. import_eafo_charging.py).",
+      "note": "Kalibrálva: EAFO adat alapján (kézzel importálva, 2026 Q3-ig), a magyarországi nyilvános AC+DC töltőpontszám éves (YoY) növekedése (-2.6%). Forrás: data/toltoinfra.json (import_eafo_charging.py, majd calibrate_factors.py futtatásának eredménye). Megjegyzés: ez az adat NEM automatikusan frissül — az EAFO dashboard JS-alapú, kézi CSV-export szükséges hozzá (ld. import_eafo_charging.py). Forgatókönyv-sáv: ±12.4 (a 12 havi változások szórása, EAFO, utolsó 12 negyedév YoY, n=12).",
       "scenarios": {
-        "pesszimista": -12.6,
+        "pesszimista": -15.0,
         "alap": -2.6,
-        "optimista": 7.4
+        "optimista": 9.8
       }
     },
     "ev_tariffs": {
@@ -55,31 +55,31 @@
     "financing_cost": {
       "label": "Finanszírozási költség (jegybanki alapkamat várható elmozdulása)",
       "unit": "pp",
-      "note": "Kalibrálva: MNB alapkamat-idősor alapján, a bázisráta 2026-08-26-ig tartó 12 hónapos változása (-1.00 százalékpont) mint a folytatódó trend feltételezése. Forrás: data/makro.json (calibrate_factors.py futtatásának eredménye).",
+      "note": "Kalibrálva: MNB alapkamat-idősor alapján, a bázisráta 2026-08-26-ig tartó 12 hónapos változása (-1.00 százalékpont) mint a folytatódó trend feltételezése. Forrás: data/makro.json (calibrate_factors.py futtatásának eredménye). Forgatókönyv-sáv: ±3.6 (a 12 havi változások szórása, MNB alapkamat, utolsó 10 év havonta, n=120).",
       "scenarios": {
-        "pesszimista": 0.5,
+        "pesszimista": 2.6,
         "alap": -1.0,
-        "optimista": -2.5
+        "optimista": -4.6
       }
     },
     "consumer_sentiment": {
       "label": "Fogyasztói vásárlási szándék (tartós fogyasztási cikk, EU-felmérés)",
       "unit": "pont",
-      "note": "Kalibrálva: Eurostat ei_bsco_m (\"tartós fogyasztási cikk vásárlási szándék\", HU, szezonálisan igazítva) alapján, a 2025-09–2026-09 közötti 12 havi változás (+5.5 balance-pont) mint a folytatódó trend feltételezése. Forrás: data/szentiment.json (calibrate_factors.py futtatásának eredménye).",
+      "note": "Kalibrálva: Eurostat ei_bsco_m (\"tartós fogyasztási cikk vásárlási szándék\", HU, szezonálisan igazítva) alapján, a 2026-07–2026-09 3 havi átlagának változása az egy évvel korábbi 3 hónaphoz képest (+11.6 balance-pont) mint a folytatódó trend feltételezése. Forrás: data/szentiment.json (calibrate_factors.py futtatásának eredménye). Forgatókönyv-sáv: ±10.5 (a 12 havi változások szórása, 3 havi átlagok, utolsó 10 év, n=120).",
       "scenarios": {
-        "pesszimista": -4.5,
-        "alap": 5.5,
-        "optimista": 15.5
+        "pesszimista": 1.1,
+        "alap": 11.6,
+        "optimista": 22.1
       }
     },
     "purchasing_power": {
       "label": "Reáljövedelem / vásárlóerő változása",
       "unit": "%",
-      "note": "Kalibrálva: KSH gdp0035 (reáljövedelem/reálkereset-index) alapján, a 2025. évi YoY reáljövedelem (+1.7%) mint a folytatódó trend feltételezése. Forrás: data/realjovedelem.json (calibrate_factors.py futtatásának eredménye).",
+      "note": "Kalibrálva: KSH gdp0035 (reáljövedelem/reálkereset-index) alapján, a 2025. évi YoY reáljövedelem (+1.7%) mint a folytatódó trend feltételezése. Forrás: data/realjovedelem.json (calibrate_factors.py futtatásának eredménye). Forgatókönyv-sáv: ±4.9 (az éves reálkereset-változás évről évre vett eltérésének szórása, utolsó 10 év).",
       "scenarios": {
-        "pesszimista": -4.3,
+        "pesszimista": -3.2,
         "alap": 1.7,
-        "optimista": 7.7
+        "optimista": 6.6
       }
     }
   }

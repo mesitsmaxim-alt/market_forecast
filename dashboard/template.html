@@ -1138,8 +1138,10 @@ __DASHBOARD_DATA__
     const exText = ex ? `Példa: a <b>${ex.label}</b> szegmens alap pontszáma ${fmt(ex.score, 1)} pont; ebből a három legnagyobb tétel ${ex.top.map(t => `${t.label} (${fmt(t.points, 1)} pont)`).join(', ')}.` : '';
     const bt = m.backtest;
     const btText = bt && bt.comparisons.length ? (() => {
-      const c = bt.comparisons[0];
-      return `<li><b>Gyenge visszamérés.</b> A ${bt.tested_factors.length} tesztelhető tényezőt (${bt.tested_factors.map(t => t.split(' (')[0]).join(', ')}) a ${c.first_year}–${c.last_year} közötti KSH-adatokon visszamérve az irány az esetek ${fmtPlain(c.hit_rate * 100, 0)}%-ában stimmel (véletlenszerűen 50% lenne), de a korreláció csak ${fmt(c.correlation, 2)} — az irány tájékoztató, a nagyságrend nem megbízható. A többi ${m.factors.length - bt.tested_factors.length} tényezőhöz nincs elég hosszú múltbeli adat a visszaméréshez.</li>`;
+      const c0 = bt.comparisons[0];
+      const parts = bt.comparisons.map(c => `${c.label.replace('BEV', 'elektromos').replace('ICE', 'belső égésű').replace('Hibrid', 'hibrid')}: irány ${fmtPlain(c.hit_rate * 100, 0)}%, korreláció ${fmt(c.correlation, 2)}`).join('; ');
+      const weak = bt.comparisons.some(c => c.hit_rate <= 0.55);
+      return `<li><b>Gyenge visszamérés.</b> A ${bt.tested_factors.length} tesztelhető tényezőt (${bt.tested_factors.map(t => t.split(' (')[0]).join(', ')}) a ${c0.first_year}–${c0.last_year} közötti KSH-adatokon visszamérve (${parts}) a modell iránya ${weak ? 'nem minden összevetésben jobb a véletlennél (50%)' : 'a véletlennél jobb (50%)'}, a nagyságrendje pedig csak gyengén követi a valóságot — a pontszám tájékoztató jelzés. A többi ${m.factors.length - bt.tested_factors.length} tényezőhöz nincs elég hosszú múltbeli adat a visszaméréshez.</li>`;
     })() : '';
     el.innerHTML = `
       <h4>Mire vonatkozik?</h4>
@@ -1152,6 +1154,7 @@ __DASHBOARD_DATA__
       <h4>Hogyan?</h4>
       <ul>
         <li>Minden szegmensnek tényezőnként van egy <b>érzékenysége</b> (−1 és +1 között): mennyire és milyen irányban reagál az adott tényezőre. Például a drágább üzemanyag az elektromos autóknak kedvez, a belső égésűeknek nem.</li>
+        <li>A <b>pesszimista / optimista</b> forgatókönyv a tényező alap értéke ± a saját történeti ingadozása (az elmúlt évek 12 havi változásainak szórása) — így a kiszámíthatatlanabb tényezőnek szélesebb a sávja. A kézi forrású tényezőknél (akkuár, vámok, CO2) nincs ehhez elég idősor, ott fix sáv van. A fogyasztói szándéknál 3 havi átlagokat vetünk össze, hogy egy-egy havi kiugrás ne rántsa meg.</li>
         <li>A pontszám a <b>tényezőváltozás × érzékenység</b> szorzatok összege, évjárat szerint súlyozva (${yb}).</li>
         <li>A márkakategória- és évjárat-kártyák sávja a csoport szegmenseinek <b>egyszerű átlaga</b> (minden hajtás egyforma súllyal), mellette a <b>piacsúlyozott</b> érték a hajtásokat a valós piaci arányuk szerint súlyozza, évjárat-sávonként más alapon — ${mwShares()}. Közelítés: a hazai használt piacon sok a külföldről behozott autó, ezek összetétele eltérhet a hazai új eladásokétól; az állományban a KSH nem választja szét a két hibridfajtát, ezért ott a legkorábbi Eurostat-év arányával osztjuk el.</li>
         <li>Ehhez jön két kisebb súlyú <b>valós piaci lendület</b>: ${m.momentum.drivetrain_source === 'share_pp'

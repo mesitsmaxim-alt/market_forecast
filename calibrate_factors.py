@@ -20,7 +20,9 @@ fájl "updated" dátuma túl régi, a note-ba és a konzolra figyelmeztetés ker
 
 from __future__ import annotations
 
+import datetime
 import json
+import statistics
 from pathlib import Path
 
 CONFIG_PATH = Path(__file__).parent / "config" / "factors.json"
@@ -33,7 +35,21 @@ AKKUAR_DATA_PATH = Path(__file__).parent / "data" / "akkuar.json"
 EV_VAMOK_DATA_PATH = Path(__file__).parent / "data" / "ev_vamok.json"
 CO2_DATA_PATH = Path(__file__).parent / "data" / "co2_szabalyozas.json"
 
-SPREAD_PCT = 8  # a pesszimista/optimista sáv fél-szélessége az alap körül
+FUEL_INDEX_PATH = Path(__file__).parent / "data" / "uzemanyag_index.json"
+
+# A pesszimista/optimista sáv fél-szélessége az automata forrású tényezőknél a
+# tényező SAJÁT történeti ingadozásából jön: a 12 havi változások szórása az
+# utolsó VOL_WINDOW_YEARS évben (hist_spread). Így a sáv azt tükrözi, mennyire
+# kiszámíthatatlan az adott tényező. Az alábbi fix értékek csak TARTALÉKOK, ha
+# nincs elég történeti adat; a kézi forrású tényezőknél (akkuár, vámok, CO2)
+# nincs értelmes idősor, ott maradnak a fix sávok.
+VOL_WINDOW_YEARS = 10
+VOL_MIN_POINTS = 8
+# A töltőinfra korai évei (2020-21) kis bázisról évi +100-235%-ot nőttek, ez a
+# szórást 50+ pontra torzítaná - ott csak az utolsó 12 negyedév YoY-ja számít.
+CHARGING_VOL_WINDOW_Q = 12
+
+SPREAD_PCT = 8  # tartalék: az üzemanyagár sávjának fél-szélessége
 FINANCING_SPREAD_PP = 1.5  # a finanszírozási költség sávjának fél-szélessége (percentpont)
 CHARGING_SPREAD_PCT = 10  # a töltőinfra sávjának fél-szélessége
 SENTIMENT_SPREAD_PONT = 10  # a fogyasztói szentiment sávjának fél-szélessége (balance-pont)
@@ -47,6 +63,81 @@ CO2_SPREAD = 4  # a CO2-szabályozási nyomás sávjának fél-szélessége (%/�
 # kell átnézni.
 STALE_DAYS = {"akkuar": 395, "ev_vamok": 183, "co2_szabalyozas": 183}
 HORIZON_DAYS = 365
+
+
+def hist_spread(changes: list[float], fallback: float, window_desc: str) -> tuple[float, str]:
+    """Sáv-fél-szélesség = a történeti változások (populációs) szórása, 0,1-re
+    kerekítve. Kevés adatnál a fix tartalék értéket adja vissza."""
+    vals = [v for v in changes if v is not None]
+    if len(vals) < VOL_MIN_POINTS:
+        return fallback, f"fix tartalék sáv (kevés történeti adat: {len(vals)} pont)"
+    return round(statistics.pstdev(vals), 1), f"a 12 havi változások szórása, {window_desc}, n={len(vals)}"
+
+
+def months_back(d: datetime.date, n: int) -> datetime.date:
+    y, m = divmod(d.year * 12 + (d.month - 1) - n, 12)
+    return datetime.date(y, m + 1, 1)
+
+
+def oil_price_spread() -> tuple[float, str]:
+    if not FUEL_INDEX_PATH.exists():
+        return SPREAD_PCT, "fix tartalék sáv (nincs üzemanyagindex-adat)"
+    u = json.loads(FUEL_INDEX_PATH.read_text(encoding="utf-8"))
+    pairs = [(m, v) for m, v in zip(u["months"], u["yoy_pct"])][-VOL_WINDOW_YEARS * 12:]
+    return hist_spread([v for _, v in pairs], SPREAD_PCT,
+                       f"Eurostat HICP üzemanyag, {pairs[0][0]}–{pairs[-1][0]}" if pairs else "")
+
+
+def financing_cost_spread() -> tuple[float, str]:
+    rate = json.loads(MAKRO_DATA_PATH.read_text(encoding="utf-8"))["alapkamat"]
+    dates = [datetime.date.fromisoformat(d) for d in rate["dates"]]
+    values = rate["values"]
+
+    def rate_at(d):
+        c = [v for dd, v in zip(dates, values) if dd <= d]
+        return c[-1] if c else None
+
+    end = dates[-1]
+    changes = []
+    for k in range(VOL_WINDOW_YEARS * 12):
+        t = months_back(end, k)
+        a, b = rate_at(t), rate_at(months_back(t, 12))
+        if a is not None and b is not None:
+            changes.append(a - b)
+    return hist_spread(changes, FINANCING_SPREAD_PP, f"MNB alapkamat, utolsó {VOL_WINDOW_YEARS} év havonta")
+
+
+def charging_infra_spread() -> tuple[float, str]:
+    qc = json.loads(CHARGING_DATA_PATH.read_text(encoding="utf-8"))["quarterly_counts"]
+    total = [a + d for a, d in zip(qc["ac"], qc["dc"])]
+    yoy = [(total[i] / total[i - 4] - 1) * 100 for i in range(4, len(total)) if total[i - 4]]
+    return hist_spread(yoy[-CHARGING_VOL_WINDOW_Q:], CHARGING_SPREAD_PCT,
+                       f"EAFO, utolsó {CHARGING_VOL_WINDOW_Q} negyedév YoY")
+
+
+def sentiment_3m_avg(mp: list) -> list:
+    """3 havi mozgóátlag (None, ha a 3 hónap bármelyike hiányzik)."""
+    return [None if i < 2 or None in mp[i - 2:i + 1] else sum(mp[i - 2:i + 1]) / 3
+            for i in range(len(mp))]
+
+
+def consumer_sentiment_spread() -> tuple[float, str]:
+    mp = json.loads(SZENTIMENT_DATA_PATH.read_text(encoding="utf-8"))["major_purchases_intention"]
+    avg3 = sentiment_3m_avg(mp)
+    changes = [avg3[i] - avg3[i - 12] for i in range(12, len(avg3))
+               if avg3[i] is not None and avg3[i - 12] is not None]
+    return hist_spread(changes[-VOL_WINDOW_YEARS * 12:], SENTIMENT_SPREAD_PONT,
+                       f"3 havi átlagok, utolsó {VOL_WINDOW_YEARS} év")
+
+
+def purchasing_power_spread() -> tuple[float, str]:
+    r = json.loads(REALJOVEDELEM_DATA_PATH.read_text(encoding="utf-8"))
+    w = [v for v in r["real_wage_yoy_pct"] if v is not None][-(VOL_WINDOW_YEARS + 1):]
+    diffs = [w[i] - w[i - 1] for i in range(1, len(w))]
+    s, _ = hist_spread(diffs, PURCHASING_POWER_SPREAD_PCT, "")
+    desc = (f"az éves reálkereset-változás évről évre vett eltérésének szórása, utolsó {len(diffs)} év"
+            if len(diffs) >= VOL_MIN_POINTS else "fix tartalék sáv (kevés történeti adat)")
+    return s, desc
 
 
 def compute_oil_price_trend() -> tuple[float, str]:
@@ -128,16 +219,21 @@ def compute_consumer_sentiment_trend() -> tuple[float, str]:
     data = json.loads(SZENTIMENT_DATA_PATH.read_text(encoding="utf-8"))
     mp = data["major_purchases_intention"]
     months = data["months"]
-    if len(mp) < 13:
+    if len(mp) < 15:
         raise ValueError("Nincs elég havi adat a szentiment 12 havi változásához")
-    change_1y = mp[-1] - mp[-13]
+    # 3 havi átlagot vetünk össze az egy évvel korábbi 3 havi átlaggal: egyetlen
+    # havi kiugrás (a felmérés zajos) így nem rántja meg a tényezőt
+    avg3 = sentiment_3m_avg(mp)
+    if avg3[-1] is None or avg3[-13] is None:
+        raise ValueError("Hiányzó havi adat a szentiment 3 havi átlagához")
+    change_1y = avg3[-1] - avg3[-13]
 
     note = (
         f"Kalibrálva: Eurostat ei_bsco_m (\"tartós fogyasztási cikk vásárlási "
-        f"szándék\", HU, szezonálisan igazítva) alapján, a {months[-13]}–"
-        f"{months[-1]} közötti 12 havi változás ({change_1y:+.1f} balance-pont) "
-        f"mint a folytatódó trend feltételezése. Forrás: data/szentiment.json "
-        f"(calibrate_factors.py futtatásának eredménye)."
+        f"szándék\", HU, szezonálisan igazítva) alapján, a {months[-3]}–{months[-1]} "
+        f"3 havi átlagának változása az egy évvel korábbi 3 hónaphoz képest "
+        f"({change_1y:+.1f} balance-pont) mint a folytatódó trend feltételezése. "
+        f"Forrás: data/szentiment.json (calibrate_factors.py futtatásának eredménye)."
     )
     return change_1y, note
 
@@ -271,51 +367,61 @@ def main():
     config = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
 
     annualized_pct, oil_note = compute_oil_price_trend()
+    annualized_pct_spread, spread_desc = oil_price_spread()
+    oil_note += f" Forgatókönyv-sáv: ±{annualized_pct_spread} ({spread_desc})."
     oil = config["factors"]["oil_price"]
     # A kulcs történeti okból "oil_price", de a tényező a HAZAI kútár (benzin +
     # dízel) éves változása, nem a Brent-árfolyam - a címke ezt mondja.
     oil["label"] = "Üzemanyagár (HU, benzin + dízel)"
     oil["note"] = oil_note
     oil["scenarios"] = {
-        "pesszimista": round(annualized_pct - SPREAD_PCT, 1),
+        "pesszimista": round(annualized_pct - annualized_pct_spread, 1) + 0.0,
         "alap": round(annualized_pct, 1),
-        "optimista": round(annualized_pct + SPREAD_PCT, 1),
+        "optimista": round(annualized_pct + annualized_pct_spread, 1) + 0.0,
     }
 
     financing_pp, financing_note = compute_financing_cost_trend()
+    financing_pp_spread, spread_desc = financing_cost_spread()
+    financing_note += f" Forgatókönyv-sáv: ±{financing_pp_spread} ({spread_desc})."
     financing = config["factors"]["financing_cost"]
     financing["note"] = financing_note
     financing["scenarios"] = {
-        "pesszimista": round(financing_pp + FINANCING_SPREAD_PP, 1),
+        "pesszimista": round(financing_pp + financing_pp_spread, 1) + 0.0,
         "alap": round(financing_pp, 1),
-        "optimista": round(financing_pp - FINANCING_SPREAD_PP, 1),
+        "optimista": round(financing_pp - financing_pp_spread, 1) + 0.0,
     }
 
     charging_pct, charging_note = compute_charging_infra_trend()
+    charging_pct_spread, spread_desc = charging_infra_spread()
+    charging_note += f" Forgatókönyv-sáv: ±{charging_pct_spread} ({spread_desc})."
     charging = config["factors"]["charging_infra"]
     charging["note"] = charging_note
     charging["scenarios"] = {
-        "pesszimista": round(charging_pct - CHARGING_SPREAD_PCT, 1),
+        "pesszimista": round(charging_pct - charging_pct_spread, 1) + 0.0,
         "alap": round(charging_pct, 1),
-        "optimista": round(charging_pct + CHARGING_SPREAD_PCT, 1),
+        "optimista": round(charging_pct + charging_pct_spread, 1) + 0.0,
     }
 
     sentiment_pont, sentiment_note = compute_consumer_sentiment_trend()
+    sentiment_pont_spread, spread_desc = consumer_sentiment_spread()
+    sentiment_note += f" Forgatókönyv-sáv: ±{sentiment_pont_spread} ({spread_desc})."
     sentiment = config["factors"]["consumer_sentiment"]
     sentiment["note"] = sentiment_note
     sentiment["scenarios"] = {
-        "pesszimista": round(sentiment_pont - SENTIMENT_SPREAD_PONT, 1),
+        "pesszimista": round(sentiment_pont - sentiment_pont_spread, 1) + 0.0,
         "alap": round(sentiment_pont, 1),
-        "optimista": round(sentiment_pont + SENTIMENT_SPREAD_PONT, 1),
+        "optimista": round(sentiment_pont + sentiment_pont_spread, 1) + 0.0,
     }
 
     pp_pct, pp_note = compute_purchasing_power_trend()
+    pp_pct_spread, spread_desc = purchasing_power_spread()
+    pp_note += f" Forgatókönyv-sáv: ±{pp_pct_spread} ({spread_desc})."
     pp = config["factors"]["purchasing_power"]
     pp["note"] = pp_note
     pp["scenarios"] = {
-        "pesszimista": round(pp_pct - PURCHASING_POWER_SPREAD_PCT, 1),
+        "pesszimista": round(pp_pct - pp_pct_spread, 1) + 0.0,
         "alap": round(pp_pct, 1),
-        "optimista": round(pp_pct + PURCHASING_POWER_SPREAD_PCT, 1),
+        "optimista": round(pp_pct + pp_pct_spread, 1) + 0.0,
     }
 
     warnings = []
@@ -363,6 +469,9 @@ def main():
           f"battery_cost.alap = {battery_pct:+.1f}%, "
           f"ev_tariffs.alap = {tariff_pp:+.1f}pp, "
           f"co2_regulation.alap = {co2_pressure:.1f}%/év")
+    print(f"Sávok (±): üzemanyag {annualized_pct_spread}, alapkamat {financing_pp_spread}pp, "
+          f"töltőinfra {charging_pct_spread}, szentiment {sentiment_pont_spread}, "
+          f"vásárlóerő {pp_pct_spread}")
     for w in warnings:
         if w:
             print(w)
