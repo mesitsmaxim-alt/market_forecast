@@ -1,0 +1,26 @@
+{
+  "generated": "2026-10-01",
+  "tested_factors": [
+    "financing_cost",
+    "purchasing_power",
+    "consumer_sentiment"
+  ],
+  "comparisons": [
+    {
+      "label": "BEV vs. ICE",
+      "correlation": 0.039,
+      "hit_rate": 0.652,
+      "n": 23,
+      "first_year": 2003,
+      "last_year": 2025
+    },
+    {
+      "label": "Hibrid vs. ICE",
+      "correlation": 0.039,
+      "hit_rate": 0.652,
+      "n": 23,
+      "first_year": 2003,
+      "last_year": 2025
+    }
+  ]
+}

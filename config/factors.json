@@ -45,11 +45,11 @@
     "co2_regulation": {
       "label": "EU CO2-szabályozás szigorodása / ICE-tiltás közeledése",
       "unit": "%/év",
-      "note": "Kalibrálva: EU flotta-CO2 célok (2019/631 rendelet) alapján — a jelenlegi 93.6 g/km célról a 2030-es 49.5 g/km-re 3.3 év alatt szükséges 47.1%-os csökkentés, évesítve (14.4%/év) mint szabályozási nyomás. Függőben lévő javaslatok (nem számolva): 1 db. Forrás: data/co2_szabalyozas.json (kézi adatbevitel).",
+      "note": "Kalibrálva: EU flotta-CO2 célok (2019/631 rendelet) alapján — a jelenlegi 93.6 g/km célról a 2030-es 49.5 g/km-re 3.3 év alatt szükséges 47.1%-os csökkentés, évesítve (14.5%/év) mint szabályozási nyomás. Függőben lévő javaslatok (nem számolva): 1 db. Forrás: data/co2_szabalyozas.json (kézi adatbevitel).",
       "scenarios": {
-        "pesszimista": 10.4,
-        "alap": 14.4,
-        "optimista": 18.4
+        "pesszimista": 10.5,
+        "alap": 14.5,
+        "optimista": 18.5
       }
     },
     "financing_cost": {
@@ -65,21 +65,21 @@
     "consumer_sentiment": {
       "label": "Fogyasztói vásárlási szándék (tartós fogyasztási cikk, EU-felmérés)",
       "unit": "pont",
-      "note": "Kalibrálva: Eurostat ei_bsco_m (\"tartós fogyasztási cikk vásárlási szándék\", HU, szezonálisan igazítva) alapján, a 2025-08–2026-08 közötti 12 havi változás (+13.5 balance-pont) mint a folytatódó trend feltételezése. Forrás: data/szentiment.json (calibrate_factors.py futtatásának eredménye).",
+      "note": "Kalibrálva: Eurostat ei_bsco_m (\"tartós fogyasztási cikk vásárlási szándék\", HU, szezonálisan igazítva) alapján, a 2025-09–2026-09 közötti 12 havi változás (+5.5 balance-pont) mint a folytatódó trend feltételezése. Forrás: data/szentiment.json (calibrate_factors.py futtatásának eredménye).",
       "scenarios": {
-        "pesszimista": 3.5,
-        "alap": 13.5,
-        "optimista": 23.5
+        "pesszimista": -4.5,
+        "alap": 5.5,
+        "optimista": 15.5
       }
     },
     "purchasing_power": {
       "label": "Reáljövedelem / vásárlóerő változása",
       "unit": "%",
-      "note": "Kalibrálva: KSH gdp0035 (reáljövedelem/reálkereset-index) alapján, a 2025. évi YoY reálkereset (a reáljövedelem még nem publikált erre az évre) (+4.8%) mint a folytatódó trend feltételezése. Forrás: data/realjovedelem.json (calibrate_factors.py futtatásának eredménye).",
+      "note": "Kalibrálva: KSH gdp0035 (reáljövedelem/reálkereset-index) alapján, a 2025. évi YoY reáljövedelem (+1.7%) mint a folytatódó trend feltételezése. Forrás: data/realjovedelem.json (calibrate_factors.py futtatásának eredménye).",
       "scenarios": {
-        "pesszimista": -1.2,
-        "alap": 4.8,
-        "optimista": 10.8
+        "pesszimista": -4.3,
+        "alap": 1.7,
+        "optimista": 7.7
       }
     }
   }
