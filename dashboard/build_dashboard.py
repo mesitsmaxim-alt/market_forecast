@@ -249,6 +249,11 @@ def build_engine_summary() -> dict:
         "year_bucket": r.year_bucket, "year_bucket_label": r.year_bucket_label,
         "scores": {s: round(r.scores[s], 4) for s in SCENARIOS},
         "dirs": {s: classify(r.scores[s]) for s in SCENARIOS},
+        # a hőtérkép kattintásos bontásához: tényezőnkénti hozzájárulás pontban,
+        # évjárat-súllyal (összegük = a szegmens pontszáma)
+        "drivers": {s: [{"label": driver_label(lbl),
+                         "points": round(c * yb_weight[r.year_bucket] * 100, 2)}
+                        for lbl, c in r.drivers[s]] for s in SCENARIOS},
     } for r in results]
 
     top_winners = [segment_row(r) for r in results_sorted[:5]]
@@ -345,6 +350,42 @@ def cagr(series: list[float], window: int) -> float:
     return ((e / s) ** (1 / w) - 1) * 100
 
 
+BRAND_MOVER_MIN_UNITS = 1000  # ennél kisebb éves volumenű márka kimarad (kis bázison a % zajos)
+BRAND_MOVER_N = 6
+
+
+def build_brand_movers(f: dict) -> dict | None:
+    """Leggyorsabban növő / csökkenő márkák a KSH első forgalomba helyezési
+    adatából (új + használt import!): a legutóbbi 4 negyedév összege vs. az
+    azt megelőző 4 negyedévé - egyetlen negyedév helyett, mert az zajos."""
+    quarters, brands = f["quarters"], f["brands"]
+    if len(quarters) < 8:
+        return None
+    rows = []
+    total_now = sum(f["total"][-4:])
+    total_prev = sum(f["total"][-8:-4])
+    for name, series in brands.items():
+        now, prev = sum(series[-4:]), sum(series[-8:-4])
+        if now < BRAND_MOVER_MIN_UNITS or prev <= 0:
+            continue
+        rows.append({
+            "brand": name, "units": now, "prev_units": prev,
+            "change_pct": round((now / prev - 1) * 100, 1),
+            "share_pct": round(now / total_now * 100, 2),
+            "share_pp_change": round((now / total_now - prev / total_prev) * 100, 2),
+        })
+    rows.sort(key=lambda r: -r["change_pct"])
+    return {
+        "window_now": f"{quarters[-4]} – {quarters[-1]}",
+        "window_prev": f"{quarters[-8]} – {quarters[-5]}",
+        "market_change_pct": round((total_now / total_prev - 1) * 100, 1),
+        "min_units": BRAND_MOVER_MIN_UNITS,
+        "n_brands": len(rows),
+        "growing": rows[:BRAND_MOVER_N],
+        "declining": rows[::-1][:BRAND_MOVER_N],
+    }
+
+
 def build_real_snapshot() -> dict:
     out = {}
 
@@ -426,7 +467,18 @@ def build_real_snapshot() -> dict:
         "total_series_full": f["total"],
         "total_yoy": (f["total"][-1] / f["total"][-5] - 1) * 100 if len(f["total"]) >= 5 else None,
         "forecast": forecast_card(f["total"], steps=4, horizon_label="4 negyedév múlva (becsült, az utolsó 8 negyedév trendje alapján)", window=8),
+        "brand_movers": build_brand_movers(f),
     }
+
+    if (DATA_DIR / "uj_hajtas.json").exists():
+        uh = load_json("uj_hajtas.json")
+        out["uj_hajtas"] = {
+            "source": uh["source"],
+            "years": uh["years"],
+            "shares": uh["detail_shares_pct"],          # benzin / dizel / hibrid / elektromos / egyeb
+            "phev_share": uh["shares_pct"]["PHEV"],     # a hibridből a plug-in rész
+            "totals": uh["counts"]["total"],
+        }
 
     s = load_json("szentiment.json")
     out["szentiment"] = {

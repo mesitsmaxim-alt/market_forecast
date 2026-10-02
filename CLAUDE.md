@@ -202,6 +202,17 @@ használt piacon sok az import, amelynek összetétele eltérhet a hazai új ela
 mindkét számot mutatja, a "Mi változott?" és a futástörténet az egyszerű átlagot követi
 (összevethetőség miatt).
 
+### Dashboard: új autók megoszlása, márka-mozgók, szegmens-bontás
+- **Új autók hajtás szerint** (Áttekintés 3.): `real.uj_hajtas` a `uj_hajtas.json`
+  `detail_shares_pct`-éből — a KSH-állománnyal AZONOS kategóriák/színek (benzin, dízel, hibrid =
+  HEV+PHEV, elektromos, egyéb), alul összevetésül az állomány-sáv. A következtetés-mondat generált.
+- **Márka-mozgók** (Modellek fül): `build_brand_movers()` a KSH `forgalomba.json`-ból — legutóbbi 4
+  negyedév vs. előző 4 (egy negyedév túl zajos), min. `BRAND_MOVER_MIN_UNITS = 1000` db. A KSH-adat
+  új + használt import EGYÜTT; a teljes piaci változás és a részesedés pp-változása is látszik.
+- **Szegmens-bontás**: a hőtérkép cellájára kattintva (Enter is) a `segments[].drivers` (tényezőnkénti
+  hozzájárulás pontban, évjárat-súllyal; összegük = pontszám) jelenik meg; a forgatókönyv-váltó
+  frissíti.
+
 ### Piaci hírek ("Amit a piac mond" fül) és legkeresettebb modellek
 - **Hírek** (`fetchers/fetch_hirek.py` → `data/hirek.json` → `hirek_report.py`): 3 magyar RSS-forrás
   (Vezess.hu, Portfolio.hu, Világgazdaság), curl-lal lekérve, `xml.etree.ElementTree`-vel parszolva

@@ -49,6 +49,16 @@ UA = (
     "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36"
 )
 
+# A dashboard megoszlás-diagramjához a KSH-állománnyal azonos kategóriák
+# (benzin / dízel külön, a hibrid a HEV+PHEV együtt - mert a KSH-állomány sem
+# bontja szét), hogy a két diagram közvetlenül összevethető legyen.
+DETAIL = {
+    "benzin": ["PET_X_HYB"],
+    "dizel": ["DIE_X_HYB"],
+    "hibrid": ["ELC_PET_HYB", "ELC_DIE_HYB", "ELC_PET_PI", "ELC_DIE_PI"],
+    "elektromos": ["ELC"],
+}
+
 GROUPS = {
     "ICE": ["PET_X_HYB", "DIE_X_HYB"],
     "HEV": ["ELC_PET_HYB", "ELC_DIE_HYB"],
@@ -79,6 +89,7 @@ def parse() -> dict:
         return values.get(str(nrg_index[code] * n_time + time_index[year]))
 
     years, counts = [], {k: [] for k in [*GROUPS, "egyeb", "total"]}
+    detail = {k: [] for k in [*DETAIL, "egyeb"]}
     for year in sorted(time_index, key=time_index.get):
         total = get("TOTAL", year)
         parts = {g: [get(c, year) for c in codes] for g, codes in GROUPS.items()}
@@ -91,6 +102,10 @@ def parse() -> dict:
             counts[g].append(v)
         counts["egyeb"].append(total - sum(sums.values()))
         counts["total"].append(total)
+        dsum = {k: sum(get(c, year) for c in codes) for k, codes in DETAIL.items()}
+        for k, v in dsum.items():
+            detail[k].append(round(v / total * 100, 2))
+        detail["egyeb"].append(round((total - sum(dsum.values())) / total * 100, 2))
 
     shares = {
         g: [round(c / t * 100, 2) for c, t in zip(counts[g], counts["total"])]
@@ -103,6 +118,8 @@ def parse() -> dict:
         "years": years,
         "counts": counts,
         "shares_pct": shares,
+        # a KSH-állomány kategóriáival azonos bontás (dashboard-diagramhoz)
+        "detail_shares_pct": detail,
     }
 
 

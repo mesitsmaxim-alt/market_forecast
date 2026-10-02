@@ -330,6 +330,43 @@
   }
   .t-muted{ color:var(--text-muted); }
 
+  /* ---------- szegmens-bontás (hőtérkép-kattintás) ---------- */
+  .heat-cell{ cursor:pointer; }
+  .heat-cell.sel{ outline:2px solid var(--text-primary); outline-offset:-2px; }
+  .seg-detail{ margin-top:16px; padding-top:14px; border-top:1px solid var(--border); }
+  .seg-detail .sd-hint{ font-size:12.5px; color:var(--text-muted); }
+  .seg-detail h4{ font-size:13px; font-weight:700; margin:0 0 4px; color:var(--text-primary); }
+  .seg-detail .sd-sub{ font-size:12px; color:var(--text-muted); margin:0 0 12px; }
+  .sd-row{ display:grid; grid-template-columns: minmax(150px, 1.2fr) 2fr 80px; gap:10px; align-items:center; padding:4px 0; font-size:12.5px; }
+  .sd-row .sd-lbl{ color:var(--text-secondary); line-height:1.3; }
+  .sd-row .sd-val{ font-family:"JetBrains Mono",monospace; text-align:right; font-weight:600; color:var(--text-primary); }
+  .sd-track{ position:relative; height:10px; background:var(--surface-2); border-radius:4px; }
+  .sd-zero{ position:absolute; left:50%; top:-3px; bottom:-3px; width:1px; background:var(--border-strong); }
+  .sd-fill{ position:absolute; top:0; bottom:0; border-radius:4px; }
+  .sd-fill.pos{ left:50%; background:var(--pos); }
+  .sd-fill.neg{ right:50%; background:var(--neg); }
+  .sd-sum{ margin-top:8px; padding-top:8px; border-top:1px dashed var(--border); font-size:12.5px; color:var(--text-secondary); }
+
+  /* ---------- új autók megoszlása (évenkénti 100%-os sávok) ---------- */
+  .newmix{ display:grid; grid-template-columns: 56px 1fr; gap:6px 12px; align-items:center; margin-top:4px; }
+  .newmix .yr{ font-family:"JetBrains Mono",monospace; font-size:12px; color:var(--text-secondary); text-align:right; }
+  .newmix .yr.stock{ font-family:inherit; font-size:11px; line-height:1.2; }
+  .mixbar{ display:flex; height:22px; gap:2px; border-radius:5px; overflow:hidden; }
+  .mixbar > div{ height:100%; cursor:default; }
+  .mix-sep{ grid-column:1 / -1; border-top:1px dashed var(--border); margin:4px 0; }
+  .comp-concl{ font-size:12.5px; line-height:1.55; color:var(--text-secondary); margin:14px 0 0; padding-top:12px; border-top:1px solid var(--border); }
+  .comp-concl b{ color:var(--text-primary); }
+
+  /* ---------- márka-mozgók ---------- */
+  .movers-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr)); gap:16px; }
+  .mover-row{ display:grid; grid-template-columns: 1fr 80px 70px; gap:10px; align-items:baseline; padding:8px 0; border-bottom:1px solid var(--border); font-size:12.5px; }
+  .mover-row:last-child{ border-bottom:none; }
+  .mover-row.head span{ font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-muted); font-weight:600; }
+  .mover-row .mv-name{ font-weight:600; color:var(--text-primary); }
+  .mover-row .mv-sub{ display:block; font-size:11px; color:var(--text-muted); font-weight:500; }
+  .mover-row .mv-num{ font-family:"JetBrains Mono",monospace; text-align:right; color:var(--text-primary); font-weight:600; }
+  .mover-row .mv-num.muted{ color:var(--text-secondary); font-weight:500; }
+
   /* ---------- "mi változott" ---------- */
   .changes-card{ background:var(--surface); border:1px solid var(--border); border-radius:14px; box-shadow:var(--shadow); overflow:hidden; }
   .change-row{ display:grid; grid-template-columns: 130px 1fr auto; gap:6px 14px; align-items:center; padding:10px 18px; border-bottom:1px solid var(--border); font-size:13px; }
@@ -413,6 +450,8 @@
     .heat-card{ padding:16px 12px; }
     .heat{ grid-template-columns: minmax(64px,auto) repeat(4, 1fr); }
     .change-row{ grid-template-columns: 1fr auto; }
+    .sd-row{ grid-template-columns: 1fr 64px; }
+    .sd-row .sd-track{ grid-column:1 / -1; grid-row:2; }
     .method > summary{ flex-wrap:wrap; padding:12px 14px; }
     .method-body{ padding:4px 14px 14px; }
     .m-table td.v{ display:none; }
@@ -479,19 +518,29 @@
   <div class="bar-groups" id="bar-groups"></div>
   <div class="heat-card">
     <h3>Mind a 48 szegmens — hőtérkép</h3>
-    <p class="heat-sub">Sorok: hajtástípus, oszlopok: márkakategória, évjárat-sávonként. Kék = a tényezők segítik, piros = hátráltatják, szürke = semleges. Vidd az egeret egy cellára a részletekért.</p>
+    <p class="heat-sub">Sorok: hajtástípus, oszlopok: márkakategória, évjárat-sávonként. Kék = a tényezők segítik, piros = hátráltatják, szürke = semleges. Vidd az egeret egy cellára a részletekért, <b>kattints rá</b> a tényezőnkénti bontásért.</p>
     <div class="heat-grids" id="heatmap"></div>
     <div class="heat-legend" id="heat-legend"></div>
+    <div class="seg-detail" id="seg-detail" aria-live="polite"></div>
   </div>
   <div class="wl-grid" id="wl-grid"></div>
 </section>
 
 <section id="composition">
-  <div class="section-head"><h2>3. Valós piaci megoszlás — KSH állomány</h2></div>
+  <div class="section-head">
+    <h2>3. Valós piaci megoszlás — állomány és új autók</h2>
+    <span class="section-note">Az állomány a forgalomban lévő összes autó (KSH); az új autók az adott évben újként forgalomba helyezettek (Eurostat). A kettő közti különbség mutatja, merre tart a piac.</span>
+  </div>
   <div class="comp-card">
     <h3 id="comp-title">Hajtástípus szerinti megoszlás</h3>
     <div class="comp-bar" id="comp-bar"></div>
     <div class="comp-legend" id="comp-legend"></div>
+  </div>
+  <div class="comp-card" id="newmix-card" style="margin-top:16px;">
+    <h3>Új autók hajtás szerint, évente</h3>
+    <div class="newmix" id="newmix"></div>
+    <div class="comp-legend" id="newmix-legend"></div>
+    <p class="comp-concl" id="newmix-concl"></p>
   </div>
 </section>
 
@@ -575,6 +624,14 @@
     <span class="section-note">Új autók forgalomba helyezése modellenként, a Datahouse adatai alapján — havonta, kézzel frissülő toplista.</span>
   </div>
   <div id="models-body"></div>
+</section>
+
+<section id="brand-movers">
+  <div class="section-head">
+    <h2>Márka-mozgók</h2>
+    <span class="section-note" id="movers-note"></span>
+  </div>
+  <div class="movers-grid" id="movers-body"></div>
 </section>
 
 </div>
@@ -764,7 +821,8 @@ __DASHBOARD_DATA__
               const s = find(dt, bt, yb);
               if (!s) return '<div></div>';
               const v = s.scores[scen];
-              return `<div class="heat-cell tnum" role="cell" tabindex="0"
+              const key = `${dt}|${bt}|${yb}`;
+              return `<div class="heat-cell tnum${key === selSeg ? ' sel' : ''}" role="cell" tabindex="0" data-key="${key}"
                   style="background:${heatColor(v, maxAbs)};"
                   data-tip="${encodeURIComponent(JSON.stringify({ l: segLabel(s), v, d: s.dirs[scen] }))}"
                   aria-label="${segLabel(s)}: ${fmt(v * 100, 1)} pont, ${s.dirs[scen]}">${fmt(v * 100, 0)}</div>`;
@@ -796,6 +854,43 @@ __DASHBOARD_DATA__
   heatEl.addEventListener('mouseleave', () => { tip.style.display = 'none'; });
   heatEl.addEventListener('focusin', e => { const c = e.target.closest('.heat-cell'); if (c) { const r = c.getBoundingClientRect(); showTip(c, r.left, r.bottom); } });
   heatEl.addEventListener('focusout', () => { tip.style.display = 'none'; });
+
+  // ---------- szegmens-bontás: kattintásra / Enterre a cella tényezőnkénti hozzájárulása ----------
+  let selSeg = null;   // "BEV|tomeggyarto|uj"
+  function renderSegDetail() {
+    const el = document.getElementById('seg-detail');
+    const s = selSeg && data.segments.find(x => `${x.drivetrain}|${x.brand_tier}|${x.year_bucket}` === selSeg);
+    if (!s || !s.drivers) {
+      el.innerHTML = `<p class="sd-hint">Kattints (vagy Tab + Enter) egy cellára: itt jelenik meg, mely tényezők hány ponttal adják ki az adott szegmens pontszámát.</p>`;
+      return;
+    }
+    const ds = s.drivers[scen].filter(d => Math.abs(d.points) >= 0.05).sort((a, b) => Math.abs(b.points) - Math.abs(a.points));
+    const max = Math.max(...ds.map(d => Math.abs(d.points)), 0.1);
+    const total = s.scores[scen] * 100;
+    el.innerHTML = `
+      <h4>${segLabel(s)}</h4>
+      <p class="sd-sub">${ucFirst(SCEN_LABELS[scen])} forgatókönyv · pontszám <b class="tnum">${fmt(total, 1)} pont</b> · <span class="dirpill ${dirClass(s.dirs[scen])}">${s.dirs[scen]}</span></p>
+      ${ds.map(d => {
+        const w = Math.abs(d.points) / max * 50;
+        return `<div class="sd-row">
+          <span class="sd-lbl">${shortLabel(d.label)}${d.label.startsWith('Valós piaci lendület') ? ` (${d.label.split('(')[1].replace(')', '')})` : ''}</span>
+          <div class="sd-track"><div class="sd-zero"></div><div class="sd-fill ${d.points >= 0 ? 'pos' : 'neg'}" style="width:${w}%;"></div></div>
+          <span class="sd-val tnum">${fmt(d.points, 1)}</span>
+        </div>`;
+      }).join('')}
+      <div class="sd-sum">A tételek összege = a szegmens pontszáma (${fmt(total, 1)} pont), az évjárat-súllyal (×${fmtPlain((data.methodology?.dimensions.year_buckets.find(y => y.label === s.year_bucket_label) || {}).weight || 1, 2)}) együtt. Kék = segíti, piros = hátráltatja.</div>`;
+  }
+  function selectCell(c) {
+    if (!c) return;
+    selSeg = c.dataset.key;
+    document.querySelectorAll('.heat-cell.sel').forEach(x => x.classList.remove('sel'));
+    c.classList.add('sel');
+    renderSegDetail();
+  }
+  heatEl.addEventListener('click', e => selectCell(e.target.closest('.heat-cell')));
+  heatEl.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { const c = e.target.closest('.heat-cell'); if (c) { e.preventDefault(); selectCell(c); } }
+  });
 
   // ---------- kártyánkénti konklúzió (az aktuális adatokból generálva) ----------
   // Szabályalapú szöveg: a kiválasztott forgatókönyv pontszámaiból és a tényezőnkénti
@@ -914,6 +1009,7 @@ __DASHBOARD_DATA__
       barGroup('Márkakategória szerint', btRows, conclBrand(btRows, dtRows), data.segments.length / btRows.length) +
       barGroup('Évjárat-sáv szerint', ybRows, conclYear(ybRows), data.segments.length / ybRows.length);
     renderHeatmap();
+    renderSegDetail();
 
     const rows = data.segments
       .filter(s => !dtFilter || s.drivetrain === dtFilter)
@@ -943,6 +1039,43 @@ __DASHBOARD_DATA__
     <div class="li"><span class="sw" style="background:${color};"></span>
       ${label} <b>${fmtPlain(fs[k], 1)}%</b> <span class="cagr">(5 éves átlagos éves növekedési ütem: ${fmt(fc[k])}%)</span>
     </div>`).join('');
+
+  // ---------- új autók hajtás szerint, évente (Eurostat) ----------
+  function showTipHtml(html, x, y) {
+    tip.innerHTML = html; tip.style.display = 'block';
+    const w = tip.offsetWidth, h = tip.offsetHeight;
+    tip.style.left = Math.min(window.innerWidth - w - 8, Math.max(8, x + 14)) + 'px';
+    tip.style.top = (y + h + 20 > window.innerHeight ? y - h - 12 : y + 16) + 'px';
+  }
+  (function renderNewMix() {
+    const uh = data.real.uj_hajtas;
+    if (!uh) { document.getElementById('newmix-card').hidden = true; return; }
+    const seg = (shares, i, title) => compOrder.map(([k, label, color]) => {
+      const v = shares[k][i];
+      const extra = k === 'hibrid' && uh.phev_share && title !== null ? ` (ebből plug-in ${fmtPlain(uh.phev_share[i], 1)}%)` : '';
+      return v > 0 ? `<div style="width:${v}%; background:${color};" data-tip="${encodeURIComponent(`<b>${title}</b><br>${label}: ${fmtPlain(v, 1)}%${extra}`)}" role="img" aria-label="${title}, ${label}: ${fmtPlain(v, 1)}%"></div>` : '';
+    }).join('');
+    const rows = uh.years.map((y, i) => `<span class="yr">${y}</span><div class="mixbar">${seg(uh.shares, i, `${y} — új autók (${fmtInt(uh.totals[i])} db)`)}</div>`).join('');
+    // összevetésül a mostani állomány ugyanazokkal a kategóriákkal
+    const stockShares = Object.fromEntries(compOrder.map(([k]) => [k, [fs[k]]]));
+    const stockRow = `<div class="mix-sep"></div><span class="yr stock">Állomány ${data.real.jarmuallomany.last_year}</span><div class="mixbar">${seg(stockShares, 0, null)}</div>`;
+    const el = document.getElementById('newmix');
+    el.innerHTML = rows + stockRow;
+    el.querySelectorAll('[data-tip]').forEach(n => {
+      if (!n.dataset.tip.includes('%3Cb%3Enull')) return;
+      n.dataset.tip = encodeURIComponent(decodeURIComponent(n.dataset.tip).replace('<b>null</b>', `<b>Állomány ${data.real.jarmuallomany.last_year} (KSH)</b>`));
+    });
+    el.addEventListener('mousemove', e => { const n = e.target.closest('[data-tip]'); n ? showTipHtml(decodeURIComponent(n.dataset.tip), e.clientX, e.clientY) : (tip.style.display = 'none'); });
+    el.addEventListener('mouseleave', () => { tip.style.display = 'none'; });
+    document.getElementById('newmix-legend').innerHTML = compOrder.map(([k, label, color]) => `
+      <div class="li"><span class="sw" style="background:${color};"></span>${label}${k === 'hibrid' ? ' (plug-in is)' : ''}
+        <b>${fmtPlain(uh.shares[k][uh.shares[k].length - 1], 1)}%</b> <span class="cagr">(${uh.years[uh.years.length - 1]}; ${uh.years[0]}: ${fmtPlain(uh.shares[k][0], 1)}%)</span></div>`).join('');
+    const last = uh.years.length - 1;
+    const ice = i => uh.shares.benzin[i] + uh.shares.dizel[i];
+    const stockIce = fs.benzin + fs.dizel;
+    document.getElementById('newmix-concl').innerHTML =
+      `<b>Az új autók között a belső égésűek (benzin + dízel) aránya ${uh.years[0]} és ${uh.years[last]} között ${fmtPlain(ice(0), 0)}%-ról ${fmtPlain(ice(last), 0)}%-ra esett</b>, a hibrideké ${fmtPlain(uh.shares.hibrid[0], 0)}%-ról ${fmtPlain(uh.shares.hibrid[last], 0)}%-ra, az elektromosoké ${fmtPlain(uh.shares.elektromos[0], 1)}%-ról ${fmtPlain(uh.shares.elektromos[last], 1)}%-ra nőtt. Az állományban viszont még ${fmtPlain(stockIce, 0)}% a belső égésű — az autópark lassan, évtizedek alatt cserélődik, ezért az új autók megoszlása jóval előrébb jár. A „hibrid” az Eurostatban a mild hibrideket is tartalmazza.`;
+  })();
 
   // ---------- sparkline helper ----------
   function sparkline(values, color) {
@@ -1493,6 +1626,24 @@ __DASHBOARD_DATA__
     draw();
   }
   renderModels();
+
+  // ---------- márka-mozgók (KSH első forgalomba helyezés, 4 negyedév vs. előző 4) ----------
+  (function renderMovers() {
+    const bm = data.real.forgalomba && data.real.forgalomba.brand_movers;
+    const sec = document.getElementById('brand-movers');
+    if (!bm) { sec.hidden = true; return; }
+    document.getElementById('movers-note').innerHTML =
+      `A KSH első forgalomba helyezési adata márkánként (<b>új és használtként behozott autók együtt</b>): a legutóbbi 4 negyedév (${bm.window_now}) az azt megelőző 4 negyedévhez képest. Csak a legalább ${fmtInt(bm.min_units)} darabos márkák (${bm.n_brands} db). A teljes piac közben ${fmt(bm.market_change_pct, 1)}%-kal változott — ennél lassabb növekedés is piaci részesedés-vesztést jelent.`;
+    const card = (title, rows) => `<div class="wl-card"><h3>${title}</h3>
+      <div class="mover-row head"><span>Márka</span><span style="text-align:right">Változás</span><span style="text-align:right">Részesedés</span></div>
+      ${rows.map(r => `<div class="mover-row">
+        <span class="mv-name">${r.brand}<span class="mv-sub">${fmtInt(r.units)} db (előtte ${fmtInt(r.prev_units)})</span></span>
+        <span class="mv-num">${fmt(r.change_pct, 1)}%</span>
+        <span class="mv-num muted">${fmt(r.share_pp_change, 2)} pp</span>
+      </div>`).join('')}</div>`;
+    document.getElementById('movers-body').innerHTML =
+      card('Leggyorsabban növő márkák', bm.growing) + card('Leggyengébb teljesítmény', bm.declining);
+  })();
 
   // ---------- tab switching ----------
   document.querySelectorAll('.tabbtn').forEach(btn => {
