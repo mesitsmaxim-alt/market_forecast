@@ -58,6 +58,13 @@ BATTERY_SPREAD_PCT = 6  # az akkumulátorár sávjának fél-szélessége
 TARIFF_SPREAD_PP = 10  # az EV-vámok sávjának fél-szélessége (effektív átlagvám, pp)
 CO2_SPREAD = 4  # a CO2-szabályozási nyomás sávjának fél-szélessége (%/év)
 
+# Az "alap" a megfigyelt 12 havi változás ennyiszerese. Ennél a három tényezőnél
+# a "folytatódik a trend" feltevés mintán kívül rosszabb volt a nulla változásnál
+# (2026-11-05-i walk-forward, utolsó 10 év, MAE trend / nulla: szentiment 13,5 /
+# 8,0, alapkamat 3,1 / 2,0, üzemanyag 15,3 / 10,3; 0 és 1 között minden k
+# rosszabb a nullánál). A többi automata tényezőnél a trend védhető maradt.
+TREND_PERSISTENCE = {"oil_price": 0.0, "financing_cost": 0.0, "consumer_sentiment": 0.0}
+
 # Kézi adatfájlok elavulási küszöbe (nap): az akkuár évente frissül (BNEF,
 # december), a vám- és CO2-idővonal eseményszerűen, ezért azt gyakrabban
 # kell átnézni.
@@ -140,6 +147,17 @@ def purchasing_power_spread() -> tuple[float, str]:
     return s, desc
 
 
+def apply_persistence(key: str, observed: float) -> tuple[float, str]:
+    """A megfigyelt változásból a TREND_PERSISTENCE szerinti "alap" érték és a
+    note-hoz fűzendő magyarázat."""
+    k = TREND_PERSISTENCE[key]
+    alap = observed * k + 0.0  # -0.0 helyett 0.0
+    return alap, (
+        f" Alap forgatókönyv: a megfigyelt változás {k:.0%}-a ({alap:+.1f}), mert a "
+        f"trend folytatódása a múltban rosszabbul jelzett előre a nulla változásnál."
+    )
+
+
 def compute_oil_price_trend() -> tuple[float, str]:
     """Mindig a JELENLEGI üzemanyagárból (holtankoljak.hu, napi frissülő)
     számolja a tényleges éves (YoY) árváltozást - a tábla beépítve tartalmaz
@@ -182,14 +200,13 @@ def compute_financing_cost_trend() -> tuple[float, str]:
     rate_1y_ago = candidates[-1][1] if candidates else values[0]
     change_pp = values[-1] - rate_1y_ago
 
-    # A tényező a KÖVETKEZŐ 12 hónap várható elmozdulását jelenti - a
-    # megfigyelt 12 havi trendet vetítjük előre "alap" feltételezésként
-    # (azaz feltételezzük a jelenlegi irány folytatódását), amíg nincs
-    # explicit MNB-előrejelzés bekötve.
+    # A tényező a KÖVETKEZŐ 12 hónap várható elmozdulását jelenti; az "alap"
+    # ebből a TREND_PERSISTENCE-szel lesz (main), amíg nincs explicit
+    # MNB-előrejelzés bekötve.
     note = (
         f"Kalibrálva: MNB alapkamat-idősor alapján, a bázisráta "
-        f"{dates[-1]}-ig tartó 12 hónapos változása ({change_pp:+.2f} "
-        f"százalékpont) mint a folytatódó trend feltételezése. "
+        f"{dates[-1]}-ig tartó 12 hónapos változása: {change_pp:+.2f} "
+        f"százalékpont. "
         f"Forrás: data/makro.json (calibrate_factors.py futtatásának eredménye)."
     )
     return change_pp, note
@@ -232,7 +249,7 @@ def compute_consumer_sentiment_trend() -> tuple[float, str]:
         f"Kalibrálva: Eurostat ei_bsco_m (\"tartós fogyasztási cikk vásárlási "
         f"szándék\", HU, szezonálisan igazítva) alapján, a {months[-3]}–{months[-1]} "
         f"3 havi átlagának változása az egy évvel korábbi 3 hónaphoz képest "
-        f"({change_1y:+.1f} balance-pont) mint a folytatódó trend feltételezése. "
+        f"({change_1y:+.1f} balance-pont). "
         f"Forrás: data/szentiment.json (calibrate_factors.py futtatásának eredménye)."
     )
     return change_1y, note
@@ -367,6 +384,8 @@ def main():
     config = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
 
     annualized_pct, oil_note = compute_oil_price_trend()
+    annualized_pct, persist_note = apply_persistence("oil_price", annualized_pct)
+    oil_note += persist_note
     annualized_pct_spread, spread_desc = oil_price_spread()
     oil_note += f" Forgatókönyv-sáv: ±{annualized_pct_spread} ({spread_desc})."
     oil = config["factors"]["oil_price"]
@@ -381,6 +400,8 @@ def main():
     }
 
     financing_pp, financing_note = compute_financing_cost_trend()
+    financing_pp, persist_note = apply_persistence("financing_cost", financing_pp)
+    financing_note += persist_note
     financing_pp_spread, spread_desc = financing_cost_spread()
     financing_note += f" Forgatókönyv-sáv: ±{financing_pp_spread} ({spread_desc})."
     financing = config["factors"]["financing_cost"]
@@ -403,6 +424,8 @@ def main():
     }
 
     sentiment_pont, sentiment_note = compute_consumer_sentiment_trend()
+    sentiment_pont, persist_note = apply_persistence("consumer_sentiment", sentiment_pont)
+    sentiment_note += persist_note
     sentiment_pont_spread, spread_desc = consumer_sentiment_spread()
     sentiment_note += f" Forgatókönyv-sáv: ±{sentiment_pont_spread} ({spread_desc})."
     sentiment = config["factors"]["consumer_sentiment"]

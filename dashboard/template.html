@@ -912,7 +912,7 @@ __DASHBOARD_DATA__
   // "a(z) <b>tisztán elektromos</b> hajtás" - a mondat elején nagy kezdőbetűvel
   const np = (r, noun, start = false) => { const w = lc(shortLabel(r.label)); const a = art(w); return `${start ? ucFirst(a) : a} <b>${w}</b> ${noun}`; };
   const listDrivers = ds => ds.map(d => `${driverName(d.label)} (${pts(d.points)})`).join(' és ');
-  const scenPhrase = () => scen === 'alap' ? 'a jelenlegi trendek folytatódása esetén' : `${art(SCEN_LABELS[scen])} ${SCEN_LABELS[scen]} forgatókönyvben`;
+  const scenPhrase = () => scen === 'alap' ? 'az alap forgatókönyvben' :`${art(SCEN_LABELS[scen])} ${SCEN_LABELS[scen]} forgatókönyvben`;
   const allNeutral = rows => rows.every(r => Math.abs(r.score * 100) < 5);
   // a két csoport közötti különbséget leginkább magyarázó tényezők
   function differentiators(a, b, n = 2) {
@@ -1288,7 +1288,7 @@ __DASHBOARD_DATA__
       <h4>Mit pontoz?</h4>
       <p>${m.n_segments} szegmenst: ${d.drivetrains.length} hajtástípus (${d.drivetrains.map(shortLabel).join(', ')}) × ${d.brand_tiers.length} márkakategória (${d.brand_tiers.join(', ')}) × ${d.year_buckets.length} évjárat-sáv.</p>
       <h4>Miből számol?</h4>
-      <p>${m.factors.length} tényező várható változásából — mindegyik a legfrissebb megfigyelt trendből, azzal a feltételezéssel, hogy folytatódik. ${nHu} hazai adat, ${m.factors.length - nHu} pedig EU-s vagy globális tényező, ami a magyar piacra hat.</p>
+      <p>${m.factors.length} tényező várható változásából. Az alap forgatókönyvben az üzemanyagár, az alapkamat és a vásárlási szándék változatlan marad, mert ezeknél a múltban a „nem változik” feltevés pontosabban jelzett előre, mint a friss trend továbbvitele; a többi tényező a legfrissebb megfigyelt trendet viszi tovább. ${nHu} hazai adat, ${m.factors.length - nHu} pedig EU-s vagy globális tényező, ami a magyar piacra hat.</p>
       <table class="m-table"><tbody>${factorRows}</tbody></table>
       <h4>Hogyan?</h4>
       <ul>

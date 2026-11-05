@@ -5,11 +5,11 @@
     "oil_price": {
       "label": "Üzemanyagár (HU, benzin + dízel)",
       "unit": "%",
-      "note": "Kalibrálva: holtankoljak.hu ÉLŐ, napi frissülő adatából, a HU 95-ös benzin+gázolaj átlagár tényleges éves (YoY) változása (2026-11-02 - 2026-11-08 vs. 2025-11-02 - 2025-11-08: +15.5%). Forrás: data/uzemanyagar_elo.json (fetchers/fetch_uzemanyag_elo.py, majd calibrate_factors.py futtatásának eredménye) - ez MINDIG a legfrissebb elérhető árat használja, nem egy befagyott pillanatfelvételt. Forgatókönyv-sáv: ±12.3 (a 12 havi változások szórása, Eurostat HICP üzemanyag, 2016-10–2026-09, n=120).",
+      "note": "Kalibrálva: holtankoljak.hu ÉLŐ, napi frissülő adatából, a HU 95-ös benzin+gázolaj átlagár tényleges éves (YoY) változása (2026-11-02 - 2026-11-08 vs. 2025-11-02 - 2025-11-08: +15.5%). Forrás: data/uzemanyagar_elo.json (fetchers/fetch_uzemanyag_elo.py, majd calibrate_factors.py futtatásának eredménye) - ez MINDIG a legfrissebb elérhető árat használja, nem egy befagyott pillanatfelvételt. Alap forgatókönyv: a megfigyelt változás 0%-a (+0.0), mert a trend folytatódása a múltban rosszabbul jelzett előre a nulla változásnál. Forgatókönyv-sáv: ±12.3 (a 12 havi változások szórása, Eurostat HICP üzemanyag, 2016-10–2026-09, n=120).",
       "scenarios": {
-        "pesszimista": 3.2,
-        "alap": 15.5,
-        "optimista": 27.8
+        "pesszimista": -12.3,
+        "alap": 0.0,
+        "optimista": 12.3
       }
     },
     "battery_cost": {
@@ -55,21 +55,21 @@
     "financing_cost": {
       "label": "Finanszírozási költség (jegybanki alapkamat várható elmozdulása)",
       "unit": "pp",
-      "note": "Kalibrálva: MNB alapkamat-idősor alapján, a bázisráta 2026-08-26-ig tartó 12 hónapos változása (-1.00 százalékpont) mint a folytatódó trend feltételezése. Forrás: data/makro.json (calibrate_factors.py futtatásának eredménye). Forgatókönyv-sáv: ±3.6 (a 12 havi változások szórása, MNB alapkamat, utolsó 10 év havonta, n=120).",
+      "note": "Kalibrálva: MNB alapkamat-idősor alapján, a bázisráta 2026-08-26-ig tartó 12 hónapos változása: -1.00 százalékpont. Forrás: data/makro.json (calibrate_factors.py futtatásának eredménye). Alap forgatókönyv: a megfigyelt változás 0%-a (+0.0), mert a trend folytatódása a múltban rosszabbul jelzett előre a nulla változásnál. Forgatókönyv-sáv: ±3.6 (a 12 havi változások szórása, MNB alapkamat, utolsó 10 év havonta, n=120).",
       "scenarios": {
-        "pesszimista": 2.6,
-        "alap": -1.0,
-        "optimista": -4.6
+        "pesszimista": 3.6,
+        "alap": 0.0,
+        "optimista": -3.6
       }
     },
     "consumer_sentiment": {
       "label": "Fogyasztói vásárlási szándék (tartós fogyasztási cikk, EU-felmérés)",
       "unit": "pont",
-      "note": "Kalibrálva: Eurostat ei_bsco_m (\"tartós fogyasztási cikk vásárlási szándék\", HU, szezonálisan igazítva) alapján, a 2026-08–2026-10 3 havi átlagának változása az egy évvel korábbi 3 hónaphoz képest (+8.7 balance-pont) mint a folytatódó trend feltételezése. Forrás: data/szentiment.json (calibrate_factors.py futtatásának eredménye). Forgatókönyv-sáv: ±10.5 (a 12 havi változások szórása, 3 havi átlagok, utolsó 10 év, n=120).",
+      "note": "Kalibrálva: Eurostat ei_bsco_m (\"tartós fogyasztási cikk vásárlási szándék\", HU, szezonálisan igazítva) alapján, a 2026-08–2026-10 3 havi átlagának változása az egy évvel korábbi 3 hónaphoz képest (+8.7 balance-pont). Forrás: data/szentiment.json (calibrate_factors.py futtatásának eredménye). Alap forgatókönyv: a megfigyelt változás 0%-a (+0.0), mert a trend folytatódása a múltban rosszabbul jelzett előre a nulla változásnál. Forgatókönyv-sáv: ±10.5 (a 12 havi változások szórása, 3 havi átlagok, utolsó 10 év, n=120).",
       "scenarios": {
-        "pesszimista": -1.8,
-        "alap": 8.7,
-        "optimista": 19.2
+        "pesszimista": -10.5,
+        "alap": 0.0,
+        "optimista": 10.5
       }
     },
     "purchasing_power": {

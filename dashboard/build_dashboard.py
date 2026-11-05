@@ -464,7 +464,10 @@ def build_real_snapshot() -> dict:
         "ac_series": qc["ac"][-12:],
         "dc_series": qc["dc"][-12:],
         "total_series_full": total_toltoinfra,
-        "forecast": forecast_card(total_toltoinfra, steps=4, horizon_label="4 negyedév múlva (becsült, az utolsó 8 negyedév trendje alapján)", window=8),
+        # 4 negyedéves ablak: a 2026-11-05-i walk-forward teszten a 8 negyedéves
+        # trend a naivnál is rosszabb volt (MAE 577 vs. 413 2022-től), a
+        # 4 negyedéves 440 / 438 (2022-től / utolsó 12 negyedév), 73-89%-os sávval
+        "forecast": forecast_card(total_toltoinfra, steps=4, horizon_label="4 negyedév múlva (becsült, az utolsó 4 negyedév trendje alapján)", window=4),
     }
 
     f = load_json("forgalomba.json")

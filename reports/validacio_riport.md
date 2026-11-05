@@ -4,7 +4,7 @@
 
 A modell előrejelzéseinek automatikus invariáns- és konzisztencia-ellenőrzése (`validate_forecast.py`). CRITICAL hiba esetén a pipeline nem commitol és nem push-ol.
 
-## Fázis: pre — PASS (2026-11-05T08:52:22)
+## Fázis: pre — PASS (2026-11-05T09:17:08)
 
 | | Súlyosság | Ellenőrzés | Leírás |
 |---|---|---|---|
@@ -24,7 +24,7 @@ A modell előrejelzéseinek automatikus invariáns- és konzisztencia-ellenőrz�
 | ✅ | WARN | `backtest.fresh` | a backtest ma futott (generated: 2026-11-05) |
 | ✅ | WARN | `backtest.quality` | a backtest korrelációja nem negatív, a találati arány legalább 50% |
 
-## Fázis: post — PASS (2026-11-05T08:52:22)
+## Fázis: post — PASS (2026-11-05T09:17:08)
 
 | | Súlyosság | Ellenőrzés | Leírás |
 |---|---|---|---|

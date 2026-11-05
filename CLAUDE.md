@@ -39,8 +39,14 @@ segment's per-factor `sensitivity` coefficient (-1..+1), summed and weighted.
 - **Calibrated factors** (`oil_price`, `charging_infra`, `financing_cost`, `consumer_sentiment`,
   `purchasing_power`) — `calibrate_factors.py` overwrites their `pesszimista/alap/optimista`
   scenario values in `config/factors.json` from real data in `data/*.json`, every pipeline run.
-  The `alap` (base) scenario is always the actual latest observed trend; pesszimista/optimista
-  are that trend ± a fixed band. `oil_price` in particular is calibrated from the LIVE
+  The `alap` (base) scenario is the latest observed 12-month change × `TREND_PERSISTENCE`;
+  pesszimista/optimista are alap ± the factor's band. Since 2026-11-05 `TREND_PERSISTENCE` is 0
+  for `oil_price`, `financing_cost` and `consumer_sentiment` (alap = 0, "no change"): in a
+  walk-forward test every k in 0..1 predicted the next 12 months worse than k=0 (last 10 years,
+  MAE trend / zero: sentiment 13.5 / 8.0, base rate 3.1 / 2.0, fuel 15.3 / 10.3). The note still
+  states the observed change. `charging_infra` and `purchasing_power` keep the full trend
+  (persistence was defensible there). The dashboard methodology text names the three
+  zero-alap factors — update it if this changes. `oil_price` in particular is calibrated from the LIVE
   `data/uzemanyagar_elo.json` (see below) so it never goes stale.
 - **Manual-source factors** (`battery_cost`, `ev_tariffs`, `co2_regulation`) — also overwritten
   by `calibrate_factors.py`, but from hand-maintained, source-cited files (`data/akkuar.json` —
@@ -171,8 +177,12 @@ tab-váltás kliensoldali JS-sel, nincs reload):
   változások szórása a `band_window`-ban, horizonttal szélesedik), mert a 2026-10-09-i walk-forward
   auditon a lineáris trend mintán kívül rosszabb volt a random walknál (szentiment MAE 2×, alapkamat
   1,6×, EUR/HUF 1,3–1,65×, reálbér/-jövedelem 1,2–1,4×). A naiv sáv lefedettsége 58–75%. A
-  töltőinfra-kártya szándékosan lineáris maradt: a folyamatosan növő sorozaton a naiv becslés
-  rosszabb (0,82×) és a sávja csak 44%-ot fed le. A template Előrejelzés-fül `section-note`-ja
+  töltőinfra-kártya lineáris, de 2026-11-05 óta 4 negyedéves ablakkal (`window=4`): a 8
+  negyedéves trend a walk-forward teszten a naivnál is rosszabb lett (MAE 577 vs. 413 2022-től), a
+  4 negyedéves 440 / 438 (2022-től / utolsó 12 negyedév) 73–89%-os sávlefedettséggel. A naiv
+  kártya a teljes időszakon kicsit jobb (413), de az utóbbi egyenletes növekedésen rosszabb (523), és
+  a 4. lépés sávja csak 22–38%-ot fed le. Kis minta (9–16 vágás), új EAFO-adat után érdemes
+  újramérni. A template Előrejelzés-fül `section-note`-ja
   NÉVVEL sorolja fel a naiv kártyákat — ha egy kártya típusa változik, azt is frissítsd.
   A lineáris kártyák sávja `oos_band()`-ból jön: a múltban ugyanazzal az ablakkal készült vetítések
   h lépéses, mintán kívüli hibáinak RMS-e (a reziduál-szórás csak `MIN_OOS_ERRORS` alatt marad
