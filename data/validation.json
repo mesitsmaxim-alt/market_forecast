@@ -1,10 +1,10 @@
 {
   "generated": "2026-11-05",
-  "status": "WARN",
+  "status": "PASS",
   "stages": {
     "pre": {
-      "status": "WARN",
-      "run_at": "2026-11-05T08:35:37",
+      "status": "PASS",
+      "run_at": "2026-11-05T08:52:22",
       "checks": [
         {
           "id": "factors.count",
@@ -93,8 +93,8 @@
         {
           "id": "sources.top_modellek_stale",
           "severity": "WARN",
-          "ok": false,
-          "message": "a data/top_modellek.json 48 napos (küszöb: 45 nap)",
+          "ok": true,
+          "message": "a data/top_modellek.json 0 napos (küszöb: 45 nap)",
           "details": []
         },
         {
@@ -115,7 +115,7 @@
     },
     "post": {
       "status": "PASS",
-      "run_at": "2026-11-05T08:35:37",
+      "run_at": "2026-11-05T08:52:22",
       "checks": [
         {
           "id": "dashboard.fresh",

@@ -1,10 +1,10 @@
 # Validációs riport (2026-11-05)
 
-**Összesített állapot: WARN**
+**Összesített állapot: PASS**
 
 A modell előrejelzéseinek automatikus invariáns- és konzisztencia-ellenőrzése (`validate_forecast.py`). CRITICAL hiba esetén a pipeline nem commitol és nem push-ol.
 
-## Fázis: pre — WARN (2026-11-05T08:35:37)
+## Fázis: pre — PASS (2026-11-05T08:52:22)
 
 | | Súlyosság | Ellenőrzés | Leírás |
 |---|---|---|---|
@@ -20,11 +20,11 @@ A modell előrejelzéseinek automatikus invariáns- és konzisztencia-ellenőrz�
 | ✅ | CRITICAL | `engine.momentum_cap` | momentum-tagok: hajtás ≤ ±0.15, márka ≤ ±0.1 |
 | ✅ | CRITICAL | `engine.alap_between` | minden szegmens alap pontszáma a pesszimista és az optimista között van |
 | ✅ | WARN | `sources.manual_stale` | a kézi forrásfájlok (akkuár, EV-vámok, CO2) a STALE_DAYS küszöbön belül frissültek |
-| ⚠️ | WARN | `sources.top_modellek_stale` | a data/top_modellek.json 48 napos (küszöb: 45 nap) |
+| ✅ | WARN | `sources.top_modellek_stale` | a data/top_modellek.json 0 napos (küszöb: 45 nap) |
 | ✅ | WARN | `backtest.fresh` | a backtest ma futott (generated: 2026-11-05) |
 | ✅ | WARN | `backtest.quality` | a backtest korrelációja nem negatív, a találati arány legalább 50% |
 
-## Fázis: post — PASS (2026-11-05T08:35:37)
+## Fázis: post — PASS (2026-11-05T08:52:22)
 
 | | Súlyosság | Ellenőrzés | Leírás |
 |---|---|---|---|
