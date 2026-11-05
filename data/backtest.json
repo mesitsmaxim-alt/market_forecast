@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-01",
+  "generated": "2026-11-05",
   "tested_factors": [
     "financing_cost",
     "purchasing_power",
@@ -11,6 +11,9 @@
       "label": "BEV vs. ICE",
       "correlation": 0.147,
       "hit_rate": 0.609,
+      "hit_p": 0.405,
+      "corr_p": 0.507,
+      "significant": false,
       "n": 23,
       "first_year": 2003,
       "last_year": 2025
@@ -19,6 +22,9 @@
       "label": "Hibrid vs. ICE",
       "correlation": 0.167,
       "hit_rate": 0.522,
+      "hit_p": 1.0,
+      "corr_p": 0.452,
+      "significant": false,
       "n": 23,
       "first_year": 2003,
       "last_year": 2025

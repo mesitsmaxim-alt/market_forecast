@@ -5,11 +5,11 @@
     "oil_price": {
       "label": "Üzemanyagár (HU, benzin + dízel)",
       "unit": "%",
-      "note": "Kalibrálva: holtankoljak.hu ÉLŐ, napi frissülő adatából, a HU 95-ös benzin+gázolaj átlagár tényleges éves (YoY) változása (2026-09-28 - 2026-10-04 vs. 2025-09-28 - 2025-10-04: +12.9%). Forrás: data/uzemanyagar_elo.json (fetchers/fetch_uzemanyag_elo.py, majd calibrate_factors.py futtatásának eredménye) - ez MINDIG a legfrissebb elérhető árat használja, nem egy befagyott pillanatfelvételt. Forgatókönyv-sáv: ±12.3 (a 12 havi változások szórása, Eurostat HICP üzemanyag, 2016-09–2026-08, n=120).",
+      "note": "Kalibrálva: holtankoljak.hu ÉLŐ, napi frissülő adatából, a HU 95-ös benzin+gázolaj átlagár tényleges éves (YoY) változása (2026-11-02 - 2026-11-08 vs. 2025-11-02 - 2025-11-08: +15.5%). Forrás: data/uzemanyagar_elo.json (fetchers/fetch_uzemanyag_elo.py, majd calibrate_factors.py futtatásának eredménye) - ez MINDIG a legfrissebb elérhető árat használja, nem egy befagyott pillanatfelvételt. Forgatókönyv-sáv: ±12.3 (a 12 havi változások szórása, Eurostat HICP üzemanyag, 2016-10–2026-09, n=120).",
       "scenarios": {
-        "pesszimista": 0.6,
-        "alap": 12.9,
-        "optimista": 25.2
+        "pesszimista": 3.2,
+        "alap": 15.5,
+        "optimista": 27.8
       }
     },
     "battery_cost": {
@@ -45,11 +45,11 @@
     "co2_regulation": {
       "label": "EU CO2-szabályozás szigorodása / ICE-tiltás közeledése",
       "unit": "%/év",
-      "note": "Kalibrálva: EU flotta-CO2 célok (2019/631 rendelet) alapján — a jelenlegi 93.6 g/km célról a 2030-es 49.5 g/km-re 3.3 év alatt szükséges 47.1%-os csökkentés, évesítve (14.5%/év) mint szabályozási nyomás. Függőben lévő javaslatok (nem számolva): 1 db. Forrás: data/co2_szabalyozas.json (kézi adatbevitel).",
+      "note": "Kalibrálva: EU flotta-CO2 célok (2019/631 rendelet) alapján — a jelenlegi 93.6 g/km célról a 2030-es 49.5 g/km-re 3.2 év alatt szükséges 47.1%-os csökkentés, évesítve (14.9%/év) mint szabályozási nyomás. Függőben lévő javaslatok (nem számolva): 1 db. Forrás: data/co2_szabalyozas.json (kézi adatbevitel).",
       "scenarios": {
-        "pesszimista": 10.5,
-        "alap": 14.5,
-        "optimista": 18.5
+        "pesszimista": 10.9,
+        "alap": 14.9,
+        "optimista": 18.9
       }
     },
     "financing_cost": {
@@ -65,11 +65,11 @@
     "consumer_sentiment": {
       "label": "Fogyasztói vásárlási szándék (tartós fogyasztási cikk, EU-felmérés)",
       "unit": "pont",
-      "note": "Kalibrálva: Eurostat ei_bsco_m (\"tartós fogyasztási cikk vásárlási szándék\", HU, szezonálisan igazítva) alapján, a 2026-07–2026-09 3 havi átlagának változása az egy évvel korábbi 3 hónaphoz képest (+11.6 balance-pont) mint a folytatódó trend feltételezése. Forrás: data/szentiment.json (calibrate_factors.py futtatásának eredménye). Forgatókönyv-sáv: ±10.5 (a 12 havi változások szórása, 3 havi átlagok, utolsó 10 év, n=120).",
+      "note": "Kalibrálva: Eurostat ei_bsco_m (\"tartós fogyasztási cikk vásárlási szándék\", HU, szezonálisan igazítva) alapján, a 2026-08–2026-10 3 havi átlagának változása az egy évvel korábbi 3 hónaphoz képest (+8.7 balance-pont) mint a folytatódó trend feltételezése. Forrás: data/szentiment.json (calibrate_factors.py futtatásának eredménye). Forgatókönyv-sáv: ±10.5 (a 12 havi változások szórása, 3 havi átlagok, utolsó 10 év, n=120).",
       "scenarios": {
-        "pesszimista": 1.1,
-        "alap": 11.6,
-        "optimista": 22.1
+        "pesszimista": -1.8,
+        "alap": 8.7,
+        "optimista": 19.2
       }
     },
     "purchasing_power": {
