@@ -182,7 +182,10 @@ tab-váltás kliensoldali JS-sel, nincs reload):
   4 negyedéves 440 / 438 (2022-től / utolsó 12 negyedév) 73–89%-os sávlefedettséggel. A naiv
   kártya a teljes időszakon kicsit jobb (413), de az utóbbi egyenletes növekedésen rosszabb (523), és
   a 4. lépés sávja csak 22–38%-ot fed le. Kis minta (9–16 vágás), új EAFO-adat után érdemes
-  újramérni. A template Előrejelzés-fül `section-note`-ja
+  újramérni. A forgalomba helyezési kártya 2026-11-05 óta csak 2 negyedévre vetít, 6 negyedéves
+  ablakkal: 4 negyedévre egyik változat sem volt megbízható (lineáris 4/6/8, naiv, szezonális naiv
+  ± növekedés; MAE 6000–9000, a régi 8 negyedéves sáv a 4. lépésnél 14%-ot fedett), 1–2 lépésre a
+  6 negyedéves trend a legjobb (MAE 3477 / 4203, sáv 50–56%). Csak 18 negyedév adat, 7–10 vágás. A template Előrejelzés-fül `section-note`-ja
   NÉVVEL sorolja fel a naiv kártyákat — ha egy kártya típusa változik, azt is frissítsd.
   A lineáris kártyák sávja `oos_band()`-ból jön: a múltban ugyanazzal az ablakkal készült vetítések
   h lépéses, mintán kívüli hibáinak RMS-e (a reziduál-szórás csak `MIN_OOS_ERRORS` alatt marad

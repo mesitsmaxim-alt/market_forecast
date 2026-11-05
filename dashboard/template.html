@@ -913,7 +913,19 @@ __DASHBOARD_DATA__
   const np = (r, noun, start = false) => { const w = lc(shortLabel(r.label)); const a = art(w); return `${start ? ucFirst(a) : a} <b>${w}</b> ${noun}`; };
   const listDrivers = ds => ds.map(d => `${driverName(d.label)} (${pts(d.points)})`).join(' és ');
   const scenPhrase = () => scen === 'alap' ? 'az alap forgatókönyvben' :`${art(SCEN_LABELS[scen])} ${SCEN_LABELS[scen]} forgatókönyvben`;
-  const allNeutral = rows => rows.every(r => Math.abs(r.score * 100) < 5);
+  // a ±5 pont alatti érték "Stagnálás" (engine.classify), szövegben semleges
+  const NEUTRAL_PTS = 5;
+  // ennél kisebb különbséget nem rangsorolunk: a 2026-11-05-i stressz-teszten a pár
+  // tized pontos sorrendek (hibrid/plug-in, márkakategóriák) véletlenszerűen felcserélődtek
+  const CLOSE_PTS = 2;
+  const allNeutral = rows => rows.every(r => Math.abs(r.score * 100) < NEUTRAL_PTS);
+  // "a <b>prémium</b>, a <b>budget</b> és az <b>új</b>" (+ főnév)
+  const npList = (g, noun, start = false) => {
+    const ws = g.map(r => { const w = lc(shortLabel(r.label)); return `${art(w)} <b>${w}</b>`; });
+    const s = ws.length > 1 ? ws.slice(0, -1).join(', ') + ' és ' + ws.at(-1) : ws[0];
+    return `${start ? ucFirst(s) : s} ${noun}`;
+  };
+  const ptsRange = g => `${fmtPlain(Math.min(...g.map(r => r.score)) * 100, 1)}–${fmtPlain(Math.max(...g.map(r => r.score)) * 100, 1)} pont`;
   // a két csoport közötti különbséget leginkább magyarázó tényezők
   function differentiators(a, b, n = 2) {
     const m = {};
@@ -927,7 +939,18 @@ __DASHBOARD_DATA__
     if (allNeutral(rows)) {
       return `${ucFirst(scenPhrase())} minden ${noun} a semleges tartományban van (±5 pont alatt, ${pts(bot.score * 100)} és ${pts(top.score * 100)} között) — érdemi különbség nincs köztük. `;
     }
-    return `${np(top, noun, true)} áll a legjobban (${pts(top.score * 100)}), ${np(bot, noun)} a leggyengébb (${pts(bot.score * 100)}). `;
+    const topGroup = rows.filter(r => (top.score - r.score) * 100 < CLOSE_PTS);
+    const botGroup = rows.filter(r => (r.score - bot.score) * 100 < CLOSE_PTS && !topGroup.includes(r));
+    if (!botGroup.length) {
+      return `${ucFirst(scenPhrase())} minden ${noun} hasonló szinten áll (${ptsRange(rows)}) — ${fmtPlain(CLOSE_PTS, 0)} pontnál kisebb különbséget a modell nem rangsorol megbízhatóan. `;
+    }
+    const head = topGroup.length > 1
+      ? `${npList(topGroup, noun, true)} gyakorlatilag azonos szinten áll az élen (${ptsRange(topGroup)}; ${fmtPlain(CLOSE_PTS, 0)} pontnál kisebb különbséget a modell nem rangsorol megbízhatóan)`
+      : `${np(top, noun, true)} áll a legjobban (${pts(top.score * 100)})`;
+    const tail = botGroup.length > 1
+      ? `${npList(botGroup, noun)} a leggyengébb (${ptsRange(botGroup)})`
+      : `${np(bot, noun)} a leggyengébb (${pts(bot.score * 100)})`;
+    return `${head}, ${tail}. `;
   }
 
   // a piacsúlyozott kép összefoglalása (márka- és évjárat-kártya)
@@ -937,12 +960,17 @@ __DASHBOARD_DATA__
     const lo = Math.min(...mws) * 100, hi = Math.max(...mws) * 100;
     const range = `${pts(lo)} és ${pts(hi)} között`;
     const ice = `a belső égésű aránya sávonként: ${iceByYb()}`;
-    const below = rows.filter(r => r.mw < 0 && r.score > 0);
-    if (hi < 0 && rows.every(r => r.score > 0)) {
+    // előjelet csak a semleges tartományon kívül állítunk: a ±5 pont alatti
+    // piacsúlyozott érték nem "negatív", hanem semleges
+    const below = rows.filter(r => r.mw * 100 <= -NEUTRAL_PTS && r.score * 100 >= NEUTRAL_PTS);
+    if (hi <= -NEUTRAL_PTS && rows.every(r => r.score > 0)) {
       return `<b>A valós piaci arányokkal súlyozva viszont minden ${nounPl} negatív</b> (${range}): a belső égésű még a piac nagy része (${ice}), és azt a modell szerint visszahúzzák a tényezők. `;
     }
-    if (hi < 0) return `Piaci arányokkal súlyozva minden ${nounPl} negatív (${range}; ${ice}). `;
-    if (lo > 0) return `Piaci arányokkal súlyozva is minden ${nounPl} pozitív (${range}). `;
+    if (hi <= -NEUTRAL_PTS) return `Piaci arányokkal súlyozva minden ${nounPl} negatív (${range}; ${ice}). `;
+    if (lo >= NEUTRAL_PTS) return `Piaci arányokkal súlyozva is minden ${nounPl} pozitív (${range}). `;
+    if (Math.max(Math.abs(lo), Math.abs(hi)) < NEUTRAL_PTS) {
+      return `<b>A valós piaci arányokkal súlyozva viszont minden ${nounPl} a semleges tartományban van</b> (${range}): a belső égésű még a piac nagy része (${ice}), és ez kiegyenlíti a villamosított hajtások előnyét. `;
+    }
     return `Piaci arányokkal súlyozva a kép <b>vegyes</b> (${range})${below.length ? `: ${below.length > 1 ? below.slice(0, -1).map(r => `${art(lc(shortLabel(r.label)))} <b>${lc(shortLabel(r.label))}</b>`).join(', ') + ' és ' : ''}${art(lc(shortLabel(below[below.length - 1].label)))} <b>${lc(shortLabel(below[below.length - 1].label))}</b> ${noun} az egyszerű átlaggal pozitív, piaci súllyal viszont negatív` : ''}, mert a régebbi autók között még a belső égésű dominál (${ice}). `;
   }
 

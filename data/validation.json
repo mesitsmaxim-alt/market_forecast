@@ -4,7 +4,7 @@
   "stages": {
     "pre": {
       "status": "PASS",
-      "run_at": "2026-11-05T09:17:08",
+      "run_at": "2026-11-05T10:15:42",
       "checks": [
         {
           "id": "factors.count",
@@ -115,7 +115,7 @@
     },
     "post": {
       "status": "PASS",
-      "run_at": "2026-11-05T09:17:08",
+      "run_at": "2026-11-05T10:15:42",
       "checks": [
         {
           "id": "dashboard.fresh",

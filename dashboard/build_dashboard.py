@@ -477,7 +477,11 @@ def build_real_snapshot() -> dict:
         "total_series": f["total"][-8:],
         "total_series_full": f["total"],
         "total_yoy": (f["total"][-1] / f["total"][-5] - 1) * 100 if len(f["total"]) >= 5 else None,
-        "forecast": forecast_card(f["total"], steps=4, horizon_label="4 negyedév múlva (becsült, az utolsó 8 negyedév trendje alapján)", window=8),
+        # 2 negyedév, 6 negyedéves ablak: a 2026-11-05-i walk-forward teszten 4
+        # negyedévre egyik változat sem volt megbízható (MAE 6000-9000, a 8
+        # negyedéves trend sávja 14%-ot fedett); 1-2 lépésre a 6 negyedéves trend
+        # a legjobb (MAE 3477 / 4203, sáv 50-56%). Kis minta (7-10 vágás).
+        "forecast": forecast_card(f["total"], steps=2, horizon_label="2 negyedév múlva (becsült, az utolsó 6 negyedév trendje alapján)", window=6),
         "brand_movers": build_brand_movers(f),
     }
 
