@@ -40,6 +40,16 @@ def build_digest() -> tuple[str, str]:
         f"kalibrálva valós adattal (ebből {cov.get('n_manual', 0)} kézi forrásból), "
         f"{cov['n_real_sources']} automatizált forrás. ({cov['automation']})"
     )
+    validation_path = Path(__file__).parent / "data" / "validation.json"
+    if validation_path.exists():
+        v = json.loads(validation_path.read_text(encoding="utf-8"))
+        n_warn = sum(1 for st in v["stages"].values() for c in st["checks"] if not c["ok"])
+        lines.append("")
+        lines.append(
+            f"**Validáció:** {v['status']} ({v['generated']}"
+            + (f", {n_warn} figyelmeztetés" if n_warn else "")
+            + ") — részletek: `reports/validacio_riport.md`."
+        )
     lines.append("")
     lines.append("## Legfontosabb pontok")
     lines.append("")

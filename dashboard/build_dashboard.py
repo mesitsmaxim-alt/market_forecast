@@ -32,7 +32,7 @@ from engine import (  # noqa: E402
     compute_segments, classify, load_config, SCENARIOS,
     MOMENTUM_WEIGHT, MOMENTUM_WINDOW_YEARS, REG_MOMENTUM_WEIGHT,
 )
-from forecast import forecast_card  # noqa: E402
+from forecast import forecast_card, naive_forecast_card  # noqa: E402
 
 DATA_DIR = ROOT / "data"
 HISTORY_PATH = DATA_DIR / "history" / "snapshots.jsonl"
@@ -419,15 +419,19 @@ def build_real_snapshot() -> dict:
     ue = load_json("uzemanyagar_elo.json")
     # a forrás középső oszlopa nem megbízhatóan "1 hónappal korábbi" (ld.
     # fuel_report.py) - csak az 1 évvel korábbi és a mostani érték kerül át
-    current, _middle, year_ago = ue["periods"]
+    _current, _middle, year_ago = ue["periods"]
     benzin_row = ue["fuels"]["95-ös Benzin E10"]
     dizel_row = ue["fuels"]["Gázolaj"]
+    # A sparkline utolsó pontja SZÁNDÉKOSAN a főszám (headline), nem a heti
+    # táblázat "current" oszlopa: a kettő eltérhet (pl. 636 vs. 630), és a
+    # kártyán a főszámnak és a görbe végpontjának egyeznie kell (CLAUDE.md;
+    # a validate_forecast.py consistency.fuel_headline ellenőrzi).
     out["uzemanyagar"] = {
         "last_week": ue["headline_date"],
         "benzin_last": ue["headline"]["benzin_95"],
         "dizel_last": ue["headline"]["gazolaj"],
-        "benzin_series": [benzin_row[year_ago], benzin_row[current]],
-        "dizel_series": [dizel_row[year_ago], dizel_row[current]],
+        "benzin_series": [benzin_row[year_ago], ue["headline"]["benzin_95"]],
+        "dizel_series": [dizel_row[year_ago], ue["headline"]["gazolaj"]],
         "year_ago_period": year_ago,
     }
 
@@ -437,12 +441,16 @@ def build_real_snapshot() -> dict:
         "alapkamat_date": m["alapkamat"]["dates"][-1],
         "alapkamat_series": m["alapkamat"]["values"][-10:],
         "alapkamat_series_full": m["alapkamat"]["values"],
-        "alapkamat_forecast": forecast_card(m["alapkamat"]["values"], steps=1, horizon_label="következő kamatdöntés (irányjelzés, az utolsó 8 döntés trendje alapján)", window=8),
+        # naiv kártya: a lineáris trend mintán kívül rosszabb volt a "marad" becslésnél
+        # (2026-10-09-i audit), a sáv az utolsó 24 kamatlépés szórása
+        "alapkamat_forecast": naive_forecast_card(m["alapkamat"]["values"], steps=1, horizon_label="következő kamatdöntés: a jelenlegi szint, a sáv az utolsó 24 kamatlépés szokásos mérete", band_window=24),
         "eurhuf_last": m["eur_huf_havi"]["values"][-1],
         "eurhuf_month": m["eur_huf_havi"]["months"][-1],
         "eurhuf_series": m["eur_huf_havi"]["values"][-24:],
         "eurhuf_series_full": m["eur_huf_havi"]["values"],
-        "eurhuf_forecast": forecast_card(m["eur_huf_havi"]["values"], steps=6, horizon_label="6 hónap múlva (becsült, az utolsó 24 hónap trendje alapján)", window=24),
+        # naiv kártya: a 24 hónapos trend mintán kívül 1,3-1,65x rosszabb volt a
+        # "marad" becslésnél (2026-10-09-i audit); 60 hónapos sávval 69% lefedettség
+        "eurhuf_forecast": naive_forecast_card(m["eur_huf_havi"]["values"], steps=6, horizon_label="6 hónap múlva: a jelenlegi szint, a sáv az elmúlt 5 év szokásos ingadozása", band_window=60),
     }
 
     t = load_json("toltoinfra.json")
@@ -486,11 +494,13 @@ def build_real_snapshot() -> dict:
         "mp_last": s["major_purchases_intention"][-1],
         "mp_series": s["major_purchases_intention"][-24:],
         "mp_series_full": s["major_purchases_intention"],
-        "mp_forecast": forecast_card(s["major_purchases_intention"], steps=6, horizon_label="6 hónap múlva (becsült, az utolsó 36 hónap trendje alapján)", window=36),
+        # naiv kártyák: a zajos szentiment-indexen a 36 hónapos trend mintán kívül
+        # kétszer rosszabb volt a "marad" becslésnél (2026-10-09-i audit)
+        "mp_forecast": naive_forecast_card(s["major_purchases_intention"], steps=6, horizon_label="6 hónap múlva: a jelenlegi szint, a sáv az elmúlt 10 év szokásos ingadozása", band_window=120),
         "cc_last": s["consumer_confidence"][-1],
         "cc_series": s["consumer_confidence"][-24:],
         "cc_series_full": s["consumer_confidence"],
-        "cc_forecast": forecast_card(s["consumer_confidence"], steps=6, horizon_label="6 hónap múlva (becsült, az utolsó 36 hónap trendje alapján)", window=36),
+        "cc_forecast": naive_forecast_card(s["consumer_confidence"], steps=6, horizon_label="6 hónap múlva: a jelenlegi szint, a sáv az elmúlt 10 év szokásos ingadozása", band_window=120),
     }
 
     r = load_json("realjovedelem.json")
@@ -501,8 +511,10 @@ def build_real_snapshot() -> dict:
         "years_full": r["years"],
         "wage_series_full": r["real_wage_yoy_pct"],
         "income_series_full": r["real_income_yoy_pct"],
-        "wage_forecast": forecast_card(r["real_wage_yoy_pct"], steps=2, horizon_label="2 év múlva (becsült, az utolsó 10 év trendje alapján)", window=10),
-        "income_forecast": forecast_card(r["real_income_yoy_pct"], steps=2, horizon_label="2 év múlva (becsült, az utolsó 10 év trendje alapján)", window=10),
+        # naiv kártyák: a 10 éves trend mintán kívül 1,2-1,4x rosszabb volt a
+        # "marad" becslésnél, a meredekség nem szignifikáns (2026-10-09-i audit)
+        "wage_forecast": naive_forecast_card(r["real_wage_yoy_pct"], steps=2, horizon_label="2 év múlva: a jelenlegi szint, a sáv az elmúlt 10 év szokásos ingadozása", band_window=10),
+        "income_forecast": naive_forecast_card(r["real_income_yoy_pct"], steps=2, horizon_label="2 év múlva: a jelenlegi szint, a sáv az elmúlt 10 év szokásos ingadozása", band_window=10),
     }
 
     return out

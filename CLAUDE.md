@@ -11,7 +11,7 @@ and publishes a summary dashboard. Git repo, pushed to the PUBLIC GitHub repo `m
 
 ## Running things
 
-Run the full pipeline (fetch → calibrate → report → dashboard → backtest → digest → git commit+push → notify):
+Run the full pipeline (fetch → calibrate → report → backtest → validate pre → dashboard → validate post → digest → git commit+push → notify):
 ```bash
 ./run_pipeline.sh
 ```
@@ -128,8 +128,12 @@ index annual average) against actual KSH stock-share changes 2003-2025, and
 deliberately excludes the momentum term (it measures the same market shift being predicted, and the
 Eurostat new-registration data only starts in 2020). Results as of 2026-10-01 (n=23): BEV vs ICE
 corr +0.15, hit 61%; Hybrid vs ICE corr +0.17, hit 52% (= chance). Adding fuel price raised
-correlation (+0.04 → ~+0.16) but lowered hit rate. The report's "Értelmezés" is generated from the
-numbers (no fixed "better than chance" claim) — keep it that way and report results honestly.
+correlation (+0.04 → ~+0.16) but lowered hit rate. None of these is significant (hit p = 0.40 / 1.0,
+corr p = 0.51 / 0.45). The report's "Értelmezés" and the dashboard methodology block are generated
+from p-values (`binom_two_sided_p`, Fisher-z `corr_p_value`, `SIGNIFICANCE = 0.05`;
+`backtest.json` carries `hit_p`/`corr_p`/`significant`): "better than chance" only when p < 0.05.
+A fixed 60% hit threshold used to claim "érdemben jobb a véletlennél" for 14/23 (fixed 2026-10-09
+after the /validate-forecast audit) — never go back to fixed thresholds.
 
 ### Segment sensitivities
 `config/segments.json` defines drivetrains (ICE/HEV/PHEV/BEV), brand_tiers (tomeggyarto/premium/
@@ -162,6 +166,20 @@ tab-váltás kliensoldali JS-sel, nincs reload):
   mellett. A 3 pontos (vagy annál rövidebb) `uzemanyagar_elo` sorozatra emiatt nincs regresszió
   (`forecast_card()` None-t ad vissza 3 pontnál kevesebb adatra), az `oil_price` faktor sávja adja az
   irányt helyette.
+  Az alapkamat-, a két szentiment-, az EUR/HUF- és a két reálbér/-jövedelem-kártya
+  `naive_forecast_card()`-ot használ (`kind: "naive"`: pont = utolsó érték, sáv = a h lépéses
+  változások szórása a `band_window`-ban, horizonttal szélesedik), mert a 2026-10-09-i walk-forward
+  auditon a lineáris trend mintán kívül rosszabb volt a random walknál (szentiment MAE 2×, alapkamat
+  1,6×, EUR/HUF 1,3–1,65×, reálbér/-jövedelem 1,2–1,4×). A naiv sáv lefedettsége 58–75%. A
+  töltőinfra-kártya szándékosan lineáris maradt: a folyamatosan növő sorozaton a naiv becslés
+  rosszabb (0,82×) és a sávja csak 44%-ot fed le. A template Előrejelzés-fül `section-note`-ja
+  NÉVVEL sorolja fel a naiv kártyákat — ha egy kártya típusa változik, azt is frissítsd.
+  A lineáris kártyák sávja `oos_band()`-ból jön: a múltban ugyanazzal az ablakkal készült vetítések
+  h lépéses, mintán kívüli hibáinak RMS-e (a reziduál-szórás csak `MIN_OOS_ERRORS` alatt marad
+  fallbacknek). A reziduál-sáv 0–18%-ot fedett le, az új sáv töltőinfrán 78%, benzinnél 54–64%;
+  a gyorsuló hibrid/elektromos részesedésnél így is csak 12–27%, mert a lineáris trend ott tartósan
+  alulbecsül (a fül szövege ezt kimondja). Új kártyánál előbb walk-forward teszttel döntsd el,
+  melyik illik (`forecast-prediction-tracker` agent).
 
 ### Dashboard: forgatókönyv-váltó, hőtérkép, "Mi változott?"
 - `build_engine_summary()` a `segments` kulcson mind a 48 szegmenst átadja mindhárom
@@ -253,9 +271,64 @@ mindkét számot mutatja, a "Mi változott?" és a futástörténet az egyszerű
   `segments.json`-t szándékosan NEM bővítjük, mert az hajtja a márka-momentumot). A piaci
   részesedés nevezője a `market_total_units` (személyautó + kishaszonjármű együtt).
 
+### Validation (hierarchical: script → subagents → skill)
+- **`validate_forecast.py`** (stdlib, deterministic) runs in `run_pipeline.sh` twice:
+  - `--stage pre` after `backtest.py`: factors.json, segments.json, a fresh
+    `engine.compute_segments()`, manual-source staleness, backtest.json;
+  - `--stage post` after `build_dashboard.py`: dashboard_data.json, last snapshots.jsonl
+    line, template.html.
+
+  Any failed CRITICAL check → exit 1 → `validation_failed()` in the pipeline notifies and
+  exits, so there is NO commit/push. WARN only goes to `reports/validacio_riport.md`,
+  `data/validation.json` and the DIGEST line. A failing post stage still leaves its
+  snapshot line in `snapshots.jsonl` (the build writes it); `load_history()` keeps only
+  the last run per day, so a fixed rerun overwrites it.
+- **CRITICAL invariants:**
+  - counts: 48 segments, 8 factors (`N_FACTORS`/`N_SEGMENTS`, update them when adding
+    a factor/segment);
+  - finite scores, |score| ≤ 2;
+  - drivers sum × year weight = score (engine), and Σ drivers points = score×100
+    (dashboard, tol. 0.1);
+  - `alap` lies BETWEEN pesszimista and optimista, and factor bands are symmetric and
+    match the note's „Forgatókönyv-sáv: ±X”;
+  - `dir == classify(score)`, momentum caps, sensitivities in −1..+1, market weights
+    sum to 1;
+  - dashboard factors = config/factors.json, methodology.backtest = backtest.json,
+    last snapshot = current summaries;
+  - fuel headline = sparkline last point;
+  - forecast cards satisfy lower ≤ point ≤ upper, and share forecasts stay in 0–100.
+- **NOT an invariant:** pesszimista ≤ optimista. The scenario axis is EV adoption, so ICE
+  scores are lowest on optimista and `ev_tariffs` runs 9 / −1 / −11. Never add that check.
+- **WARN checks:**
+  - staleness (STALE_DAYS, top_modellek > 45 days, generated ≠ today);
+  - day-over-day jumps (summary > 0.3, factor alap > 2× its band);
+  - backtest hit rate < 50% or correlation < 0;
+  - `toFixed(` or internal text (.py, launchd, Claude) in visible template lines.
+- **Subagents** (`.claude/agents/forecast-*.md`, sonnet, read-only, each returns
+  `VERDICT / ÖSSZEFOGLALÓ / TALÁLATOK`), grouped into 3 areas:
+  - **A. Modell** (is it computed correctly?): `invariant-checker` (runs the script,
+    root-causes failures), `calibration-auditor` (independently recomputes all 8 factors
+    from `data/*.json` without importing `calibrate_factors.py`; synthetic unit tests of
+    `engine`/`forecast`);
+  - **B. Predikciók** (does it come true?): `stats-reviewer` (backtest significance,
+    in-sample band width), `prediction-tracker` (walk-forward out-of-sample test of every
+    `forecast_card` and of the "alap = latest trend persists" assumption vs. naive
+    baselines; ex-post check of `snapshots.jsonl` calls);
+  - **C. Feltételezések** (are they true and robust?): `source-verifier` (web-checks manual
+    inputs), `assumption-stress-tester` (in-memory monkeypatch of `engine.load_config` and
+    constants: tornado, sign flips, random perturbations with seed 42, momentum weights,
+    leave-one-factor-out), `plausibility-reviewer` (economic sense vs. real trends).
+- **The `/validate-forecast` skill** (`.claude/skills/validate-forecast/SKILL.md`) is the
+  orchestrator, because subagents cannot spawn subagents:
+  - it runs the script, launches the 7 subagents in parallel (or one area:
+    `modell` / `predikciok` / `feltetelezesek`), gives a verdict per area and overall,
+    filters false alarms and writes `reports/validacio_audit_<date>.md`;
+  - it never fixes, publishes or pushes;
+  - it is meant to be run manually before publishing the dashboard.
+
 ## Report/file naming convention
 `reports/` filenames are prefixed by report type: `riport_` (scenario-based), `szegmens_riport_`,
 `uzemanyag_riport_`, `makro_riport_`, `toltoinfra_riport_`, `forgalomba_riport_`,
-`szentiment_riport_`, `realjovedelem_riport_`, plus `backtest_riport.md` and the always-overwritten
+`szentiment_riport_`, `realjovedelem_riport_`, `validacio_audit_` (from /validate-forecast), plus `backtest_riport.md`, the always-overwritten `validacio_riport.md`, and the always-overwritten
 `DIGEST.md` one-pager (source for the macOS notification text via `digest_report.py`).
 </content>

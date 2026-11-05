@@ -389,6 +389,38 @@ megmutatja, hogy a jelenlegi kalibráció részben jó irányba mutat, de
 messze nem pontos, és pontosan megnevezi, mely tényezők visszatesztelése
 hiányzik még.
 
+## Validáció (az előrejelzések ellenőrzése)
+
+Háromszintű, hierarchikus rendszer ellenőrzi, hogy a modell előrejelzései
+helyesek és belsőleg következetesek-e:
+
+1. **`validate_forecast.py`: automatikus, minden pipeline-futásban.**
+   Determinisztikus invariáns- és konzisztencia-ellenőrzések, két fázisban:
+   - `--stage pre` a backtest után: tényezők, szegmens-pontszámok, kézi
+     források frissessége;
+   - `--stage post` a dashboard-build után: dashboard-adat, history, sablon.
+
+   **CRITICAL** hibánál a pipeline megáll, nincs commit és push, és macOS-értesítést
+   kapsz. A **WARN** csak a riportba kerül. Kimenet: `data/validation.json` és
+   `reports/validacio_riport.md`; a digest is kiírja az állapotot. Kézi futtatás:
+   ```bash
+   python3 validate_forecast.py            # mindkét fázis
+   python3 validate_forecast.py --stage post
+   ```
+2. **Szakértő Claude Code subagentek** (`.claude/agents/forecast-*.md`):
+   - `forecast-invariant-checker`: a bukott ellenőrzések gyökéroka a kódban;
+   - `forecast-source-verifier`: a kézi források (BNEF, EU-vámok, CO2, Top modellek)
+     webes ellenőrzése, csonka EAFO-negyedév, befagyott Eurostat-sor;
+   - `forecast-plausibility-reviewer`: közgazdasági józan ész, a modell iránya kontra a
+     valós trendek, momentum-dominancia;
+   - `forecast-stats-reviewer`: a backtest szignifikanciája, a trendvetítések
+     megbízhatósága.
+3. **`/validate-forecast` skill (orchestrator):** egy Claude Code munkamenetben kézzel
+   indítod, pl. a dashboard publikálása előtt. Lefuttatja az 1. szintet, párhuzamosan
+   elindítja a 4 subagentet, kiszűri a hamis riasztásokat, és megírja a
+   `reports/validacio_audit_<dátum>.md` riportot PASS / WARN / FAIL ítélettel.
+   Semmit nem javít és nem publikál.
+
 ## Bővítési pontok
 
 - **Valós márkánkénti bontás** a jelenlegi márkakategória-szintek helyett,

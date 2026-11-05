@@ -589,7 +589,7 @@
 <section id="forecast-real">
   <div class="section-head">
     <h2>Trendvetítés — valós mutatók</h2>
-    <span class="section-note">Egyszerű lineáris trend-extrapoláció (nem statisztikai előrejelző modell) az idősorok friss szakaszára (az ablak kártyánként jelölve), ±1 szórás sávval. A görbe a teljes múltat mutatja, a vetítés csak a jelenlegi trendet viszi tovább.</span>
+    <span class="section-note">Egyszerű lineáris trend-extrapoláció (nem statisztikai előrejelző modell) az idősorok friss szakaszára (az ablak kártyánként jelölve). A sáv azt mutatja, mekkorát tévedtek a múltban ugyanígy készült vetítések. A görbe a teljes múltat mutatja, a vetítés csak a jelenlegi trendet viszi tovább. Az alapkamatnál, az árfolyamnál, a fogyasztói felméréseknél és a reálbérnél/-jövedelemnél a trend a múltban rosszabbul jelzett előre, mint a „nem változik” feltevés, ezért ott a kártya csak a mostani szintet és a szokásos ingadozás sávját mutatja. A gyorsuló részesedéseknél (hibrid, elektromos) a lineáris trend inkább alulbecsül.</span>
   </div>
   <div class="real-grid" id="forecast-real-grid"></div>
 </section>
@@ -1273,8 +1273,14 @@ __DASHBOARD_DATA__
     const btText = bt && bt.comparisons.length ? (() => {
       const c0 = bt.comparisons[0];
       const parts = bt.comparisons.map(c => `${c.label.replace('BEV', 'elektromos').replace('ICE', 'belső égésű').replace('Hibrid', 'hibrid')}: irány ${fmtPlain(c.hit_rate * 100, 0)}%, korreláció ${fmt(c.correlation, 2)}`).join('; ');
-      const weak = bt.comparisons.some(c => c.hit_rate <= 0.55);
-      return `<li><b>Gyenge visszamérés.</b> A ${bt.tested_factors.length} tesztelhető tényezőt (${bt.tested_factors.map(t => t.split(' (')[0]).join(', ')}) a ${c0.first_year}–${c0.last_year} közötti KSH-adatokon visszamérve (${parts}) a modell iránya ${weak ? 'nem minden összevetésben jobb a véletlennél (50%)' : 'a véletlennél jobb (50%)'}, a nagyságrendje pedig csak gyengén követi a valóságot — a pontszám tájékoztató jelzés. A többi ${m.factors.length - bt.tested_factors.length} tényezőhöz nincs elég hosszú múltbeli adat a visszaméréshez.</li>`;
+      // csak statisztikailag szignifikáns találati arányra mondjuk, hogy "jobb a véletlennél"
+      const nSig = bt.comparisons.filter(c => c.significant).length;
+      const verdict = nSig === bt.comparisons.length
+        ? 'statisztikailag igazolhatóan jobb a véletlennél (50%)'
+        : nSig === 0
+          ? 'statisztikailag nem különböztethető meg a véletlentől (50%) — a visszamérés nem mutat bizonyítható előrejelző erőt'
+          : 'csak egyes összevetésekben igazolhatóan jobb a véletlennél (50%)';
+      return `<li><b>Gyenge visszamérés.</b> A ${bt.tested_factors.length} tesztelhető tényezőt (${bt.tested_factors.map(t => t.split(' (')[0]).join(', ')}) a ${c0.first_year}–${c0.last_year} közötti KSH-adatokon visszamérve (${parts}) a modell iránya ${verdict}, a pontszám tehát tájékoztató jelzés. A többi ${m.factors.length - bt.tested_factors.length} tényezőhöz nincs elég hosszú múltbeli adat a visszaméréshez.</li>`;
     })() : '';
     el.innerHTML = `
       <h4>Mire vonatkozik?</h4>
@@ -1468,12 +1474,15 @@ __DASHBOARD_DATA__
 
     document.getElementById('forecast-real-grid').innerHTML = items.map(it => {
       const lastF = it.fc.points.at(-1), lo = it.fc.lower.at(-1), hi = it.fc.upper.at(-1);
+      // naiv kártya: ennél a sornál a trend nem jelzett előre megbízhatóan, ezért
+      // csak a mostani szintet és a szokásos ingadozást mutatjuk
+      const naive = it.fc.kind === 'naive';
       return `
       <div class="real-card">
-        <div class="src">Lineáris trendvetítés</div>
+        <div class="src">${naive ? 'Nincs megbízható trend — szokásos ingadozás' : 'Lineáris trendvetítés'}</div>
         <div class="desc">${it.title}</div>
         ${forecastSpark(it.series, it.fc.points, it.fc.lower, it.fc.upper, 'var(--accent)')}
-        <div class="forecast-badge">→ becsült: ${fmtPlain(lastF, it.d)} ${it.unit} (${fmtPlain(lo, it.d)}–${fmtPlain(hi, it.d)})</div>
+        <div class="forecast-badge">${naive ? 'várható sáv' : '→ becsült'}: ${naive ? '' : fmtPlain(lastF, it.d) + ' ' + it.unit + ' '}(${fmtPlain(lo, it.d)}–${fmtPlain(hi, it.d)}${naive ? ' ' + it.unit : ''})</div>
         <div class="cap">${it.fc.horizon_label}</div>
       </div>`;
     }).join('');
@@ -1514,7 +1523,7 @@ __DASHBOARD_DATA__
     const el = document.getElementById('news-body');
     const articles = (data.hirek && data.hirek.articles) || [];
     if (!articles.length) {
-      el.innerHTML = `<div class="collecting-note">Egyelőre nincs archivált hír — a legközelebbi pipeline-futáskor (fetchers/fetch_hirek.py) frissül ez a lista.</div>`;
+      el.innerHTML = `<div class="collecting-note">Egyelőre nincs archivált hír — a következő havi frissítéskor bővül ez a lista.</div>`;
       return;
     }
     const bySource = {};
@@ -1613,7 +1622,7 @@ __DASHBOARD_DATA__
         return `<div class="tier-card">
           <span class="t-name">${tm.tier_labels[k]}</span>
           <span class="t-fig tnum">${t.n}<small>modell</small></span>
-          <span class="t-line">${fmtInt(t.units)} db · a lista <b>${listTotal ? (t.units / listTotal * 100).toFixed(0) : 0}%</b>-a</span>
+          <span class="t-line">${fmtInt(t.units)} db · a lista <b>${fmtInt(listTotal ? t.units / listTotal * 100 : 0)}%</b>-a</span>
           ${sc != null ? `<span class="t-line">Szegmens-pontszám (alap): <b>${fmt(sc * 100, 1)} pont</b></span>` : ''}
         </div>`;
       }).join('') + (byTier.egyeb ? `<div class="tier-card"><span class="t-name">Besorolatlan márka</span><span class="t-fig tnum">${byTier.egyeb.n}<small>modell</small></span></div>` : '');

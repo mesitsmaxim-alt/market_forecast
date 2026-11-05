@@ -5,14 +5,15 @@ együtthatók visszamérése valós, történeti KSH/MNB/Eurostat adaton.
 
 Módszertan
 ----------
-A modell 8 tényezőjéből csak 3-hoz van elég hosszú, éves bontású valós
+A modell 8 tényezőjéből csak 4-hez van elég hosszú, éves bontású valós
 történeti idősorunk ahhoz, hogy évről évre kiszámoljuk a tényleges deltát:
 
     - financing_cost   <- MNB alapkamat (év végi érték, éves változás)
     - purchasing_power <- KSH reáljövedelem/reálkereset YoY%
     - consumer_sentiment <- Eurostat "vásárlási szándék", éves átlag, éves változás
+    - oil_price        <- Eurostat HICP üzemanyagindex, éves átlagos YoY%
 
-(Az olajár, akkumulátorár, töltőinfra, EV-vám, CO2-szabályozás tényezőkhöz
+(Az akkumulátorár, töltőinfra, EV-vám, CO2-szabályozás tényezőkhöz
 nincs elég hosszú visszamenő valós idősor a projektben - ez a backtest tehát
 CSAK a modell egy részét, nem az egészet teszteli. Ez explicit korlát, nem
 elhallgatott hiba.)
@@ -28,7 +29,7 @@ képest) helyesen jelzik-e előre a tényleges elmozdulás irányát/mértékét
 Kimenet-metrika: minden évre (2003-2025) kiszámoljuk
     actual_diff  = (BEV részesedés-változás, százalékpont) - (ICE részesedés-változás, százalékpont)
     predicted_diff = (BEV pontszám) - (ICE pontszám) a 3 tényezőből, a
-                     config/segments.json érzékenységeivel
+                     config/segments.json érzékenységeivel (a 4 tényezőből)
 majd Pearson-korrelációt és "hit rate"-et (hányszor egyezik az előjel)
 számolunk. Ugyanezt megismételjük Hibrid vs. ICE összevetésre is.
 
@@ -42,6 +43,7 @@ from __future__ import annotations
 
 import datetime
 import json
+import math
 import statistics
 from pathlib import Path
 
@@ -50,6 +52,7 @@ CONFIG_DIR = Path(__file__).parent / "config"
 REPORTS_DIR = Path(__file__).parent / "reports"
 
 TESTED_FACTORS = ["financing_cost", "purchasing_power", "consumer_sentiment", "oil_price"]
+SIGNIFICANCE = 0.05  # e fölötti p-értéknél a riport nem állíthat "jobb a véletlennél"-t
 
 
 def load_json(name: str, base: Path = DATA_DIR) -> dict:
@@ -114,6 +117,21 @@ def build_year_factor_deltas():
     return out, j
 
 
+def binom_two_sided_p(k: int, n: int) -> float:
+    """Kétoldali egzakt binomiális próba p = 0,5 mellett (a találati arány
+    eltér-e a véletlentől)."""
+    tail = sum(math.comb(n, i) for i in range(max(k, n - k), n + 1)) / 2 ** n
+    return min(1.0, 2 * tail)
+
+
+def corr_p_value(r: float, n: int) -> float:
+    """Kétoldali p-érték a Pearson-korrelációra, Fisher-z normális közelítéssel
+    (stdlib: nincs t-eloszlás; n ≈ 20 fölött a különbség elhanyagolható)."""
+    r = max(-0.999999, min(0.999999, r))
+    z = math.atanh(r) * math.sqrt(n - 3)
+    return 2 * (1 - statistics.NormalDist().cdf(abs(z)))
+
+
 def score(sensitivity: dict, deltas: dict) -> float:
     return sum(sensitivity.get(f, 0.0) * deltas[f] / 100.0 for f in TESTED_FACTORS)
 
@@ -146,9 +164,20 @@ def run_backtest(label_a: str, ksh_keys_a: list[str], sens_a: dict,
     actual = [r["actual_diff"] for r in rows]
     predicted = [r["predicted_diff"] for r in rows]
     corr = statistics.correlation(actual, predicted) if len(rows) > 2 else None
-    hit_rate = sum(r["sign_match"] for r in rows) / len(rows) if rows else None
+    hits = sum(r["sign_match"] for r in rows)
+    hit_rate = hits / len(rows) if rows else None
+    # a marginálisokból várható véletlen egyezés: ha a tényleges és a jósolt
+    # előjel is többnyire pozitív, a "találat" 50%-nál gyakrabban jön véletlenül
+    pa = sum(a >= 0 for a in actual) / len(rows) if rows else None
+    pp = sum(p >= 0 for p in predicted) / len(rows) if rows else None
 
-    return {"label": f"{label_a} vs. {label_b}", "rows": rows, "correlation": corr, "hit_rate": hit_rate}
+    return {
+        "label": f"{label_a} vs. {label_b}", "rows": rows, "correlation": corr, "hit_rate": hit_rate,
+        "hit_p": binom_two_sided_p(hits, len(rows)) if rows else None,
+        "corr_p": corr_p_value(corr, len(rows)) if corr is not None and len(rows) > 3 else None,
+        "actual_pos_share": pa,
+        "chance_hit": pa * pp + (1 - pa) * (1 - pp) if rows else None,
+    }
 
 
 def build_report(results: list[dict]) -> str:
@@ -199,29 +228,40 @@ def build_report(results: list[dict]) -> str:
     lines.append("")
     # Az értelmezés a tényleges számokból készül, nem fix szöveg - különben egy
     # romló eredmény mellett is "a véletlennél jobb"-at állítana.
+    # A "jobb a véletlennél" állítás csak szignifikáns (p < SIGNIFICANCE) eredményre
+    # mehet ki: korábban egy fix 60%-os küszöb a 14/23-as (p = 0,40) találatra is
+    # "érdemben jobb a véletlennél"-t írt.
     for res in results:
         corr, hit = res["correlation"], res["hit_rate"]
         if corr is None or hit is None:
             continue
-        hit_txt = (
-            "érdemben jobb a véletlennél (50%)" if hit >= 0.6
-            else "alig jobb a véletlennél (50%)" if hit > 0.55
-            else "a véletlen szintjén van (50%) — az irányt ebben az összevetésben nem találja el megbízhatóan"
-        )
-        corr_txt = (
-            "közepes" if abs(corr) >= 0.3 else "gyenge" if abs(corr) >= 0.1 else "gyakorlatilag nulla"
-        )
+        n = len(res["rows"])
+        if res["hit_p"] < SIGNIFICANCE:
+            hit_txt = (f"szignifikánsan {'jobb' if hit > 0.5 else 'rosszabb'} a véletlennél "
+                       f"(50%; p = {res['hit_p']:.3f})")
+        else:
+            hit_txt = (f"statisztikailag nem különböztethető meg a véletlentől "
+                       f"(50%; p = {res['hit_p']:.2f}, n = {n})")
+        if res["corr_p"] < SIGNIFICANCE:
+            corr_txt = f"szignifikáns (p = {res['corr_p']:.3f}), a pontszámok nagyságrendje követi a tényleges elmozdulást"
+        else:
+            corr_txt = (f"nem különböztethető meg a nullától (p = {res['corr_p']:.2f}), "
+                        f"a pontszámok nagyságrendje nem bizonyíthatóan követi a tényleges elmozdulást")
         lines.append(
             f"- **{res['label']}:** a találati arány ({hit*100:.0f}%) {hit_txt}; a korreláció "
-            f"({corr:+.2f}) {corr_txt}, vagyis a pontszámok nagyságrendje "
-            f"{'részben' if abs(corr) >= 0.1 else 'nem'} követi a tényleges elmozdulást."
+            f"({corr:+.2f}) {corr_txt}. Mivel a tényleges változás {res['actual_pos_share']*100:.0f}%-ban "
+            f"pozitív, a véletlen egyezés várható aránya valójában {res['chance_hit']*100:.0f}%."
         )
     lines.append("")
     lines.append(
-        "Az érzékenységi együtthatók szakértői becslések; a gyenge eredmény egyik "
-        "valószínű oka, hogy a BEV-térnyerés tényleges mozgatórugói (akkumulátorár, "
-        "töltőinfra, EU-szabályozás) pont azok, amikhez nincs hosszú történeti "
-        "adatunk — ez a backtest szükségszerűen vak foltokkal dolgozik."
+        "Az érzékenységi együtthatók szakértői becslések. Ha az eredmény nem "
+        "szignifikáns, két magyarázat lehetséges, és a backtest nem dönt köztük: (1) a "
+        "BEV-térnyerés tényleges mozgatórugói (akkumulátorár, töltőinfra, "
+        "EU-szabályozás) pont azok, amikhez nincs hosszú történeti adatunk, ezért a "
+        "backtest vak foltokkal dolgozik; (2) a tesztelt tényezők együtthatóinak "
+        "nincs kimutatható előrejelző ereje. A p-értékek ráadásul optimisták: az "
+        "állomány-részesedés éves változásai erősen autokorreláltak, így a független "
+        "megfigyelések száma kisebb, mint n."
     )
 
     return "\n".join(lines)
@@ -260,6 +300,11 @@ def main():
             "label": res["label"],
             "correlation": round(res["correlation"], 3) if res["correlation"] is not None else None,
             "hit_rate": round(res["hit_rate"], 3) if res["hit_rate"] is not None else None,
+            "hit_p": round(res["hit_p"], 3) if res["hit_p"] is not None else None,
+            "corr_p": round(res["corr_p"], 3) if res["corr_p"] is not None else None,
+            "significant": bool(
+                res["hit_p"] is not None and res["hit_p"] < SIGNIFICANCE and res["hit_rate"] > 0.5
+            ),
             "n": len(res["rows"]),
             "first_year": res["rows"][0]["year"] if res["rows"] else None,
             "last_year": res["rows"][-1]["year"] if res["rows"] else None,

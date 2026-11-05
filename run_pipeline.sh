@@ -10,6 +10,12 @@ LOG_DIR="logs"
 mkdir -p "$LOG_DIR"
 LOG_FILE="$LOG_DIR/run_$(date +%Y-%m-%d_%H%M%S).log"
 
+validation_failed() {
+  echo "=== VALIDÁCIÓ SIKERTELEN ($1): nincs commit és push. Ld. reports/validacio_riport.md ==="
+  osascript -e "display notification \"Kritikus hiba az előrejelzésben ($1 fázis) — nincs commit/push. Ld. reports/validacio_riport.md\" with title \"Autópiaci előrejelző: validáció sikertelen\"" 2>/dev/null || true
+  exit 1
+}
+
 {
   echo "=== Piaci előrejelző pipeline indul: $(date) ==="
 
@@ -44,8 +50,17 @@ LOG_FILE="$LOG_DIR/run_$(date +%Y-%m-%d_%H%M%S).log"
   echo "--- Backtesting ---"
   "$PYTHON" backtest.py
 
+  # Validáció (validate_forecast.py): CRITICAL hibánál itt megállunk - nincs
+  # dashboard-build, commit és push, csak egy értesítés. Részletek:
+  # reports/validacio_riport.md.
+  echo "--- Validáció (pre) ---"
+  "$PYTHON" validate_forecast.py --stage pre || validation_failed pre
+
   echo "--- Dashboard adat frissítése ---"
   "$PYTHON" dashboard/build_dashboard.py
+
+  echo "--- Validáció (post) ---"
+  "$PYTHON" validate_forecast.py --stage post || validation_failed post
 
   echo "--- Digest ---"
   NOTIF_TEXT="$("$PYTHON" digest_report.py)"
