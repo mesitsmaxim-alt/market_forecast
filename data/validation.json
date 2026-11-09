@@ -115,7 +115,7 @@
     },
     "post": {
       "status": "PASS",
-      "run_at": "2026-11-09T09:04:58",
+      "run_at": "2026-11-09T10:57:45",
       "checks": [
         {
           "id": "dashboard.fresh",

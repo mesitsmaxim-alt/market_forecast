@@ -194,15 +194,38 @@
   h2{ font-size:13px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--text-secondary); margin:0; }
   .section-note{ font-size:13px; color:var(--text-muted); max-width:60ch; }
 
-  /* ---------- coverage tiles ---------- */
-  .tiles{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; }
-  .tile{
-    background:var(--surface); border:1px solid var(--border); border-radius:14px;
-    padding:16px 18px; box-shadow:var(--shadow);
+  /* ---------- fő üzenet (nyitóblokk) ---------- */
+  .summary{
+    background:var(--surface); border:1px solid var(--border); border-radius:16px; box-shadow:var(--shadow);
+    padding:22px 24px 18px; display:grid; gap:16px;
   }
-  .tile .figure{ font-family:"JetBrains Mono",monospace; font-size:30px; font-weight:700; line-height:1; margin-bottom:8px; }
-  .tile .figure small{ font-size:16px; font-weight:600; color:var(--text-muted); margin-left:2px; }
-  .tile .label{ font-size:12.5px; color:var(--text-secondary); line-height:1.4; }
+  .summary-eyebrow{
+    font-family:"JetBrains Mono",monospace; font-size:11.5px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--accent); font-weight:600;
+  }
+  .summary-head{ font-size:clamp(19px,2.4vw,24px); font-weight:700; line-height:1.3; margin:-8px 0 0; max-width:46ch; text-wrap:balance; letter-spacing:-0.005em; }
+  .summary-head b{ color:var(--accent); font-weight:800; }
+  .summary-grid{ display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:10px; }
+  .sum-card{ background:var(--surface-2); border-radius:12px; padding:14px 14px 12px; display:grid; gap:8px; align-content:start; min-width:0; }
+  .sum-card .s-lbl{ font-size:13px; font-weight:600; color:var(--text-secondary); }
+  .sum-card .s-fig{ font-family:"JetBrains Mono",monospace; font-size:28px; font-weight:700; line-height:1; }
+  .sum-card .s-fig small{ font-size:13px; font-weight:600; color:var(--text-muted); margin-left:4px; }
+  .sum-card .s-fig.neg{ color:var(--neg); }
+  .s-range{ position:relative; height:14px; }
+  .s-range .r-track{ position:absolute; left:0; right:0; top:6px; height:2px; background:var(--border-strong); border-radius:2px; }
+  .s-range .r-zero{ position:absolute; top:1px; width:1px; height:12px; background:var(--text-muted); }
+  .s-range .r-band{ position:absolute; top:4px; height:6px; border-radius:3px; background:color-mix(in srgb, var(--accent) 35%, transparent); }
+  .s-range .r-dot{ position:absolute; top:2px; width:10px; height:10px; margin-left:-5px; border-radius:50%; background:var(--accent); border:2px solid var(--surface-2); box-sizing:border-box; }
+  .sum-card .s-cap{ font-size:11.5px; color:var(--text-muted); font-variant-numeric:tabular-nums; }
+  .summary-foot{ font-size:13px; color:var(--text-secondary); margin:0; line-height:1.5; max-width:80ch; }
+  .summary-foot a{ font-weight:600; }
+
+  /* ---------- coverage tiles (a forrásjegyzék fölött, kompakt) ---------- */
+  .tiles{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-bottom:14px; }
+  .tile{ background:var(--surface-2); border-radius:10px; padding:10px 14px; }
+  .tile .figure{ font-family:"JetBrains Mono",monospace; font-size:18px; font-weight:700; line-height:1.1; margin-bottom:4px; }
+  .tile .figure small{ font-size:12px; font-weight:600; color:var(--text-muted); margin-left:2px; }
+  .tile .label{ font-size:12px; color:var(--text-secondary); line-height:1.4; }
 
   /* ---------- factor table ---------- */
   .factor-table{ background:var(--surface); border:1px solid var(--border); border-radius:14px; box-shadow:var(--shadow); overflow:hidden; }
@@ -459,6 +482,8 @@
     .m-table tr:last-child{ border-bottom:none; }
     .m-table td{ border-bottom:none; padding:0; }
     .m-table td.f{ grid-column:1 / -1; margin-bottom:2px; }
+    .summary{ padding:18px 16px 16px; }
+    .summary-grid{ grid-template-columns:repeat(2, minmax(0,1fr)); }
     .change-group{ grid-column: 1 / -1; }
     .change-dirs{ grid-column: 1 / -1; }
   }
@@ -484,17 +509,19 @@
 
 <div class="tabpanel" data-tabpanel="overview">
 
+<section id="summary" class="summary" aria-labelledby="summary-head">
+  <span class="summary-eyebrow">Alap forgatókönyv · a következő 12 hónap</span>
+  <p class="summary-head" id="summary-head"></p>
+  <div class="summary-grid" id="summary-grid"></div>
+  <p class="summary-foot" id="summary-foot"></p>
+</section>
+
 <section id="changes">
   <div class="section-head">
     <h2>Mi változott?</h2>
     <span class="section-note" id="changes-note"></span>
   </div>
   <div id="changes-body"></div>
-</section>
-
-<section id="coverage">
-  <div class="section-head"><h2>Lefedettség</h2></div>
-  <div class="tiles" id="tiles"></div>
 </section>
 
 <section id="factors">
@@ -554,6 +581,7 @@
 
 <section id="sources">
   <div class="section-head"><h2>5. Forrás- és automatizálás-jegyzék</h2></div>
+  <div class="tiles" id="tiles"></div>
   <div class="src-table-wrap">
     <table class="src-table">
       <thead><tr><th>Adat</th><th>Forrás</th><th>Frissítés</th><th>Bekötve</th></tr></thead>
@@ -13867,6 +13895,53 @@
     });
   }
   renderChanges();
+
+  // ---------- fő üzenet: a hajtások iránya az alap forgatókönyvben ----------
+  // mindig az alap forgatókönyvet mutatja (a váltó a lenti szegmens-blokkra hat)
+  function renderSummary() {
+    const rows = [...data.drivetrain_summary].sort((a, b) => b.score - a.score);
+    const top = rows[0], bot = rows[rows.length - 1];
+    const ice = rows.find(r => r.key === 'ICE');
+    const elec = rows.filter(r => r.key !== 'ICE');
+    const name = r => { const w = lc(shortLabel(r.label)); return `${art(w)} ${w}`; };
+    let head;
+    if (rows.every(r => Math.abs(r.score * 100) < NEUTRAL_PTS)) {
+      head = 'A hajtások között <b>nincs érdemi elmozdulás</b>: minden hajtás a semleges tartományban van.';
+    } else if (ice && ice.score * 100 <= -NEUTRAL_PTS && elec.every(r => r.score > 0)) {
+      head = `A kereslet <b>az elektrifikáció felé tolódik</b>: ${name(top)} hajtás erősödik leginkább, a belső égésű visszaesik.`;
+    } else {
+      head = `${ucFirst(name(top))} hajtás kilátásai a legjobbak, ${name(bot)} hajtásé a leggyengébbek.`;
+    }
+    document.getElementById('summary-head').innerHTML = head;
+
+    // közös skála a négy kártyán, hogy a sávok egymással összevethetők legyenek
+    const ext = Math.max(...rows.flatMap(r => [Math.abs(r.pesszimista), Math.abs(r.optimista), Math.abs(r.score)]), 0.001);
+    const pos = v => 50 + v / ext * 48;
+    document.getElementById('summary-grid').innerHTML = rows.map(r => {
+      const lo = Math.min(r.pesszimista, r.optimista), hi = Math.max(r.pesszimista, r.optimista);
+      return `<div class="sum-card">
+        <span class="s-lbl">${shortLabel(r.label)}</span>
+        <span class="s-fig tnum${r.score < 0 ? ' neg' : ''}">${fmt(r.score * 100, 1)}<small>pont</small></span>
+        <span><span class="dirpill ${dirClass(r.dir)}">${r.dir}</span></span>
+        <div class="s-range" role="img" aria-label="Forgatókönyv-sáv: ${fmt(lo * 100, 1)} és ${fmt(hi * 100, 1)} pont között">
+          <span class="r-track"></span><span class="r-zero" style="left:50%"></span>
+          <span class="r-band" style="left:${pos(lo)}%;width:${pos(hi) - pos(lo)}%"></span>
+          <span class="r-dot" style="left:${pos(r.score)}%"></span>
+        </div>
+        <span class="s-cap">sáv: ${fmt(lo * 100, 1)} … ${fmt(hi * 100, 1)} pont</span>
+      </div>`;
+    }).join('');
+
+    const br = data.brand_summary;
+    const brSpread = (Math.max(...br.map(r => r.score)) - Math.min(...br.map(r => r.score))) * 100;
+    const dtSpread = (top.score - bot.score) * 100;
+    const brandPart = dtSpread > 0 && brSpread < dtSpread / 2
+      ? `Márka és évjárat szerint kisebbek a különbségek: a kitettséget elsősorban a hajtáslánc határozza meg. `
+      : '';
+    document.getElementById('summary-foot').innerHTML =
+      `${brandPart}A pont a 12 hónapos keresleti kitettséget méri (±5 pont alatt semleges), a sáv a pesszimista és az optimista forgatókönyv közti tartomány. <a href="#segments">Részletek szegmensenként ↓</a>`;
+  }
+  renderSummary();
 
   // ---------- forecast-aware sparkline (history line + dashed projection + band) ----------
   function forecastSpark(history, forecast, lower, upper, color) {
