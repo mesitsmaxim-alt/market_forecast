@@ -632,6 +632,18 @@ REAL_HEADLINE_LABELS = {
 }
 
 
+# A pontszámokat érintő módszertani váltások (dátum = az első futás az új
+# módszerrel). A "Mi változott?" blokk és a Történet fül ezzel jelzi, hogy egy
+# elmozdulás nem piaci, hanem számítási. Publikus szöveg.
+METHOD_CHANGES = [
+    {"date": "2026-11-05",
+     "text": "Az üzemanyagár, a finanszírozási költség és a vásárlási szándék alap "
+             "forgatókönyve mostantól „nincs változás”, mert a múltban a megfigyelt trend "
+             "továbbvitele rosszabbul jelezte előre a következő 12 hónapot. Az ebből adódó "
+             "pontszám- és irányváltások nem piaci elmozdulást jelentenek."},
+]
+
+
 def build_changes(prev: dict | None, combined: dict) -> dict | None:
     """Összevetés az előző NAPI futással: a szegmens-irányok (hajtástípus,
     márkakategória), az alap forgatókönyv tényező-értékei és a valós
@@ -639,6 +651,7 @@ def build_changes(prev: dict | None, combined: dict) -> dict | None:
     if prev is None:
         return None
     items = []
+    method_notes = [m for m in METHOD_CHANGES if prev["date"] < m["date"] <= combined["generated"]]
 
     for group, key in (("Hajtástípus", "drivetrain_summary"), ("Márkakategória", "brand_summary")):
         prev_scores = {r["key"]: r["score"] for r in prev.get(key, [])}
@@ -676,7 +689,7 @@ def build_changes(prev: dict | None, combined: dict) -> dict | None:
 
     # Irányváltások elöl, utána csoportonként az eredeti sorrend
     items.sort(key=lambda it: not it["dir_changed"])
-    return {"since": prev["date"], "items": items}
+    return {"since": prev["date"], "items": items, "method_notes": method_notes}
 
 
 def build_real_headline(real: dict) -> dict:
@@ -728,6 +741,7 @@ def main():
         "real": build_real_snapshot(),
         "run_history": run_history,
         "hirek": build_hirek(),
+        "method_changes": METHOD_CHANGES,
     }
     combined["top_modellek"] = build_top_modellek(combined["brand_summary"])
     combined["coverage"]["n_factors"] = len(combined["factors"])

@@ -646,7 +646,7 @@
 
 <script id="dashboard-data" type="application/json">
 {
-  "generated": "2026-11-05",
+  "generated": "2026-11-09",
   "coverage": {
     "n_factors": 8,
     "n_calibrated": 5,
@@ -12088,6 +12088,64 @@
         "sentiment_mp": -16.0,
         "wage_yoy": 4.8
       }
+    },
+    {
+      "date": "2026-11-05",
+      "factors": {
+        "oil_price": 0.0,
+        "battery_cost": -8.0,
+        "charging_infra": 5.7,
+        "ev_tariffs": -1.0,
+        "co2_regulation": 14.9,
+        "financing_cost": 0.0,
+        "consumer_sentiment": 0.0,
+        "purchasing_power": 1.7
+      },
+      "drivetrain_summary": [
+        {
+          "key": "BEV",
+          "score": 0.1949
+        },
+        {
+          "key": "PHEV",
+          "score": 0.0941
+        },
+        {
+          "key": "HEV",
+          "score": 0.0804
+        },
+        {
+          "key": "ICE",
+          "score": -0.0943
+        }
+      ],
+      "brand_summary": [
+        {
+          "key": "kinai_belepo",
+          "score": 0.088
+        },
+        {
+          "key": "tomeggyarto",
+          "score": 0.0819
+        },
+        {
+          "key": "premium",
+          "score": 0.0786
+        },
+        {
+          "key": "budget",
+          "score": 0.0266
+        }
+      ],
+      "real_headline": {
+        "benzin": 633,
+        "dizel": 726,
+        "alapkamat": 5.5,
+        "eurhuf": 365.67,
+        "forgalomba_total": 78118,
+        "sentiment_mp": -12.9,
+        "wage_yoy": 4.8
+      }
     }
   ],
   "hirek": {
@@ -12101,6 +12159,12 @@
       }
     ]
   },
+  "method_changes": [
+    {
+      "date": "2026-11-05",
+      "text": "Az üzemanyagár, a finanszírozási költség és a vásárlási szándék alap forgatókönyve mostantól „nincs változás”, mert a múltban a megfigyelt trend továbbvitele rosszabbul jelezte előre a következő 12 hónapot. Az ebből adódó pontszám- és irányváltások nem piaci elmozdulást jelentenek."
+    }
+  ],
   "top_modellek": {
     "source": "jarmuipar.hu (Datahouse adatai alapján)",
     "source_url": "https://www.jarmuipar.hu/2026/10/top-100-ezek-nyertesek-az-autopiacon/",
@@ -13040,153 +13104,9 @@
     }
   },
   "changes": {
-    "since": "2026-10-09",
-    "items": [
-      {
-        "group": "Hajtástípus",
-        "label": "Plug-in hibrid",
-        "unit": "pont",
-        "from": 18.1,
-        "to": 9.4,
-        "from_dir": "Erős növekedés",
-        "to_dir": "Növekedés",
-        "dir_changed": true
-      },
-      {
-        "group": "Hajtástípus",
-        "label": "Hibrid (nem tölthető)",
-        "unit": "pont",
-        "from": 16.8,
-        "to": 8.0,
-        "from_dir": "Erős növekedés",
-        "to_dir": "Növekedés",
-        "dir_changed": true
-      },
-      {
-        "group": "Márkakategória",
-        "label": "Kínai eredetű, EV-fókuszú belépő (pl. BYD, MG)",
-        "unit": "pont",
-        "from": 16.5,
-        "to": 8.8,
-        "from_dir": "Erős növekedés",
-        "to_dir": "Növekedés",
-        "dir_changed": true
-      },
-      {
-        "group": "Márkakategória",
-        "label": "Tömeggyártó (pl. Volkswagen, Toyota, Hyundai, Ford)",
-        "unit": "pont",
-        "from": 15.1,
-        "to": 8.2,
-        "from_dir": "Erős növekedés",
-        "to_dir": "Növekedés",
-        "dir_changed": true
-      },
-      {
-        "group": "Márkakategória",
-        "label": "Prémium (pl. BMW, Mercedes, Audi)",
-        "unit": "pont",
-        "from": 16.2,
-        "to": 7.9,
-        "from_dir": "Erős növekedés",
-        "to_dir": "Növekedés",
-        "dir_changed": true
-      },
-      {
-        "group": "Márkakategória",
-        "label": "Belépő szintű / budget (pl. Dacia)",
-        "unit": "pont",
-        "from": 7.2,
-        "to": 2.7,
-        "from_dir": "Növekedés",
-        "to_dir": "Stagnálás",
-        "dir_changed": true
-      },
-      {
-        "group": "Hajtástípus",
-        "label": "Tisztán elektromos",
-        "unit": "pont",
-        "from": 33.1,
-        "to": 19.5,
-        "from_dir": "Erős növekedés",
-        "to_dir": "Erős növekedés",
-        "dir_changed": false
-      },
-      {
-        "group": "Hajtástípus",
-        "label": "Belső égésű (benzin/dízel)",
-        "unit": "pont",
-        "from": -13.0,
-        "to": -9.4,
-        "from_dir": "Visszaesés",
-        "to_dir": "Visszaesés",
-        "dir_changed": false
-      },
-      {
-        "group": "Tényező (alap)",
-        "label": "Üzemanyagár (HU, benzin + dízel)",
-        "unit": "%",
-        "from": 12.9,
-        "to": 0.0,
-        "dir_changed": false
-      },
-      {
-        "group": "Tényező (alap)",
-        "label": "EU CO2-szabályozás szigorodása / ICE-tiltás közeledése",
-        "unit": "%/év",
-        "from": 14.5,
-        "to": 14.9,
-        "dir_changed": false
-      },
-      {
-        "group": "Tényező (alap)",
-        "label": "Finanszírozási költség (jegybanki alapkamat várható elmozdulása)",
-        "unit": "pp",
-        "from": -1.0,
-        "to": 0.0,
-        "dir_changed": false
-      },
-      {
-        "group": "Tényező (alap)",
-        "label": "Fogyasztói vásárlási szándék (tartós fogyasztási cikk, EU-felmérés)",
-        "unit": "pont",
-        "from": 11.6,
-        "to": 0.0,
-        "dir_changed": false
-      },
-      {
-        "group": "Valós adat",
-        "label": "Benzin ára",
-        "unit": "Ft/l",
-        "from": 636,
-        "to": 633,
-        "dir_changed": false
-      },
-      {
-        "group": "Valós adat",
-        "label": "Dízel ára",
-        "unit": "Ft/l",
-        "from": 709,
-        "to": 726,
-        "dir_changed": false
-      },
-      {
-        "group": "Valós adat",
-        "label": "Euró/forint árfolyam",
-        "unit": "Ft",
-        "from": 363.69,
-        "to": 365.67,
-        "dir_changed": false
-      },
-      {
-        "group": "Valós adat",
-        "label": "Vásárlási szándék",
-        "unit": "pont",
-        "from": -16.0,
-        "to": -12.9,
-        "dir_changed": false
-      }
-    ]
+    "since": "2026-11-05",
+    "items": [],
+    "method_notes": []
   }
 }
 </script>
@@ -13496,6 +13416,20 @@
     return `${head}, ${tail}. `;
   }
 
+  // ha egy nem semleges besorolás a megfigyelt lendület nélkül semleges lenne, azt
+  // kimondjuk: az a már látott trendből jön, nem a forgatókönyv tényezőiből
+  // (2026-11-05-i audit: a hibrid és a tömeggyártó/prémium márka így állt)
+  const momentumPts = r => r.drivers.filter(d => d.label.startsWith('Valós piaci lendület')).reduce((a, d) => a + d.points, 0);
+  function momentumSentence(rows, noun) {
+    const g = rows.filter(r => {
+      const s = r.score * 100, m = momentumPts(r);
+      return Math.abs(s) >= NEUTRAL_PTS && Math.sign(m) === Math.sign(s) && Math.abs(s - m) < NEUTRAL_PTS;
+    });
+    if (!g.length) return '';
+    const parts = g.map(r => `${fmtPlain(r.score * 100, 1)} pontból ${fmtPlain(momentumPts(r), 1)}`).join(', ');
+    return `${npList(g, noun, true)} besorolása főleg a <b>már megfigyelt piaci lendületből</b> jön (${parts}): a forgatókönyv tényezői önmagukban a semleges tartományban tartanák. `;
+  }
+
   // a piacsúlyozott kép összefoglalása (márka- és évjárat-kártya)
   function mwSentence(rows, nounPl, noun) {
     const mws = rows.map(r => r.mw).filter(v => v != null);
@@ -13528,6 +13462,7 @@
     } else if (rows.every(r => r.score > 0)) {
       s += `Minden hajtás pozitív, a különbség a mértékben van. `;
     }
+    s += momentumSentence(rows, 'hajtás');
     const topPos = top.drivers.filter(d => d.points > 0).slice(0, 2);
     if (topPos.length) s += `${ucFirst(np(top, 'hajtás'))} legnagyobb támasza ${listDrivers(topPos)}. `;
     const botNeg = bot.drivers.filter(d => d.points < 0).sort((a, b) => a.points - b.points).slice(0, 2);
@@ -13544,6 +13479,7 @@
       s += `A márkakategóriák közti különbség (${fmtPlain(spread, 1)} pont) jóval kisebb, mint a hajtások közötti (${fmtPlain(dtSpread, 1)} pont): a kitettséget <b>elsősorban a hajtáslánc határozza meg, nem a márka</b>. `;
     }
     if (allNeutral(rows)) return s;
+    s += momentumSentence(rows, 'márkakategória');
     const diff = differentiators(top, bot);
     if (diff.length) s += `A legjobb és a leggyengébb kategória közti különbséget főleg ${diff.map(d => `${driverName(d.label)} (${fmtPlain(d.points, 1)} pont)`).join(' és ')} adja.`;
     return s;
@@ -13893,9 +13829,13 @@
       return;
     }
     const nDir = ch.items.filter(i => i.dir_changed).length;
-    note.textContent = `Az előző napi futáshoz (${ch.since}) képest: ${ch.items.length} változás` + (nDir ? `, ebből ${nDir} irányváltás.` : '.');
+    const mn = ch.method_notes || [];
+    note.textContent = `Az előző napi futáshoz (${ch.since}) képest: ${ch.items.length} változás` + (nDir ? `, ebből ${nDir} irányváltás` : '') + (mn.length ? ', nagy részük módszertani változás miatt.' : '.');
+    const methodBox = mn.length
+      ? `<div class="collecting-note" style="margin-bottom:12px"><b>Módszertani változás (${mn.map(m => m.date).join(', ')}):</b> ${mn.map(m => m.text).join(' ')}</div>`
+      : '';
     if (!ch.items.length) {
-      body.innerHTML = `<div class="collecting-note">Nincs érdemi változás az előző napi futás (${ch.since}) óta.</div>`;
+      body.innerHTML = methodBox + `<div class="collecting-note">Nincs érdemi változás az előző napi futás (${ch.since}) óta.</div>`;
       return;
     }
     // tizedesjegyek száma az értékhez igazodva (0-2), hogy "12" ne legyen "12,0"
@@ -13913,7 +13853,7 @@
     };
     const LIMIT = 6;
     const extra = ch.items.length - LIMIT;
-    body.innerHTML = `<div class="changes-card">
+    body.innerHTML = methodBox + `<div class="changes-card">
       ${ch.items.slice(0, LIMIT).map(row).join('')}
       ${extra > 0 ? `<div id="changes-extra" hidden>${ch.items.slice(LIMIT).map(row).join('')}</div>
         <button type="button" class="change-more" id="changes-more" aria-expanded="false">+ további ${extra} változás</button>` : ''}
@@ -13982,7 +13922,12 @@
         <div class="spark-labels"><span>${rh[0].date}</span><span>${rh[rh.length - 1].date}</span></div>
       </div>`;
     }).join('');
-    el.innerHTML = `<div class="real-grid">${cards}</div>`;
+    // a sorozaton belüli módszertani törések: az ugrás ott nem piaci elmozdulás
+    const breaks = (data.method_changes || []).filter(m => m.date > rh[0].date && m.date <= rh[rh.length - 1].date);
+    const breakNote = breaks.length
+      ? `<div class="collecting-note" style="margin-top:12px"><b>Módszertani törés a sorozatban:</b> ${breaks.map(m => `${m.date}: ${m.text}`).join(' ')}</div>`
+      : '';
+    el.innerHTML = `<div class="real-grid">${cards}</div>${breakNote}`;
   }
   renderRunHistory();
 

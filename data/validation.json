@@ -1,10 +1,10 @@
 {
-  "generated": "2026-11-05",
-  "status": "PASS",
+  "generated": "2026-11-09",
+  "status": "WARN",
   "stages": {
     "pre": {
-      "status": "PASS",
-      "run_at": "2026-11-05T10:15:42",
+      "status": "WARN",
+      "run_at": "2026-11-09T09:04:58",
       "checks": [
         {
           "id": "factors.count",
@@ -94,13 +94,13 @@
           "id": "sources.top_modellek_stale",
           "severity": "WARN",
           "ok": true,
-          "message": "a data/top_modellek.json 0 napos (küszöb: 45 nap)",
+          "message": "a data/top_modellek.json 4 napos (küszöb: 45 nap)",
           "details": []
         },
         {
           "id": "backtest.fresh",
           "severity": "WARN",
-          "ok": true,
+          "ok": false,
           "message": "a backtest ma futott (generated: 2026-11-05)",
           "details": []
         },
@@ -115,13 +115,13 @@
     },
     "post": {
       "status": "PASS",
-      "run_at": "2026-11-05T10:15:42",
+      "run_at": "2026-11-09T09:04:58",
       "checks": [
         {
           "id": "dashboard.fresh",
           "severity": "WARN",
           "ok": true,
-          "message": "a dashboard_data.json ma készült (generated: 2026-11-05)",
+          "message": "a dashboard_data.json ma készült (generated: 2026-11-09)",
           "details": []
         },
         {
@@ -219,7 +219,7 @@
           "id": "history.jumps",
           "severity": "WARN",
           "ok": true,
-          "message": "nincs szokatlan ugrás az előző napi futáshoz (2026-10-09) képest",
+          "message": "nincs szokatlan ugrás az előző napi futáshoz (2026-11-05) képest",
           "details": []
         },
         {

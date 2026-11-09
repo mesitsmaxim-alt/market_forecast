@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-05",
+  "generated": "2026-11-09",
   "coverage": {
     "n_factors": 8,
     "n_calibrated": 5,
@@ -11441,6 +11441,64 @@
         "sentiment_mp": -16.0,
         "wage_yoy": 4.8
       }
+    },
+    {
+      "date": "2026-11-05",
+      "factors": {
+        "oil_price": 0.0,
+        "battery_cost": -8.0,
+        "charging_infra": 5.7,
+        "ev_tariffs": -1.0,
+        "co2_regulation": 14.9,
+        "financing_cost": 0.0,
+        "consumer_sentiment": 0.0,
+        "purchasing_power": 1.7
+      },
+      "drivetrain_summary": [
+        {
+          "key": "BEV",
+          "score": 0.1949
+        },
+        {
+          "key": "PHEV",
+          "score": 0.0941
+        },
+        {
+          "key": "HEV",
+          "score": 0.0804
+        },
+        {
+          "key": "ICE",
+          "score": -0.0943
+        }
+      ],
+      "brand_summary": [
+        {
+          "key": "kinai_belepo",
+          "score": 0.088
+        },
+        {
+          "key": "tomeggyarto",
+          "score": 0.0819
+        },
+        {
+          "key": "premium",
+          "score": 0.0786
+        },
+        {
+          "key": "budget",
+          "score": 0.0266
+        }
+      ],
+      "real_headline": {
+        "benzin": 633,
+        "dizel": 726,
+        "alapkamat": 5.5,
+        "eurhuf": 365.67,
+        "forgalomba_total": 78118,
+        "sentiment_mp": -12.9,
+        "wage_yoy": 4.8
+      }
     }
   ],
   "hirek": {
@@ -11454,6 +11512,12 @@
       }
     ]
   },
+  "method_changes": [
+    {
+      "date": "2026-11-05",
+      "text": "Az üzemanyagár, a finanszírozási költség és a vásárlási szándék alap forgatókönyve mostantól „nincs változás”, mert a múltban a megfigyelt trend továbbvitele rosszabbul jelezte előre a következő 12 hónapot. Az ebből adódó pontszám- és irányváltások nem piaci elmozdulást jelentenek."
+    }
+  ],
   "top_modellek": {
     "source": "jarmuipar.hu (Datahouse adatai alapján)",
     "source_url": "https://www.jarmuipar.hu/2026/10/top-100-ezek-nyertesek-az-autopiacon/",
@@ -12393,152 +12457,8 @@
     }
   },
   "changes": {
-    "since": "2026-10-09",
-    "items": [
-      {
-        "group": "Hajtástípus",
-        "label": "Plug-in hibrid",
-        "unit": "pont",
-        "from": 18.1,
-        "to": 9.4,
-        "from_dir": "Erős növekedés",
-        "to_dir": "Növekedés",
-        "dir_changed": true
-      },
-      {
-        "group": "Hajtástípus",
-        "label": "Hibrid (nem tölthető)",
-        "unit": "pont",
-        "from": 16.8,
-        "to": 8.0,
-        "from_dir": "Erős növekedés",
-        "to_dir": "Növekedés",
-        "dir_changed": true
-      },
-      {
-        "group": "Márkakategória",
-        "label": "Kínai eredetű, EV-fókuszú belépő (pl. BYD, MG)",
-        "unit": "pont",
-        "from": 16.5,
-        "to": 8.8,
-        "from_dir": "Erős növekedés",
-        "to_dir": "Növekedés",
-        "dir_changed": true
-      },
-      {
-        "group": "Márkakategória",
-        "label": "Tömeggyártó (pl. Volkswagen, Toyota, Hyundai, Ford)",
-        "unit": "pont",
-        "from": 15.1,
-        "to": 8.2,
-        "from_dir": "Erős növekedés",
-        "to_dir": "Növekedés",
-        "dir_changed": true
-      },
-      {
-        "group": "Márkakategória",
-        "label": "Prémium (pl. BMW, Mercedes, Audi)",
-        "unit": "pont",
-        "from": 16.2,
-        "to": 7.9,
-        "from_dir": "Erős növekedés",
-        "to_dir": "Növekedés",
-        "dir_changed": true
-      },
-      {
-        "group": "Márkakategória",
-        "label": "Belépő szintű / budget (pl. Dacia)",
-        "unit": "pont",
-        "from": 7.2,
-        "to": 2.7,
-        "from_dir": "Növekedés",
-        "to_dir": "Stagnálás",
-        "dir_changed": true
-      },
-      {
-        "group": "Hajtástípus",
-        "label": "Tisztán elektromos",
-        "unit": "pont",
-        "from": 33.1,
-        "to": 19.5,
-        "from_dir": "Erős növekedés",
-        "to_dir": "Erős növekedés",
-        "dir_changed": false
-      },
-      {
-        "group": "Hajtástípus",
-        "label": "Belső égésű (benzin/dízel)",
-        "unit": "pont",
-        "from": -13.0,
-        "to": -9.4,
-        "from_dir": "Visszaesés",
-        "to_dir": "Visszaesés",
-        "dir_changed": false
-      },
-      {
-        "group": "Tényező (alap)",
-        "label": "Üzemanyagár (HU, benzin + dízel)",
-        "unit": "%",
-        "from": 12.9,
-        "to": 0.0,
-        "dir_changed": false
-      },
-      {
-        "group": "Tényező (alap)",
-        "label": "EU CO2-szabályozás szigorodása / ICE-tiltás közeledése",
-        "unit": "%/év",
-        "from": 14.5,
-        "to": 14.9,
-        "dir_changed": false
-      },
-      {
-        "group": "Tényező (alap)",
-        "label": "Finanszírozási költség (jegybanki alapkamat várható elmozdulása)",
-        "unit": "pp",
-        "from": -1.0,
-        "to": 0.0,
-        "dir_changed": false
-      },
-      {
-        "group": "Tényező (alap)",
-        "label": "Fogyasztói vásárlási szándék (tartós fogyasztási cikk, EU-felmérés)",
-        "unit": "pont",
-        "from": 11.6,
-        "to": 0.0,
-        "dir_changed": false
-      },
-      {
-        "group": "Valós adat",
-        "label": "Benzin ára",
-        "unit": "Ft/l",
-        "from": 636,
-        "to": 633,
-        "dir_changed": false
-      },
-      {
-        "group": "Valós adat",
-        "label": "Dízel ára",
-        "unit": "Ft/l",
-        "from": 709,
-        "to": 726,
-        "dir_changed": false
-      },
-      {
-        "group": "Valós adat",
-        "label": "Euró/forint árfolyam",
-        "unit": "Ft",
-        "from": 363.69,
-        "to": 365.67,
-        "dir_changed": false
-      },
-      {
-        "group": "Valós adat",
-        "label": "Vásárlási szándék",
-        "unit": "pont",
-        "from": -16.0,
-        "to": -12.9,
-        "dir_changed": false
-      }
-    ]
+    "since": "2026-11-05",
+    "items": [],
+    "method_notes": []
   }
 }

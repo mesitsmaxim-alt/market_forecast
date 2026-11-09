@@ -953,6 +953,20 @@ __DASHBOARD_DATA__
     return `${head}, ${tail}. `;
   }
 
+  // ha egy nem semleges besorolás a megfigyelt lendület nélkül semleges lenne, azt
+  // kimondjuk: az a már látott trendből jön, nem a forgatókönyv tényezőiből
+  // (2026-11-05-i audit: a hibrid és a tömeggyártó/prémium márka így állt)
+  const momentumPts = r => r.drivers.filter(d => d.label.startsWith('Valós piaci lendület')).reduce((a, d) => a + d.points, 0);
+  function momentumSentence(rows, noun) {
+    const g = rows.filter(r => {
+      const s = r.score * 100, m = momentumPts(r);
+      return Math.abs(s) >= NEUTRAL_PTS && Math.sign(m) === Math.sign(s) && Math.abs(s - m) < NEUTRAL_PTS;
+    });
+    if (!g.length) return '';
+    const parts = g.map(r => `${fmtPlain(r.score * 100, 1)} pontból ${fmtPlain(momentumPts(r), 1)}`).join(', ');
+    return `${npList(g, noun, true)} besorolása főleg a <b>már megfigyelt piaci lendületből</b> jön (${parts}): a forgatókönyv tényezői önmagukban a semleges tartományban tartanák. `;
+  }
+
   // a piacsúlyozott kép összefoglalása (márka- és évjárat-kártya)
   function mwSentence(rows, nounPl, noun) {
     const mws = rows.map(r => r.mw).filter(v => v != null);
@@ -985,6 +999,7 @@ __DASHBOARD_DATA__
     } else if (rows.every(r => r.score > 0)) {
       s += `Minden hajtás pozitív, a különbség a mértékben van. `;
     }
+    s += momentumSentence(rows, 'hajtás');
     const topPos = top.drivers.filter(d => d.points > 0).slice(0, 2);
     if (topPos.length) s += `${ucFirst(np(top, 'hajtás'))} legnagyobb támasza ${listDrivers(topPos)}. `;
     const botNeg = bot.drivers.filter(d => d.points < 0).sort((a, b) => a.points - b.points).slice(0, 2);
@@ -1001,6 +1016,7 @@ __DASHBOARD_DATA__
       s += `A márkakategóriák közti különbség (${fmtPlain(spread, 1)} pont) jóval kisebb, mint a hajtások közötti (${fmtPlain(dtSpread, 1)} pont): a kitettséget <b>elsősorban a hajtáslánc határozza meg, nem a márka</b>. `;
     }
     if (allNeutral(rows)) return s;
+    s += momentumSentence(rows, 'márkakategória');
     const diff = differentiators(top, bot);
     if (diff.length) s += `A legjobb és a leggyengébb kategória közti különbséget főleg ${diff.map(d => `${driverName(d.label)} (${fmtPlain(d.points, 1)} pont)`).join(' és ')} adja.`;
     return s;
@@ -1350,9 +1366,13 @@ __DASHBOARD_DATA__
       return;
     }
     const nDir = ch.items.filter(i => i.dir_changed).length;
-    note.textContent = `Az előző napi futáshoz (${ch.since}) képest: ${ch.items.length} változás` + (nDir ? `, ebből ${nDir} irányváltás.` : '.');
+    const mn = ch.method_notes || [];
+    note.textContent = `Az előző napi futáshoz (${ch.since}) képest: ${ch.items.length} változás` + (nDir ? `, ebből ${nDir} irányváltás` : '') + (mn.length ? ', nagy részük módszertani változás miatt.' : '.');
+    const methodBox = mn.length
+      ? `<div class="collecting-note" style="margin-bottom:12px"><b>Módszertani változás (${mn.map(m => m.date).join(', ')}):</b> ${mn.map(m => m.text).join(' ')}</div>`
+      : '';
     if (!ch.items.length) {
-      body.innerHTML = `<div class="collecting-note">Nincs érdemi változás az előző napi futás (${ch.since}) óta.</div>`;
+      body.innerHTML = methodBox + `<div class="collecting-note">Nincs érdemi változás az előző napi futás (${ch.since}) óta.</div>`;
       return;
     }
     // tizedesjegyek száma az értékhez igazodva (0-2), hogy "12" ne legyen "12,0"
@@ -1370,7 +1390,7 @@ __DASHBOARD_DATA__
     };
     const LIMIT = 6;
     const extra = ch.items.length - LIMIT;
-    body.innerHTML = `<div class="changes-card">
+    body.innerHTML = methodBox + `<div class="changes-card">
       ${ch.items.slice(0, LIMIT).map(row).join('')}
       ${extra > 0 ? `<div id="changes-extra" hidden>${ch.items.slice(LIMIT).map(row).join('')}</div>
         <button type="button" class="change-more" id="changes-more" aria-expanded="false">+ további ${extra} változás</button>` : ''}
@@ -1439,7 +1459,12 @@ __DASHBOARD_DATA__
         <div class="spark-labels"><span>${rh[0].date}</span><span>${rh[rh.length - 1].date}</span></div>
       </div>`;
     }).join('');
-    el.innerHTML = `<div class="real-grid">${cards}</div>`;
+    // a sorozaton belüli módszertani törések: az ugrás ott nem piaci elmozdulás
+    const breaks = (data.method_changes || []).filter(m => m.date > rh[0].date && m.date <= rh[rh.length - 1].date);
+    const breakNote = breaks.length
+      ? `<div class="collecting-note" style="margin-top:12px"><b>Módszertani törés a sorozatban:</b> ${breaks.map(m => `${m.date}: ${m.text}`).join(' ')}</div>`
+      : '';
+    el.innerHTML = `<div class="real-grid">${cards}</div>${breakNote}`;
   }
   renderRunHistory();
 

@@ -44,8 +44,13 @@ segment's per-factor `sensitivity` coefficient (-1..+1), summed and weighted.
   for `oil_price`, `financing_cost` and `consumer_sentiment` (alap = 0, "no change"): in a
   walk-forward test every k in 0..1 predicted the next 12 months worse than k=0 (last 10 years,
   MAE trend / zero: sentiment 13.5 / 8.0, base rate 3.1 / 2.0, fuel 15.3 / 10.3). The note still
-  states the observed change. `charging_infra` and `purchasing_power` keep the full trend
-  (persistence was defensible there). The dashboard methodology text names the three
+  states the observed change. `purchasing_power` keeps the full trend (k=1 beat k=0 out of
+  sample: real income MAE 3.1 vs 3.8, n=29). `charging_infra` keeping k=1 is a DELIBERATE,
+  weakly supported exception: on the same walk-forward test the result depends on the start
+  (MAE k=1 / k=0.5 / k=0 from 2021: 39.9 / 23.2 / 30.3; from 2022: 32.5 / 21.4 / 16.4; from
+  2023: 16.1 / 16.3 / 20.8, n=10–18). The early small-base growth is a different regime, and
+  since 2023 k=1 is marginally best. Re-measure after new EAFO exports; switch to 0.5 or 0 if
+  the post-2023 advantage disappears. The dashboard methodology text names the three
   zero-alap factors — update it if this changes. `oil_price` in particular is calibrated from the LIVE
   `data/uzemanyagar_elo.json` (see below) so it never goes stale.
 - **Manual-source factors** (`battery_cost`, `ev_tariffs`, `co2_regulation`) — also overwritten
@@ -185,7 +190,12 @@ tab-váltás kliensoldali JS-sel, nincs reload):
   újramérni. A forgalomba helyezési kártya 2026-11-05 óta csak 2 negyedévre vetít, 6 negyedéves
   ablakkal: 4 negyedévre egyik változat sem volt megbízható (lineáris 4/6/8, naiv, szezonális naiv
   ± növekedés; MAE 6000–9000, a régi 8 negyedéves sáv a 4. lépésnél 14%-ot fedett), 1–2 lépésre a
-  6 negyedéves trend a legjobb (MAE 3477 / 4203, sáv 50–56%). Csak 18 negyedév adat, 7–10 vágás. A template Előrejelzés-fül `section-note`-ja
+  6 negyedéves trend a legjobbak között van (MAE 3477 / 4203, sáv 50–56%), de az 5 negyedévestől
+  nem különböztethető meg, és a 8 negyedéves elleni előny sem szignifikáns (előjelpróba p ≈
+  0,2–0,3, ugyanazon az adaton választva). Ugyanez a töltőinfra 4 negyedéves ablakára: óvatosabb,
+  nem bizonyítottan jobb. Szezonalitás: a II.→III. negyedévi forgalomba-változás mind a 4 évben
+  negatív volt (−1,7…−7,1%), a lineáris pont a III. negyedévre 2–6%-kal túlbecsülhet (az alsó
+  sáv lefedi). Csak 18 negyedév adat, 7–10 vágás. A template Előrejelzés-fül `section-note`-ja
   NÉVVEL sorolja fel a naiv kártyákat — ha egy kártya típusa változik, azt is frissítsd.
   A lineáris kártyák sávja `oos_band()`-ból jön: a múltban ugyanazzal az ablakkal készült vetítések
   h lépéses, mintán kívüli hibáinak RMS-e (a reziduál-szórás csak `MIN_OOS_ERRORS` alatt marad
@@ -204,6 +214,12 @@ tab-váltás kliensoldali JS-sel, nincs reload):
   napot kiveszi a `run_history`-ból, a Történet fül a mostani futást a végére fűzi.
 - `build_changes()` az előző NAPI futáshoz viszonyít (szegmens-irányok, alap tényezők, valós
   fő mutatók) → `changes` kulcs, irányváltások elöl.
+- `METHOD_CHANGES` (`build_dashboard.py`): a pontszámokat érintő módszertani váltások listája
+  (dátum = első futás az új módszerrel, publikus szöveg). A "Mi változott?" blokk kiírja, ha az
+  előző napi futás óta volt ilyen, a Történet fül pedig jelzi a sorozaton belüli törést. Minden
+  pontszámot elmozdító módszertani változásnál vegyél fel egy bejegyzést.
+- A hajtás- és márkakártya `momentumSentence()`-e kimondja, ha egy nem semleges besorolás a
+  "Valós piaci lendület" tagok nélkül semleges lenne (2026-11-05: hibrid, tömeggyártó, prémium).
 
 ### Dashboard: "Hogyan számol a modell?" blokk
 A 2. szekció tetején egy natív `<details>` blokk magyarázza a szegmens-pontszámokat (magyar piac,

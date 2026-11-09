@@ -1,10 +1,10 @@
-# Validációs riport (2026-11-05)
+# Validációs riport (2026-11-09)
 
-**Összesített állapot: PASS**
+**Összesített állapot: WARN**
 
 A modell előrejelzéseinek automatikus invariáns- és konzisztencia-ellenőrzése (`validate_forecast.py`). CRITICAL hiba esetén a pipeline nem commitol és nem push-ol.
 
-## Fázis: pre — PASS (2026-11-05T10:15:42)
+## Fázis: pre — WARN (2026-11-09T09:04:58)
 
 | | Súlyosság | Ellenőrzés | Leírás |
 |---|---|---|---|
@@ -20,15 +20,15 @@ A modell előrejelzéseinek automatikus invariáns- és konzisztencia-ellenőrz�
 | ✅ | CRITICAL | `engine.momentum_cap` | momentum-tagok: hajtás ≤ ±0.15, márka ≤ ±0.1 |
 | ✅ | CRITICAL | `engine.alap_between` | minden szegmens alap pontszáma a pesszimista és az optimista között van |
 | ✅ | WARN | `sources.manual_stale` | a kézi forrásfájlok (akkuár, EV-vámok, CO2) a STALE_DAYS küszöbön belül frissültek |
-| ✅ | WARN | `sources.top_modellek_stale` | a data/top_modellek.json 0 napos (küszöb: 45 nap) |
-| ✅ | WARN | `backtest.fresh` | a backtest ma futott (generated: 2026-11-05) |
+| ✅ | WARN | `sources.top_modellek_stale` | a data/top_modellek.json 4 napos (küszöb: 45 nap) |
+| ⚠️ | WARN | `backtest.fresh` | a backtest ma futott (generated: 2026-11-05) |
 | ✅ | WARN | `backtest.quality` | a backtest korrelációja nem negatív, a találati arány legalább 50% |
 
-## Fázis: post — PASS (2026-11-05T10:15:42)
+## Fázis: post — PASS (2026-11-09T09:04:58)
 
 | | Súlyosság | Ellenőrzés | Leírás |
 |---|---|---|---|
-| ✅ | WARN | `dashboard.fresh` | a dashboard_data.json ma készült (generated: 2026-11-05) |
+| ✅ | WARN | `dashboard.fresh` | a dashboard_data.json ma készült (generated: 2026-11-09) |
 | ✅ | CRITICAL | `dashboard.segments_count` | 48 szegmens, 48 egyedi kombináció (elvárt: 48) |
 | ✅ | CRITICAL | `dashboard.factors_count` | 8 tényező (elvárt: 8) |
 | ✅ | CRITICAL | `dashboard.coverage` | lefedettség: 5 automata + 3 kézi = 8 tényező |
@@ -42,7 +42,7 @@ A modell előrejelzéseinek automatikus invariáns- és konzisztencia-ellenőrz�
 | ✅ | CRITICAL | `consistency.fuel_headline` | üzemanyagár: a főszám = a sparkline utolsó pontja |
 | ✅ | CRITICAL | `forecast.cards` | 13 trendvetítés-kártya: azonos hossz, alsó ≤ pont ≤ felső |
 | ✅ | CRITICAL | `forecast.share_range` | a részesedés-vetítések 0–100% között maradnak |
-| ✅ | WARN | `history.jumps` | nincs szokatlan ugrás az előző napi futáshoz (2026-10-09) képest |
+| ✅ | WARN | `history.jumps` | nincs szokatlan ugrás az előző napi futáshoz (2026-11-05) képest |
 | ✅ | CRITICAL | `history.snapshot` | a legutóbbi history-snapshot = a mostani dashboard összesítői |
 | ✅ | WARN | `template.tofixed` | nincs toFixed() látható szövegben (számok csak fmt/fmtPlain/fmtInt-en át) |
 | ✅ | WARN | `template.internal_text` | nincs belső karbantartási szöveg (scriptnév, launchd, Claude) a publikus oldalon |
