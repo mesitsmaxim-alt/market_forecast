@@ -25,7 +25,7 @@ A modell előrejelzéseinek automatikus invariáns- és konzisztencia-ellenőrz�
 | ⚠️ | WARN | `backtest.fresh` | a backtest ma futott (generated: 2026-11-05) |
 | ✅ | WARN | `backtest.quality` | a backtest korrelációja nem negatív, a találati arány legalább 50% |
 
-## Fázis: post — PASS (2026-11-10T10:23:38)
+## Fázis: post — PASS (2026-11-10T10:51:01)
 
 | | Súlyosság | Ellenőrzés | Leírás |
 |---|---|---|---|

@@ -4,7 +4,7 @@
   "stages": {
     "post": {
       "status": "PASS",
-      "run_at": "2026-11-10T10:23:38",
+      "run_at": "2026-11-10T10:51:01",
       "checks": [
         {
           "id": "dashboard.fresh",

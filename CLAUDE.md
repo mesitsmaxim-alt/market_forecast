@@ -235,6 +235,13 @@ tab-váltás kliensoldali JS-sel, nincs reload):
   és szezonális naiv változat sem volt egyértelműen jobb (n = 8–10), ezért nincs bevezetve. Új kártyánál előbb walk-forward teszttel döntsd el,
   melyik illik (`forecast-prediction-tracker` agent).
 
+### Dashboard: arculat ("Útjelző", 2026-11-10)
+- Színek és betűk tokenként a template `:root`-jában (+ a két sötét blokk): `--marking` (sárga
+  felfestés), `--on-accent` (szöveg kék alapon), `--f-display` (Barlow Condensed: címek, nagy
+  számok), `--f-body` (Barlow), `--f-data` (IBM Plex Mono: táblázatos számok). Új stílusnál ezeket
+  használd, ne literál színt vagy betűnevet. A komponens-felülírások az „arculat” blokkban vannak,
+  a mobil `@media` ELŐTT (hogy a mobil szabályok nyerjenek).
+
 ### Dashboard: forgatókönyv-váltó, hőtérkép, "Mi változott?"
 - `build_engine_summary()` a `segments` kulcson mind a 48 szegmenst átadja mindhárom
   forgatókönyvre (`scores`/`dirs`); az Áttekintés forgatókönyv-váltója, a hőtérkép és a

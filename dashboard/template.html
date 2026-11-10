@@ -1,26 +1,34 @@
 <title>Autópiaci Előrejelző</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+  /* Arculat: „Útjelző” — a közúti jelzésrendszerből: kondenzált táblafelirat a címekhez,
+     táblakék kiemelés, sárga felfestés-szaggatás elválasztóként (az egyetlen merész elem).
+     Elrendezés: szekciók egymás alatt, lapos, árnyék nélküli táblaszerű kártyák. */
   :root{
-    --bg:#f5f6f4;
+    --bg:#f1f3f5;
     --surface:#ffffff;
-    --surface-2:#eef1f4;
-    --surface-tint:#eef4fb;
-    --text-primary:#0b0f14;
-    --text-secondary:#4d5560;
-    --text-muted:#838a93;
-    --border:rgba(11,15,20,0.10);
-    --border-strong:rgba(11,15,20,0.16);
-    --accent:#1c5cab;
-    --accent-soft:#cde2fb;
-    --accent-ink:#0d366b;
-    --pos:#2a78d6;
-    --pos-dark:#3987e5;
-    --neg:#e34948;
-    --neg-dark:#e66767;
-    --neutral-mid:#c3c2b7;
+    --surface-2:#e7ebef;
+    --surface-tint:#e4edf8;
+    --text-primary:#111923;
+    --text-secondary:#46525f;
+    --text-muted:#76828f;
+    --border:rgba(17,25,35,0.10);
+    --border-strong:rgba(17,25,35,0.18);
+    --accent:#0b4ea2;
+    --accent-soft:#cfe0f5;
+    --accent-ink:#082f63;
+    --on-accent:#ffffff;
+    --marking:#e8ad00;
+    --pos:#0b4ea2;
+    --pos-dark:#5b9cf0;
+    --neg:#cf3f2a;
+    --neg-dark:#ef6a55;
+    --neutral-mid:#c3c6c0;
+    --f-display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+    --f-body:"Barlow","Segoe UI",system-ui,-apple-system,sans-serif;
+    --f-data:"IBM Plex Mono",ui-monospace,SFMono-Regular,monospace;
     --good:#0ca30c;
     --warning:#fab219;
     --serious:#ec835a;
@@ -30,61 +38,65 @@
     --cat-3:#1baf7a; /* hibrid */
     --cat-4:#eda100; /* elektromos */
     --cat-5:#e87ba4; /* egyeb */
-    --shadow: 0 1px 2px rgba(11,15,20,0.04), 0 6px 20px -8px rgba(11,15,20,0.12);
+    --shadow:none;
     color-scheme: light;
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
-      --bg:#0d0d0d;
-      --surface:#17191c;
-      --surface-2:#1e2126;
-      --surface-tint:#152233;
-      --text-primary:#f5f6f7;
-      --text-secondary:#c3c2b7;
-      --text-muted:#8b9099;
-      --border:rgba(255,255,255,0.09);
+      --bg:#121417;
+      --surface:#1a1d21;
+      --surface-2:#23272c;
+      --surface-tint:#16253a;
+      --text-primary:#eef1f4;
+      --text-secondary:#b4bcc5;
+      --text-muted:#838c96;
+      --border:rgba(255,255,255,0.08);
       --border-strong:rgba(255,255,255,0.16);
-      --accent:#5b9bdc;
-      --accent-soft:#1c3352;
-      --accent-ink:#cde2fb;
-      --pos:#3987e5;
-      --neg:#e66767;
-      --neutral-mid:#383835;
-      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 10px 30px -10px rgba(0,0,0,0.55);
+      --accent:#6aa6f2;
+      --accent-soft:#1a3355;
+      --accent-ink:#d4e5fb;
+      --pos:#5b9cf0;
+      --neg:#ef6a55;
+      --neutral-mid:#3a3e43;
+      --shadow:none;
+      --on-accent:#0c1420;
+      --marking:#f2c230;
       color-scheme: dark;
     }
   }
   :root[data-theme="dark"]{
-    --bg:#0d0d0d;
-    --surface:#17191c;
-    --surface-2:#1e2126;
-    --surface-tint:#152233;
-    --text-primary:#f5f6f7;
-    --text-secondary:#c3c2b7;
-    --text-muted:#8b9099;
-    --border:rgba(255,255,255,0.09);
+    --bg:#121417;
+    --surface:#1a1d21;
+    --surface-2:#23272c;
+    --surface-tint:#16253a;
+    --text-primary:#eef1f4;
+    --text-secondary:#b4bcc5;
+    --text-muted:#838c96;
+    --border:rgba(255,255,255,0.08);
     --border-strong:rgba(255,255,255,0.16);
-    --accent:#5b9bdc;
-    --accent-soft:#1c3352;
-    --accent-ink:#cde2fb;
-    --pos:#3987e5;
-    --neg:#e66767;
-    --neutral-mid:#383835;
-    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 10px 30px -10px rgba(0,0,0,0.55);
-    color-scheme: dark;
+    --accent:#6aa6f2;
+    --accent-soft:#1a3355;
+    --accent-ink:#d4e5fb;
+    --pos:#5b9cf0;
+    --neg:#ef6a55;
+    --neutral-mid:#3a3e43;
+    --shadow:none;
+    --on-accent:#0c1420;
+      --marking:#f2c230;
+      color-scheme: dark;
   }
 
   *{box-sizing:border-box;}
   body{
     background:var(--bg);
     color:var(--text-primary);
-    font-family:"Public Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+    font-family:var(--f-body);
     padding-inline:20px;
     padding-block:28px 60px;
     max-width:1180px;
     margin-inline:auto;
   }
-  .mono{ font-family:"JetBrains Mono", ui-monospace, SFMono-Regular, monospace; }
+  .mono{ font-family:var(--f-data); }
   .tnum{ font-variant-numeric: tabular-nums; }
 
   a{ color:var(--accent); }
@@ -95,7 +107,7 @@
     padding-bottom:20px; margin-bottom:28px; border-bottom:1px solid var(--border);
   }
   .eyebrow{
-    font-family:"JetBrains Mono",monospace; font-size:12px; letter-spacing:.08em; text-transform:uppercase;
+    font-family:var(--f-data); font-size:12px; letter-spacing:.08em; text-transform:uppercase;
     color:var(--accent); font-weight:600; margin-bottom:6px; display:block;
   }
   h1{ font-size:clamp(24px,4vw,32px); font-weight:800; margin:0 0 6px; text-wrap:balance; letter-spacing:-0.01em; }
@@ -132,13 +144,13 @@
 
   /* ---------- forecast ---------- */
   .forecast-note{ font-size:12px; color:var(--text-muted); background:var(--surface-2); border-radius:8px; padding:6px 9px; line-height:1.4; }
-  .forecast-badge{ font-family:"JetBrains Mono",monospace; font-size:12px; font-weight:600; color:var(--accent); }
+  .forecast-badge{ font-family:var(--f-data); font-size:12px; font-weight:600; color:var(--accent); }
   .scenario-fan{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px; }
   .fan-card{ background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:18px 20px; box-shadow:var(--shadow); }
   .fan-card h3{ font-size:13px; font-weight:700; margin:0 0 14px; }
   .fan-row{ display:grid; grid-template-columns: 90px 1fr 70px; gap:10px; align-items:center; font-size:12px; padding:5px 0; }
   .fan-row .fan-lbl{ color:var(--text-secondary); }
-  .fan-row .fan-val{ font-family:"JetBrains Mono",monospace; text-align:right; font-weight:600; }
+  .fan-row .fan-val{ font-family:var(--f-data); text-align:right; font-weight:600; }
   .fan-track{ position:relative; height:6px; background:var(--surface-2); border-radius:3px; }
   .fan-dot{ position:absolute; top:50%; width:9px; height:9px; border-radius:50%; transform:translate(-50%,-50%); border:2px solid var(--surface); }
 
@@ -154,7 +166,7 @@
   .news-item:last-child{ border-bottom:none; }
   .news-item a{ color:var(--text-primary); text-decoration:none; line-height:1.4; }
   .news-item a:hover{ color:var(--accent); text-decoration:underline; }
-  .news-item .news-date{ font-family:"JetBrains Mono",monospace; font-size:11.5px; color:var(--text-muted); white-space:nowrap; flex:none; }
+  .news-item .news-date{ font-family:var(--f-data); font-size:11.5px; color:var(--text-muted); white-space:nowrap; flex:none; }
 
   /* ---------- top models ---------- */
   .model-meta{ font-size:12.5px; color:var(--text-muted); margin-bottom:16px; line-height:1.5; }
@@ -163,24 +175,24 @@
   .model-row:last-child{ border-bottom:none; }
   .model-row.head{ background:var(--surface-2); }
   .model-row.head span{ font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted); font-weight:600; }
-  .model-rank{ font-family:"JetBrains Mono",monospace; font-weight:700; color:var(--text-muted); }
+  .model-rank{ font-family:var(--f-data); font-weight:700; color:var(--text-muted); }
   .model-name{ font-size:13.5px; font-weight:600; }
   .model-track{ position:relative; height:8px; background:var(--surface-2); border-radius:4px; overflow:hidden; }
   .model-fill{ position:absolute; top:0; bottom:0; left:0; background:var(--accent); border-radius:4px; }
-  .model-units{ font-family:"JetBrains Mono",monospace; font-size:12.5px; text-align:right; font-weight:600; }
+  .model-units{ font-family:var(--f-data); font-size:12.5px; text-align:right; font-weight:600; }
   .model-name .badge{ margin-left:8px; vertical-align:1px; }
   .model-rank{ display:flex; flex-direction:column; gap:2px; }
-  .rank-chg{ font-family:"JetBrains Mono",monospace; font-size:10.5px; font-weight:600; color:var(--text-secondary); }
+  .rank-chg{ font-family:var(--f-data); font-size:10.5px; font-weight:600; color:var(--text-secondary); }
   .rank-chg.flat{ color:var(--text-muted); }
   .model-sub{ display:block; font-size:11.5px; font-weight:500; color:var(--text-muted); margin-top:2px; }
   .model-units .u-sub{ display:block; white-space:nowrap; font-size:11px; font-weight:500; color:var(--text-muted); margin-top:2px; }
   .tier-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; margin-bottom:16px; }
   .tier-card{ background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:14px 16px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:6px; }
   .tier-card .t-name{ font-size:12.5px; font-weight:700; }
-  .tier-card .t-fig{ font-family:"JetBrains Mono",monospace; font-size:20px; font-weight:700; }
+  .tier-card .t-fig{ font-family:var(--f-data); font-size:20px; font-weight:700; }
   .tier-card .t-fig small{ font-size:12px; color:var(--text-muted); font-weight:600; margin-left:4px; }
   .tier-card .t-line{ font-size:11.5px; color:var(--text-muted); line-height:1.4; }
-  .tier-card .t-line b{ color:var(--text-secondary); font-family:"JetBrains Mono",monospace; }
+  .tier-card .t-line b{ color:var(--text-secondary); font-family:var(--f-data); }
   .model-controls{ display:flex; flex-wrap:wrap; align-items:center; gap:8px 16px; margin-bottom:12px; font-size:12.5px; color:var(--text-secondary); }
   .model-controls label{ display:inline-flex; align-items:center; gap:7px; cursor:pointer; font-weight:600; color:var(--text-primary); }
   .model-controls input{ width:16px; height:16px; accent-color:var(--accent); margin:0; }
@@ -205,7 +217,7 @@
     padding:22px 24px 18px; display:grid; gap:16px;
   }
   .summary-eyebrow{
-    font-family:"JetBrains Mono",monospace; font-size:11.5px; letter-spacing:.08em; text-transform:uppercase;
+    font-family:var(--f-data); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase;
     color:var(--accent); font-weight:600;
   }
   .summary-head{ font-size:clamp(19px,2.4vw,24px); font-weight:700; line-height:1.3; margin:-8px 0 0; max-width:46ch; text-wrap:balance; letter-spacing:-0.005em; }
@@ -213,7 +225,7 @@
   .summary-grid{ display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:10px; }
   .sum-card{ background:var(--surface-2); border-radius:12px; padding:14px 14px 12px; display:grid; gap:8px; align-content:start; min-width:0; }
   .sum-card .s-lbl{ font-size:13px; font-weight:600; color:var(--text-secondary); }
-  .sum-card .s-fig{ font-family:"JetBrains Mono",monospace; font-size:28px; font-weight:700; line-height:1; }
+  .sum-card .s-fig{ font-family:var(--f-data); font-size:28px; font-weight:700; line-height:1; }
   .sum-card .s-fig small{ font-size:13px; font-weight:600; color:var(--text-muted); margin-left:4px; }
   .sum-card .s-fig.neg{ color:var(--neg); }
   .s-range{ position:relative; height:14px; }
@@ -228,7 +240,7 @@
   /* ---------- coverage tiles (a forrásjegyzék fölött, kompakt) ---------- */
   .tiles{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-bottom:14px; }
   .tile{ background:var(--surface-2); border-radius:10px; padding:10px 14px; }
-  .tile .figure{ font-family:"JetBrains Mono",monospace; font-size:18px; font-weight:700; line-height:1.1; margin-bottom:4px; }
+  .tile .figure{ font-family:var(--f-data); font-size:18px; font-weight:700; line-height:1.1; margin-bottom:4px; }
   .tile .figure small{ font-size:12px; font-weight:600; color:var(--text-muted); margin-left:2px; }
   .tile .label{ font-size:12px; color:var(--text-secondary); line-height:1.4; }
 
@@ -256,7 +268,7 @@
   .range-dot.p{ background:var(--neg); }
   .range-dot.o{ background:var(--pos); }
   .range-dot.a{ background:var(--text-primary); width:11px; height:11px; }
-  .factor-vals{ font-family:"JetBrains Mono",monospace; font-size:12px; text-align:right; color:var(--text-secondary); }
+  .factor-vals{ font-family:var(--f-data); font-size:12px; text-align:right; color:var(--text-secondary); }
   .factor-vals b{ color:var(--text-primary); }
 
   /* ---------- diverging bars ---------- */
@@ -267,7 +279,7 @@
   .bar-row:last-child{ margin-bottom:0; }
   .bar-row .rowtop{ display:flex; justify-content:space-between; align-items:baseline; gap:8px; font-size:12.5px; }
   .bar-row .rowtop .lbl{ color:var(--text-secondary); font-weight:500; }
-  .bar-row .rowtop .val{ font-family:"JetBrains Mono",monospace; font-weight:600; }
+  .bar-row .rowtop .val{ font-family:var(--f-data); font-weight:600; }
   .bar-track{ position:relative; height:8px; background:var(--surface-2); border-radius:4px; overflow:hidden; }
   .bar-fill{ position:absolute; top:0; bottom:0; border-radius:4px; }
   .bar-fill.pos{ background:var(--pos); left:50%; }
@@ -291,7 +303,7 @@
   :root[data-theme="dark"] .dirpill.serious{ color:#ffb08c; }
 
   .bar-row .mw{ font-size:11.5px; color:var(--text-muted); }
-  .bar-row .mw b{ font-family:"JetBrains Mono",monospace; font-weight:600; color:var(--text-secondary); }
+  .bar-row .mw b{ font-family:var(--f-data); font-weight:600; color:var(--text-secondary); }
   .bar-card .mw-note{ font-size:11.5px; color:var(--text-muted); margin:-6px 0 12px; line-height:1.45; }
   .bar-concl{
     margin:14px 0 0; padding-top:12px; border-top:1px solid var(--border);
@@ -332,7 +344,7 @@
   .m-table td{ padding:7px 8px 7px 0; border-bottom:1px solid var(--border); vertical-align:top; }
   .m-table tr:last-child td{ border-bottom:none; }
   .m-table td.f{ color:var(--text-primary); font-weight:600; }
-  .m-table td.v{ font-family:"JetBrains Mono",monospace; white-space:nowrap; text-align:right; }
+  .m-table td.v{ font-family:var(--f-data); white-space:nowrap; text-align:right; }
   .badge.scope-hu{ background:color-mix(in srgb, var(--accent) 12%, transparent); color:var(--accent); }
   .badge.scope-eu{ background:var(--surface-2); color:var(--text-secondary); border:1px solid var(--border); }
 
@@ -347,7 +359,7 @@
   .heat .rh{ font-size:11.5px; color:var(--text-secondary); font-weight:600; display:flex; align-items:center; padding-right:6px; line-height:1.25; }
   .heat-cell{
     height:40px; border-radius:4px; display:flex; align-items:center; justify-content:center;
-    font-family:"JetBrains Mono",monospace; font-size:12px; font-weight:600; color:var(--text-primary); cursor:default;
+    font-family:var(--f-data); font-size:12px; font-weight:600; color:var(--text-primary); cursor:default;
   }
   .heat-legend{ display:flex; align-items:center; gap:10px; margin-top:14px; font-size:11px; color:var(--text-muted); flex-wrap:wrap; }
   .heat-legend .ramp{ width:180px; height:10px; border-radius:3px; }
@@ -367,7 +379,7 @@
   .seg-detail .sd-sub{ font-size:12px; color:var(--text-muted); margin:0 0 12px; }
   .sd-row{ display:grid; grid-template-columns: minmax(150px, 1.2fr) 2fr 80px; gap:10px; align-items:center; padding:4px 0; font-size:12.5px; }
   .sd-row .sd-lbl{ color:var(--text-secondary); line-height:1.3; }
-  .sd-row .sd-val{ font-family:"JetBrains Mono",monospace; text-align:right; font-weight:600; color:var(--text-primary); }
+  .sd-row .sd-val{ font-family:var(--f-data); text-align:right; font-weight:600; color:var(--text-primary); }
   .sd-track{ position:relative; height:10px; background:var(--surface-2); border-radius:4px; }
   .sd-zero{ position:absolute; left:50%; top:-3px; bottom:-3px; width:1px; background:var(--border-strong); }
   .sd-fill{ position:absolute; top:0; bottom:0; border-radius:4px; }
@@ -377,7 +389,7 @@
 
   /* ---------- új autók megoszlása (évenkénti 100%-os sávok) ---------- */
   .newmix{ display:grid; grid-template-columns: 56px 1fr; gap:6px 12px; align-items:center; margin-top:4px; }
-  .newmix .yr{ font-family:"JetBrains Mono",monospace; font-size:12px; color:var(--text-secondary); text-align:right; }
+  .newmix .yr{ font-family:var(--f-data); font-size:12px; color:var(--text-secondary); text-align:right; }
   .newmix .yr.stock{ font-family:inherit; font-size:11px; line-height:1.2; }
   .mixbar{ display:flex; height:22px; gap:2px; border-radius:5px; overflow:hidden; }
   .mixbar > div{ height:100%; cursor:default; }
@@ -392,7 +404,7 @@
   .mover-row.head span{ font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-muted); font-weight:600; }
   .mover-row .mv-name{ font-weight:600; color:var(--text-primary); }
   .mover-row .mv-sub{ display:block; font-size:11px; color:var(--text-muted); font-weight:500; }
-  .mover-row .mv-num{ font-family:"JetBrains Mono",monospace; text-align:right; color:var(--text-primary); font-weight:600; }
+  .mover-row .mv-num{ font-family:var(--f-data); text-align:right; color:var(--text-primary); font-weight:600; }
   .mover-row .mv-num.muted{ color:var(--text-secondary); font-weight:500; }
 
   /* ---------- "mi változott" ---------- */
@@ -401,7 +413,7 @@
   .change-row:last-child{ border-bottom:none; }
   .change-group{ font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-muted); font-weight:600; }
   .change-label{ color:var(--text-primary); font-weight:500; line-height:1.35; }
-  .change-vals{ font-family:"JetBrains Mono",monospace; font-size:12.5px; color:var(--text-secondary); white-space:nowrap; text-align:right; }
+  .change-vals{ font-family:var(--f-data); font-size:12.5px; color:var(--text-secondary); white-space:nowrap; text-align:right; }
   .change-vals b{ color:var(--text-primary); }
   .change-dirs{ grid-column: 2 / -1; display:flex; align-items:center; gap:6px; font-size:12px; color:var(--text-muted); }
   .change-more{ appearance:none; border:none; background:none; cursor:pointer; font-family:inherit; font-size:12.5px; font-weight:600; color:var(--accent); padding:10px 18px; }
@@ -416,7 +428,7 @@
   .wl-item{ display:flex; justify-content:space-between; gap:12px; align-items:baseline; padding:8px 0; border-bottom:1px solid var(--border); font-size:12.5px; }
   .wl-item:last-child{ border-bottom:none; }
   .wl-item .name{ color:var(--text-secondary); line-height:1.35; }
-  .wl-item .sc{ font-family:"JetBrains Mono",monospace; font-weight:700; white-space:nowrap; }
+  .wl-item .sc{ font-family:var(--f-data); font-weight:700; white-space:nowrap; }
 
   /* ---------- real data cards ---------- */
   .real-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:14px; }
@@ -424,13 +436,13 @@
   .real-card .src{ font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted); font-weight:600; }
   .real-card .desc{ font-size:12.5px; color:var(--text-secondary); line-height:1.4; margin-top:-4px; }
   .real-card .headline{ display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; }
-  .real-card .headline .v{ font-family:"JetBrains Mono",monospace; font-size:22px; font-weight:700; }
+  .real-card .headline .v{ font-family:var(--f-data); font-size:22px; font-weight:700; }
   .real-card .headline .u{ font-size:12px; color:var(--text-muted); }
-  .real-card .delta{ font-family:"JetBrains Mono",monospace; font-size:12px; font-weight:600; }
+  .real-card .delta{ font-family:var(--f-data); font-size:12px; font-weight:600; }
   .real-card .delta.up{ color:var(--good); }
   .real-card .delta.down{ color:var(--critical); }
   .real-card .delta.flat{ color:var(--text-muted); }
-  .real-card .delta .delta-what{ font-family:"Public Sans",sans-serif; font-weight:500; color:var(--text-muted); }
+  .real-card .delta .delta-what{ font-family:var(--f-body); font-weight:500; color:var(--text-muted); }
   .real-card .cap{ font-size:11.5px; color:var(--text-muted); line-height:1.4; }
   .spark{ width:100%; height:40px; display:block; }
   .spark-labels{ display:flex; justify-content:space-between; font-size:10px; color:var(--text-muted); margin-top:-4px; }
@@ -444,7 +456,7 @@
   .comp-legend{ display:flex; flex-wrap:wrap; gap:14px 20px; margin-top:14px; }
   .comp-legend .li{ display:flex; align-items:center; gap:7px; font-size:12px; color:var(--text-secondary); }
   .comp-legend .sw{ width:10px; height:10px; border-radius:3px; flex:none; }
-  .comp-legend b{ color:var(--text-primary); font-family:"JetBrains Mono",monospace; }
+  .comp-legend b{ color:var(--text-primary); font-family:var(--f-data); }
   .comp-legend .cagr{ color:var(--text-muted); font-size:11px; }
 
   /* ---------- source table ---------- */
@@ -454,10 +466,42 @@
   table.src-table th{ background:var(--surface-2); font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-muted); font-weight:600; }
   table.src-table tr:last-child td{ border-bottom:none; }
   table.src-table td.name{ font-weight:600; }
-  table.src-table td.mono{ font-family:"JetBrains Mono",monospace; color:var(--text-secondary); }
+  table.src-table td.mono{ font-family:var(--f-data); color:var(--text-secondary); }
 
   footer{ margin-top:48px; padding-top:20px; border-top:1px solid var(--border); font-size:12px; color:var(--text-muted); line-height:1.6; }
   footer p{ margin:0 0 8px; max-width:80ch; }
+
+  /* ---------- arculat: táblafelirat-címek, felfestés-csík, lapos táblák ---------- */
+  body{ font-size:14.5px; }
+  header.top{ border-bottom:none; position:relative; padding-bottom:26px; }
+  header.top::after{
+    content:""; position:absolute; left:0; right:0; bottom:0; height:4px;
+    background:repeating-linear-gradient(90deg, var(--marking) 0 46px, transparent 46px 74px);
+  }
+  .eyebrow{ color:var(--text-muted); letter-spacing:.1em; }
+  h1{ font-family:var(--f-display); font-weight:700; font-size:clamp(34px,5.4vw,52px); letter-spacing:0; line-height:.95; margin-bottom:10px; }
+  .subtitle{ font-size:15.5px; }
+  .status-pill, .theme-toggle{ border-radius:6px; }
+  .status-pill{ background:var(--surface); }
+  .tabnav{ gap:4px; border-bottom:none; }
+  .tabbtn{ font-family:var(--f-display); font-size:17px; font-weight:600; letter-spacing:.01em; padding:7px 14px; border-radius:6px; border-bottom:none; margin-bottom:0; }
+  .tabbtn.active{ background:var(--accent); color:var(--on-accent); }
+  .tabbtn:focus-visible, .theme-toggle:focus-visible{ outline:2px solid var(--marking); outline-offset:2px; }
+  h2{ font-family:var(--f-display); font-size:20px; font-weight:700; letter-spacing:.02em; color:var(--text-primary); display:flex; align-items:center; gap:10px; }
+  h2::before{ content:""; width:22px; height:4px; background:var(--marking); flex:none; }
+  .bar-card h3, .heat-card > h3, .wl-card h3, .fan-card h3{ font-family:var(--f-display); font-size:18px; font-weight:600; letter-spacing:.01em; }
+  .summary, .bar-card, .heat-card, .wl-card, .real-card, .factor-table, .changes-card, .fan-card, .tier-card, .collecting-note{ border-radius:8px; }
+  .summary{ border:none; border-top:4px solid var(--accent); }
+  .summary-eyebrow{ color:var(--text-muted); }
+  .summary-head{ font-family:var(--f-display); font-size:clamp(26px,3.4vw,34px); font-weight:700; line-height:1.08; max-width:40ch; letter-spacing:0; }
+  .sum-card{ border-radius:6px; }
+  .sum-card .s-lbl{ font-family:var(--f-display); font-size:17px; font-weight:600; color:var(--text-primary); }
+  .sum-card .s-fig{ font-family:var(--f-display); font-size:46px; letter-spacing:0; }
+  .sum-card .s-fig small{ font-family:var(--f-body); }
+  .s-range .r-band{ background:color-mix(in srgb, var(--accent) 45%, transparent); }
+  .dirpill{ border-radius:4px; font-size:11px; }
+  .tile{ border-radius:6px; }
+  .tile .figure{ font-family:var(--f-display); font-size:24px; }
 
   @media (max-width:640px){
     .factor-row{ grid-template-columns: 1fr; row-gap:8px; }
@@ -496,12 +540,12 @@
 
 <header class="top">
   <div>
-    <span class="eyebrow">Magyar autópiaci előrejelző rendszer</span>
-    <h1>Piaci előrejelző &amp; riportoló dashboard</h1>
-    <p class="subtitle">Tényező-alapú forgatókönyv-modell + valós KSH / MNB / Eurostat adatokkal kalibrált szegmens-elemzés, automatizált havi frissítéssel.</p>
+    <span class="eyebrow">Magyarország · személyautó-piac · havi frissítés</span>
+    <h1>Autópiaci előrejelző</h1>
+    <p class="subtitle">Merre mozdul a hazai autókereslet a következő 12 hónapban — hajtás, márka és évjárat szerint, KSH-, MNB- és Eurostat-adatokra kalibrálva.</p>
   </div>
   <span class="status-pill"><span class="status-dot"></span> <span id="generated-label">Frissítve —</span> · havonta frissül</span>
-  <button class="theme-toggle" id="theme-toggle" type="button">🌓 Téma</button>
+  <button class="theme-toggle" id="theme-toggle" type="button"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 1a6 6 0 0 1 0 12z" fill="currentColor"/></svg> Téma</button>
 </header>
 
 <nav class="tabnav" id="tabnav">
