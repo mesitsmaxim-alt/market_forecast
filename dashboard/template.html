@@ -1008,6 +1008,22 @@ __DASHBOARD_DATA__
     return `${npList(g, noun, true)} besorolása főleg a <b>már megfigyelt piaci lendületből</b> jön (${parts}): a forgatókönyv tényezői önmagukban a semleges tartományban tartanák. `;
   }
 
+  // ha egy nem semleges besorolás egyetlen forgatókönyv-tényezőn múlik (nélküle
+  // semleges lenne), azt kimondjuk. A 2026-11-05-i stressz-teszt szerint a belső
+  // égésű visszaesésének ~2/3-a a kézi becslésű CO2-érzékenységből jön. A lendület
+  // miatti eseteket a momentumSentence() kezeli.
+  function dominantSentence(rows, noun) {
+    const out = [];
+    rows.forEach(r => {
+      const s = r.score * 100, m = momentumPts(r);
+      if (Math.abs(s) < NEUTRAL_PTS || (Math.sign(m) === Math.sign(s) && Math.abs(s - m) < NEUTRAL_PTS)) return;
+      const top = r.drivers.filter(d => !d.label.startsWith('Valós piaci lendület') && Math.sign(d.points) === Math.sign(s))
+        .sort((a, b) => Math.abs(b.points) - Math.abs(a.points))[0];
+      if (top && Math.abs(s - top.points) < NEUTRAL_PTS) out.push({ r, top });
+    });
+    return out.map(({ r, top }) => `${np(r, noun, true)} besorolása nagyrészt egyetlen tényezőn múlik: ${driverName(top.label)} adja a ${fmtPlain(r.score * 100, 1)} pontból ${fmtPlain(top.points, 1)} pontot, nélküle a semleges tartományban lenne. `).join('');
+  }
+
   // a piacsúlyozott kép összefoglalása (márka- és évjárat-kártya)
   function mwSentence(rows, nounPl, noun) {
     const mws = rows.map(r => r.mw).filter(v => v != null);
@@ -1041,6 +1057,7 @@ __DASHBOARD_DATA__
       s += `Minden hajtás pozitív, a különbség a mértékben van. `;
     }
     s += momentumSentence(rows, 'hajtás');
+    s += dominantSentence(rows, 'hajtás');
     const topPos = top.drivers.filter(d => d.points > 0).slice(0, 2);
     if (topPos.length) s += `${ucFirst(np(top, 'hajtás'))} legnagyobb támasza ${listDrivers(topPos)}. `;
     const botNeg = bot.drivers.filter(d => d.points < 0).sort((a, b) => a.points - b.points).slice(0, 2);
@@ -1058,6 +1075,7 @@ __DASHBOARD_DATA__
     }
     if (allNeutral(rows)) return s;
     s += momentumSentence(rows, 'márkakategória');
+    s += dominantSentence(rows, 'márkakategória');
     const diff = differentiators(top, bot);
     if (diff.length) s += `A legjobb és a leggyengébb kategória közti különbséget főleg ${diff.map(d => `${driverName(d.label)} (${fmtPlain(d.points, 1)} pont)`).join(' és ')} adja.`;
     return s;

@@ -227,7 +227,12 @@ tab-váltás kliensoldali JS-sel, nincs reload):
   h lépéses, mintán kívüli hibáinak RMS-e (a reziduál-szórás csak `MIN_OOS_ERRORS` alatt marad
   fallbacknek). A reziduál-sáv 0–18%-ot fedett le, az új sáv töltőinfrán 78%, benzinnél 54–64%;
   a gyorsuló hibrid/elektromos részesedésnél így is csak 12–27%, mert a lineáris trend ott tartósan
-  alulbecsül (a fül szövege ezt kimondja). Új kártyánál előbb walk-forward teszttel döntsd el,
+  alulbecsül (a fül szövege ezt kimondja). A hajtás-részesedés kártyák 2026-11-10 óta 4 éves
+  ablakkal futnak (6 helyett): walk-forward 2014-től mind a négy hajtásnál kisebb a hiba (hibrid
+  h=1/2 MAE 0,23/0,51 vs 0,40/0,77 pp). A logit- (S-görbe) trend csak az elektromosnál volt jobb, a
+  hibridnél rosszabb, ezért nincs bevezetve; a relatív hibából számolt sáv sem segített (elektromosnál
+  ±100% széles). Szezonalitás a forgalomba-kártyán (2026-11-10): szezonálisan igazított lineáris
+  és szezonális naiv változat sem volt egyértelműen jobb (n = 8–10), ezért nincs bevezetve. Új kártyánál előbb walk-forward teszttel döntsd el,
   melyik illik (`forecast-prediction-tracker` agent).
 
 ### Dashboard: forgatókönyv-váltó, hőtérkép, "Mi változott?"
@@ -345,7 +350,8 @@ mindkét számot mutatja, a "Mi változott?" és a futástörténet az egyszerű
   - drivers sum × year weight = score (engine), and Σ drivers points = score×100
     (dashboard, tol. 0.1);
   - `alap` lies BETWEEN pesszimista and optimista, and factor bands are symmetric and
-    match the note's „Forgatókönyv-sáv: ±X”;
+    match the note's „Forgatókönyv-sáv: ±X”; no factor has a zero-width band (an alap = 0
+    factor would otherwise hide a broken band calculation);
   - `dir == classify(score)`, momentum caps, sensitivities in −1..+1, market weights
     sum to 1;
   - dashboard factors = config/factors.json, methodology.backtest = backtest.json,
@@ -356,7 +362,10 @@ mindkét számot mutatja, a "Mi változott?" és a futástörténet az egyszerű
   scores are lowest on optimista and `ev_tariffs` runs 9 / −1 / −11. Never add that check.
 - **WARN checks:**
   - staleness (STALE_DAYS, top_modellek > 45 days, generated ≠ today);
-  - day-over-day jumps (summary > 0.3, factor alap > 2× its band);
+  - day-over-day jumps (summary > 0.3, factor alap > 2× its band) — passes if the build
+    has a `METHOD_CHANGES` note for the period, otherwise asks for one;
+  - `sources.eafo_stale`: a quarter ended ≥ 30 days ago (`EAFO_LAG_DAYS`) and is missing from
+    `toltoinfra.json` → the EAFO CSVs need a manual re-export;
   - backtest hit rate < 50% or correlation < 0;
   - `toFixed(` or internal text (.py, launchd, Claude) in visible template lines.
 - **Subagents** (`.claude/agents/forecast-*.md`, sonnet, read-only, each returns
@@ -372,7 +381,9 @@ mindkét számot mutatja, a "Mi változott?" és a futástörténet az egyszerű
   - **C. Feltételezések** (are they true and robust?): `source-verifier` (web-checks manual
     inputs), `assumption-stress-tester` (in-memory monkeypatch of `engine.load_config` and
     constants: tornado, sign flips, random perturbations with seed 42, momentum weights,
-    leave-one-factor-out), `plausibility-reviewer` (economic sense vs. real trends).
+    leave-one-factor-out; ALSO perturb pesszimista/optimista, see
+    `reports/stressz_teszt_forgatokonyvek_2026-11-10.md`), `plausibility-reviewer`
+    (economic sense vs. real trends).
 - **The `/validate-forecast` skill** (`.claude/skills/validate-forecast/SKILL.md`) is the
   orchestrator, because subagents cannot spawn subagents:
   - it runs the script, launches the 7 subagents in parallel (or one area:

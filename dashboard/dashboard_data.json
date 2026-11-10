@@ -8813,84 +8813,84 @@
       },
       "fuel_share_forecast": {
         "benzin": {
-          "horizon_label": "2 év múlva (becsült, az utolsó 6 év trendje alapján)",
+          "horizon_label": "2 év múlva (becsült, az utolsó 4 év trendje alapján)",
           "points": [
-            58.043,
-            56.805
+            57.81,
+            56.462
           ],
           "lower": [
-            57.395,
-            55.698
+            57.39,
+            55.618
           ],
           "upper": [
-            58.691,
-            57.912
+            58.23,
+            57.306
           ],
-          "slope": -1.2386
+          "slope": -1.348
         },
         "dizel": {
-          "horizon_label": "2 év múlva (becsült, az utolsó 6 év trendje alapján)",
+          "horizon_label": "2 év múlva (becsült, az utolsó 4 év trendje alapján)",
           "points": [
-            31.187,
-            31.094
+            31.085,
+            30.944
           ],
           "lower": [
-            30.31,
-            29.525
+            30.574,
+            29.855
           ],
           "upper": [
-            32.064,
-            32.663
+            31.596,
+            32.033
           ],
-          "slope": -0.0931
+          "slope": -0.141
         },
         "hibrid": {
-          "horizon_label": "2 év múlva (becsült, az utolsó 6 év trendje alapján)",
+          "horizon_label": "2 év múlva (becsült, az utolsó 4 év trendje alapján)",
           "points": [
-            7.969,
-            8.988
+            8.13,
+            9.225
           ],
           "lower": [
-            7.57,
-            8.254
+            7.904,
+            8.751
           ],
           "upper": [
-            8.368,
-            9.722
+            8.356,
+            9.699
           ],
-          "slope": 1.0189
+          "slope": 1.095
         },
         "elektromos": {
-          "horizon_label": "2 év múlva (becsült, az utolsó 6 év trendje alapján)",
+          "horizon_label": "2 év múlva (becsült, az utolsó 4 év trendje alapján)",
           "points": [
-            2.128,
-            2.457
-          ],
-          "lower": [
-            1.968,
-            2.19
-          ],
-          "upper": [
-            2.288,
+            2.31,
             2.724
           ],
-          "slope": 0.3294
-        },
-        "egyeb": {
-          "horizon_label": "2 év múlva (becsült, az utolsó 6 év trendje alapján)",
-          "points": [
-            0.667,
-            0.648
-          ],
           "lower": [
-            0.504,
-            0.363
+            2.211,
+            2.538
           ],
           "upper": [
-            0.83,
-            0.933
+            2.409,
+            2.91
           ],
-          "slope": -0.0189
+          "slope": 0.414
+        },
+        "egyeb": {
+          "horizon_label": "2 év múlva (becsült, az utolsó 4 év trendje alapján)",
+          "points": [
+            0.665,
+            0.645
+          ],
+          "lower": [
+            0.56,
+            0.433
+          ],
+          "upper": [
+            0.77,
+            0.857
+          ],
+          "slope": -0.02
         }
       }
     },

@@ -405,11 +405,14 @@ def build_real_snapshot() -> dict:
             k: [round(v[i] / total[i] * 100, 2) for i in range(len(total))]
             for k, v in fuel.items()
         },
+        # 4 éves ablak (2026-11-10 walk-forward, 2014-től, h=1/2 MAE pp): mind a négy
+        # hajtásnál jobb a 6 évesnél (hibrid 0,23/0,51 vs 0,40/0,77; dízel 0,47/1,04 vs
+        # 0,88/1,57). Logit-trend csak az elektromosnál nyert, ezért nem azt használjuk.
         "fuel_share_forecast": {
             k: forecast_card(
                 [round(v[i] / total[i] * 100, 2) for i in range(len(total))],
-                steps=2, horizon_label="2 év múlva (becsült, az utolsó 6 év trendje alapján)",
-                window=6,
+                steps=2, horizon_label="2 év múlva (becsült, az utolsó 4 év trendje alapján)",
+                window=4,
             )
             for k, v in fuel.items()
         },

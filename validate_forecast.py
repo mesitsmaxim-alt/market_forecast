@@ -67,6 +67,8 @@ DRIVER_SUM_TOL_PTS = 0.1  # a drivers pontjai 2 tizedesre kerekítettek
 BAND_TOL = 0.15  # a tényező-sávok 0,1-re kerekítettek
 WEIGHT_SUM_TOL = 0.002
 TOP_MODELLEK_STALE_DAYS = 45  # ugyanaz, mint a dashboard figyelmeztetése
+# az EAFO-adat kézi export: egy lezárt negyedév ennyi nap után már letölthető
+EAFO_LAG_DAYS = 30
 JUMP_SCORE = 0.3  # összesítő pontszám napi változása, ami fölött WARN
 JUMP_BAND_MULT = 2.0  # tényező alap-értékének változása a sávja hányszorosáig normális
 
@@ -121,6 +123,10 @@ def check_factors(c: Checks):
         if not between(a, p, o):
             bad_order.append(f"{key}: pesszimista={p}, alap={a}, optimista={o}")
         # a sáv szimmetrikus az alap körül; ha a note megnevezi, annak kell lennie
+        # nulla szélességű sáv: a pesszimista és az optimista forgatókönyv azonos lenne
+        # (pl. elrontott sávszámítás, amit az alap = 0 tényezők könnyen elrejtenek)
+        if abs(o - p) <= BAND_TOL:
+            bad_band.append(f"{key}: nulla szélességű sáv ({p} / {a} / {o})")
         if abs(abs(o - a) - abs(a - p)) > BAND_TOL:
             bad_band.append(f"{key}: aszimmetrikus sáv ({p} / {a} / {o})")
         m = re.search(r"Forgatókönyv-sáv: ±([\d.]+)", f.get("note", ""))
@@ -132,7 +138,7 @@ def check_factors(c: Checks):
     c.add("factors.alap_between", CRITICAL, not bad_order,
           "a tényezők alap értéke a pesszimista és az optimista között van", bad_order)
     c.add("factors.band", CRITICAL, not bad_band,
-          "a tényező-sávok szimmetrikusak, és egyeznek a note-ban leírttal", bad_band)
+          "a tényező-sávok nem nullák, szimmetrikusak, és egyeznek a note-ban leírttal", bad_band)
 
 
 def check_segment_config(c: Checks):
@@ -206,6 +212,19 @@ def check_staleness(c: Checks):
             msgs.append(w)
     c.add("sources.manual_stale", WARN, not msgs,
           "a kézi forrásfájlok (akkuár, EV-vámok, CO2) a STALE_DAYS küszöbön belül frissültek", msgs)
+
+    # EAFO (töltőinfra): van-e lezárt, már letölthető negyedév, ami hiányzik az exportból
+    path = DATA_DIR / "toltoinfra.json"
+    if path.exists():
+        last = load_json(path)["quarterly_counts"]["quarters"][-1]  # "2026 Q2"
+        y, q = int(last[:4]), int(last[-1])
+        ny, nq = (y + 1, 1) if q == 4 else (y, q + 1)
+        next_end = dt.date(ny + (nq == 4), 1 if nq == 4 else 3 * nq + 1, 1) - dt.timedelta(days=1)
+        due = (dt.date.today() - next_end).days >= EAFO_LAG_DAYS
+        c.add("sources.eafo_stale", WARN, not due,
+              f"a töltőinfra-adat utolsó negyedéve {last}"
+              + (f"; a {ny} Q{nq} {next_end} óta lezárt — töltsd le újra az EAFO CSV-ket "
+                 f"(data/raw_eafo/, majd import_eafo_charging.py)" if due else ", nincs letölthető újabb"))
 
     path = DATA_DIR / "top_modellek.json"
     if path.exists():
@@ -391,8 +410,15 @@ def check_dashboard(c: Checks):
             band = abs(f["optimista"] - f["pesszimista"]) / 2
             if old is not None and band > 0 and abs(f["alap"] - old) > JUMP_BAND_MULT * band:
                 jumps.append(f"tényező {f['key']}: {old} → {f['alap']} (sáv ±{band:.1f})")
-        c.add("history.jumps", WARN, not jumps,
-              f"nincs szokatlan ugrás az előző napi futáshoz ({prev.get('date')}) képest", jumps)
+        # ugrásnál ki kell derülnie, hogy módszertani-e: ha az, a METHOD_CHANGES-ben
+        # (build_dashboard.py) kell lennie egy bejegyzésnek, különben a "Mi változott?"
+        # blokk piaci elmozdulásként mutatja (2026-11-05-i audit)
+        noted = (d.get("changes") or {}).get("method_notes") or []
+        if jumps and not noted:
+            jumps.append("nincs METHOD_CHANGES-bejegyzés: ha az ugrás módszertani változásból jön, vedd fel")
+        c.add("history.jumps", WARN, not jumps or bool(noted),
+              f"nincs szokatlan ugrás az előző napi futáshoz ({prev.get('date')}) képest, "
+              f"vagy van rá módszertani bejegyzés", jumps)
 
     return d
 
