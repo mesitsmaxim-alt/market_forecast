@@ -298,6 +298,22 @@ mindkét számot mutatja, a "Mi változott?" és a futástörténet az egyszerű
   hozzájárulás pontban, évjárat-súllyal; összegük = pontszám) jelenik meg; a forgatókönyv-váltó
   frissíti.
 
+### Márkák, évjáratok, használtautó-árak fülek (2026-11-10)
+- **Legkeresettebb márkák:** `build_brand_ranking()` a KSH `forgalomba.json`-ból (első forgalomba
+  helyezés = új ÉS használtan behozott autók), az utolsó 4 negyedév összege szerint, top 15.
+  `KSH_BRAND_DISPLAY` egységesíti a márkaneveket (Skoda→Škoda, KIA→Kia, Mercedes→Mercedes-Benz),
+  hogy a használtpiaci adattal összeköthetők legyenek. Mellette a használtpiaci hirdetésszám.
+- **Évjáratok és Használtautó-árak:** `data/hasznalt_piac.json`, KÉZI bevitel a KSH–Használtautó.hu
+  havi kísérleti kiadványából (`ksh.hu/s/kiserleti-statisztika`, „Használtautó.hu – KSH,
+  <hónap>”). Letölthető táblázat nincs, és a ksh.hu a sima curl-letöltést elutasítja („Request
+  Rejected”), ezért nem automatizált — ne próbáld megkerülni. Kínálati (hirdetési) adat, nem
+  eladás: a lapon is így szerepel. A márkánkénti hirdetésszámot a kiadvány csak tartományként
+  (`ads_min`/`ads_max`), a modellenkénti árat/kort csak a szélső értékekre közli; a „kb.” értékeket
+  `*_approx: true` jelöli. Gyártási év szerinti bontás nincs a forrásban, ezért az Évjáratok fül
+  átlagkort mutat (márka, üzemanyag, szélső modellek). Elavulás: 50 nap a megjelenéstől (dashboard
+  figyelmeztetés + `sources.hasznalt_piac_stale` WARN). Frissítéskor a hirdetésszám-részesedést a
+  build számolja, ne írd be kézzel.
+
 ### Piaci hírek ("Amit a piac mond" fül) és legkeresettebb modellek
 - **Hírek** (`fetchers/fetch_hirek.py` → `data/hirek.json` → `hirek_report.py`): 3 magyar RSS-forrás
   (Vezess.hu, Portfolio.hu, Világgazdaság), curl-lal lekérve, `xml.etree.ElementTree`-vel parszolva

@@ -69,6 +69,7 @@ WEIGHT_SUM_TOL = 0.002
 TOP_MODELLEK_STALE_DAYS = 45  # ugyanaz, mint a dashboard figyelmeztetése
 # az EAFO-adat kézi export: egy lezárt negyedév ennyi nap után már letölthető
 EAFO_LAG_DAYS = 30
+HASZNALT_PIAC_STALE_DAYS = 50  # ugyanaz, mint a dashboard figyelmeztetése
 JUMP_SCORE = 0.3  # összesítő pontszám napi változása, ami fölött WARN
 JUMP_BAND_MULT = 2.0  # tényező alap-értékének változása a sávja hányszorosáig normális
 
@@ -225,6 +226,15 @@ def check_staleness(c: Checks):
               f"a töltőinfra-adat utolsó negyedéve {last}"
               + (f"; a {ny} Q{nq} {next_end} óta lezárt — töltsd le újra az EAFO CSV-ket "
                  f"(data/raw_eafo/, majd import_eafo_charging.py)" if due else ", nincs letölthető újabb"))
+
+    # KSH–Használtautó.hu havi kiadvány (kézi): a hónap közepén jelenik meg, ~6 hét késéssel
+    path = DATA_DIR / "hasznalt_piac.json"
+    if path.exists():
+        hp = load_json(path)
+        age = (dt.date.today() - dt.date.fromisoformat(hp["published"])).days
+        c.add("sources.hasznalt_piac_stale", WARN, age <= HASZNALT_PIAC_STALE_DAYS,
+              f"a data/hasznalt_piac.json a {hp['period']} kiadványból való, {age} napja jelent meg "
+              f"(küszöb: {HASZNALT_PIAC_STALE_DAYS} nap; újabb: ksh.hu/s/kiserleti-statisztika)")
 
     path = DATA_DIR / "top_modellek.json"
     if path.exists():

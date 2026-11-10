@@ -4,7 +4,7 @@
   "stages": {
     "post": {
       "status": "PASS",
-      "run_at": "2026-11-10T10:51:01",
+      "run_at": "2026-11-10T11:08:56",
       "checks": [
         {
           "id": "dashboard.fresh",
@@ -136,7 +136,7 @@
     },
     "pre": {
       "status": "WARN",
-      "run_at": "2026-11-10T10:23:15",
+      "run_at": "2026-11-10T11:08:56",
       "checks": [
         {
           "id": "factors.count",
@@ -227,6 +227,13 @@
           "severity": "WARN",
           "ok": false,
           "message": "a töltőinfra-adat utolsó negyedéve 2026 Q2; a 2026 Q3 2026-09-30 óta lezárt — töltsd le újra az EAFO CSV-ket (data/raw_eafo/, majd import_eafo_charging.py)",
+          "details": []
+        },
+        {
+          "id": "sources.hasznalt_piac_stale",
+          "severity": "WARN",
+          "ok": true,
+          "message": "a data/hasznalt_piac.json a 2026. szeptember kiadványból való, 26 napja jelent meg (küszöb: 50 nap; újabb: ksh.hu/s/kiserleti-statisztika)",
           "details": []
         },
         {

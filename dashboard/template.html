@@ -397,6 +397,16 @@
   .comp-concl{ font-size:12.5px; line-height:1.55; color:var(--text-secondary); margin:14px 0 0; padding-top:12px; border-top:1px solid var(--border); }
   .comp-concl b{ color:var(--text-primary); }
 
+  /* ---------- márkák, évjáratok, árak ---------- */
+  .band-bar{ display:flex; height:28px; border-radius:6px; overflow:hidden; margin:6px 0 10px; }
+  .band-bar span{ display:flex; align-items:center; justify-content:center; font-family:var(--f-data); font-size:11.5px; font-weight:600; color:var(--on-accent); min-width:0; overflow:hidden; }
+  .band-legend{ display:flex; flex-wrap:wrap; gap:6px 16px; font-size:12px; color:var(--text-secondary); }
+  .band-legend i{ display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:6px; vertical-align:-1px; }
+  .used-card{ background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:16px 18px; margin-bottom:16px; }
+  .used-card h3{ font-family:var(--f-display); font-size:18px; font-weight:600; margin:0 0 10px; }
+  .used-concl{ font-size:13px; line-height:1.55; color:var(--text-secondary); margin:12px 0 0; max-width:80ch; }
+  .used-concl b{ color:var(--text-primary); }
+
   /* ---------- márka-mozgók ---------- */
   .movers-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr)); gap:16px; }
   .mover-row{ display:grid; grid-template-columns: 1fr 80px 70px; gap:10px; align-items:baseline; padding:8px 0; border-bottom:1px solid var(--border); font-size:12.5px; }
@@ -554,6 +564,9 @@
   <button class="tabbtn" data-tab="forecast" type="button">Előrejelzés</button>
   <button class="tabbtn" data-tab="news" type="button">Amit a piac mond</button>
   <button class="tabbtn" data-tab="models" type="button">Legkeresettebb modellek</button>
+  <button class="tabbtn" data-tab="brands" type="button">Legkeresettebb márkák</button>
+  <button class="tabbtn" data-tab="ages" type="button">Évjáratok</button>
+  <button class="tabbtn" data-tab="prices" type="button">Használtautó-árak</button>
 </nav>
 
 <div class="tabpanel" data-tabpanel="overview">
@@ -721,8 +734,52 @@
 
 </div>
 
+<div class="tabpanel" data-tabpanel="brands" hidden>
+
+<section id="brands-new">
+  <div class="section-head">
+    <h2>Legkeresettebb márkák — forgalomba helyezés</h2>
+    <span class="section-note" id="brands-new-note"></span>
+  </div>
+  <div id="brands-new-body"></div>
+</section>
+
+<section id="brands-used">
+  <div class="section-head">
+    <h2>Legtöbbet hirdetett márkák a használtpiacon</h2>
+    <span class="section-note" id="brands-used-note"></span>
+  </div>
+  <div id="brands-used-body"></div>
+</section>
+
+</div>
+
+<div class="tabpanel" data-tabpanel="ages" hidden>
+
+<section id="ages">
+  <div class="section-head">
+    <h2>Milyen idős autókat kínálnak a használtpiacon?</h2>
+    <span class="section-note">A hirdetett használt autók kora (kínálati adat, nem eladás). Gyártási év szerinti bontást a forrás nem közöl, ezért márkánkénti, üzemanyag szerinti és modellenkénti átlagkort mutatunk.</span>
+  </div>
+  <div id="ages-body"></div>
+</section>
+
+</div>
+
+<div class="tabpanel" data-tabpanel="prices" hidden>
+
+<section id="prices">
+  <div class="section-head">
+    <h2>Használtautó-árak</h2>
+    <span class="section-note">Kínálati (hirdetési) árak, nem tényleges eladási árak. Forrás: a KSH és a Használtautó.hu közös havi kiadványa.</span>
+  </div>
+  <div id="prices-body"></div>
+</section>
+
+</div>
+
 <footer>
-  <p><b>Frissítés:</b> az adatok havonta, minden hónap elején automatikusan frissülnek a forrásokból (KSH, MNB, Eurostat, holtankoljak.hu, EAFO); néhány forrás — akkumulátorár, EV-vámok, CO2-szabályozás, modell-toplista — kézzel, a megjelenésükkor kerül be. Ez az oldal a <span id="generated-label-2">—</span>-i állapotot mutatja.</p>
+  <p><b>Frissítés:</b> az adatok havonta, minden hónap elején automatikusan frissülnek a forrásokból (KSH, MNB, Eurostat, holtankoljak.hu, EAFO); néhány forrás — akkumulátorár, EV-vámok, CO2-szabályozás, modell-toplista, használtautó-kínálat és -árak (KSH–Használtautó.hu) — kézzel, a megjelenésükkor kerül be. Ez az oldal a <span id="generated-label-2">—</span>-i állapotot mutatja.</p>
   <p><b>Módszertan:</b> minden szegmens (hajtástípus × márkakategória × évjárat-sáv) pontszáma a tényezők forgatókönyv-deltáinak és az érzékenységi együtthatóknak a súlyozott összege, kiegészítve a KSH-adatból számolt megfigyelt piaci momentummal. A pontszám iránya és nagyságrendje informál, nem pontos előrejelzés.</p>
   <p>A projekt forráskódja nyilvános: <a href="https://github.com/mesitsmaxim-alt/market_forecast" target="_blank" rel="noopener">github.com/mesitsmaxim-alt/market_forecast</a>.</p>
 </footer>
@@ -1881,6 +1938,127 @@ __DASHBOARD_DATA__
     draw();
   }
   renderModels();
+
+  // ---------- márkák / évjáratok / használtautó-árak fülek ----------
+  const HP = data.hasznalt_piac;
+  const fmtM = v => `${fmtPlain(v / 1e6, 2)} M Ft`;          // 5 460 000 -> "5,46 M Ft"
+  const approx = (v, d, flag) => `${flag ? 'kb. ' : ''}${fmtPlain(v, d)}`;
+  const rankChg = (now, prev) => prev == null ? '<span class="rank-chg">új</span>'
+    : prev === now ? '<span class="rank-chg flat">=</span>'
+    : `<span class="rank-chg">${prev > now ? '▲' : '▼'}${Math.abs(prev - now)}</span>`;
+  // elavulás: a kiadvány havonta jelenik meg (a hónap közepén, kb. 6 hét késéssel)
+  const hpStale = () => HP && HP.age_days > 50
+    ? `<div class="stale-note" role="status"><span aria-hidden="true">⚠</span><span><b>Elavulhatott:</b> a használtpiaci adat a ${HP.period} havi kiadványból való (megjelent ${HP.published}), azóta újabb is megjelenhetett.</span></div>`
+    : '';
+  const hpSource = () => HP ? `Forrás: <a href="${HP.source_page}" target="_blank" rel="noopener">${HP.source}</a> · ${HP.period} (megjelent ${HP.published}) · kb. ${fmtInt(HP.n_vehicles_approx)} hirdetett autó` : '';
+  const listRow = (rank, name, sub, frac, right, rightSub) => `<div class="model-row">
+      <span class="model-rank">${rank}</span>
+      <span class="model-name">${name}${sub ? `<span class="model-sub">${sub}</span>` : ''}</span>
+      <span class="model-track"><span class="model-fill" style="width:${Math.max(2, frac * 100)}%"></span></span>
+      <span class="model-units">${right}${rightSub ? `<span class="u-sub">${rightSub}</span>` : ''}</span>
+    </div>`;
+
+  function renderBrands() {
+    const m = data.markak;
+    const elNew = document.getElementById('brands-new-body');
+    if (!m) { elNew.innerHTML = '<div class="collecting-note">Nincs elég negyedéves adat a márka-rangsorhoz.</div>'; }
+    else {
+      document.getElementById('brands-new-note').textContent =
+        `KSH, az első forgalomba helyezések márkánként (új és használtan behozott autók együtt), ${m.window}. A változás az előző 4 negyedévhez képest.`;
+      const max = m.rows[0].units;
+      elNew.innerHTML = `<div class="model-list">
+        <div class="model-row head"><span>#</span><span>Márka</span><span></span><span style="text-align:right">4 negyedév</span></div>
+        ${m.rows.map(r => listRow(r.rank, r.brand,
+            `${m.last_quarter}: ${fmtInt(r.last_quarter)} db · részesedés ${fmtPlain(r.share_pct, 1)}%`,
+            r.units / max, `${fmtInt(r.units)} db`, r.change_pct == null ? '' : `${fmt(r.change_pct, 1)}%`)).join('')}
+      </div>
+      <p class="used-concl">A ${m.rows.length} legnagyobb márka adja a forgalomba helyezések <b>${fmtPlain(m.top_share_pct, 1)}%-át</b> (összesen ${fmtInt(m.total_units)} db).</p>`;
+    }
+    const elUsed = document.getElementById('brands-used-body');
+    if (!HP) { elUsed.innerHTML = '<div class="collecting-note">Nincs feltöltött használtpiaci adat.</div>'; return; }
+    document.getElementById('brands-used-note').innerHTML =
+      'A hirdetések száma márkánként. A forrás csak tartományt közöl, a sorrend a tartomány közepe szerint.';
+    const rows = HP.brands_top10.rows.slice().sort((a, b) => (b.ads_min + b.ads_max) - (a.ads_min + a.ads_max));
+    const max = rows[0].ads_max;
+    elUsed.innerHTML = `${hpStale()}<div class="model-meta">${hpSource()}</div>
+      <div class="model-list">
+        <div class="model-row head"><span>#</span><span>Márka</span><span></span><span style="text-align:right">Hirdetés</span></div>
+        ${rows.map((r, i) => listRow(i + 1, r.brand,
+            `átlagár ${approx(r.avg_price_m, 1, r.price_approx)} M Ft · átlagkor ${approx(r.avg_age_years, 1, r.age_approx)} év`,
+            (r.ads_min + r.ads_max) / 2 / max, `${fmtInt(r.ads_min)}–${fmtInt(r.ads_max)}`, '')).join('')}
+      </div>`;
+  }
+  renderBrands();
+
+  function renderAges() {
+    const el = document.getElementById('ages-body');
+    if (!HP) { el.innerHTML = '<div class="collecting-note">Nincs feltöltött használtpiaci adat.</div>'; return; }
+    const fuel = Object.fromEntries(HP.fuel.map(f => [f.key, f]));
+    const mt = HP.models_top10;
+    const tiles = [
+      { fig: fmtPlain(HP.brands_top10.avg_age_years, 1), suf: 'év', label: 'a 10 leggyakoribb márka hirdetett autóinak átlagkora' },
+      { fig: fmtPlain(fuel.benzin.avg_age_years, 1), suf: 'év', label: `benzines autók átlagkora, átlagosan ${fmtInt(fuel.benzin.avg_km)} km-rel` },
+      { fig: fmtPlain(fuel.dizel.avg_age_years, 1), suf: 'év', label: `dízel autók átlagkora, átlagosan ${fmtInt(fuel.dizel.avg_km)} km-rel` },
+      { fig: `${fmtPlain(mt.youngest.avg_age_years, 1)} / ${fmtPlain(mt.oldest.avg_age_years, 1)}`, suf: 'év',
+        label: `a 10 leggyakoribb modell közül a legfiatalabb (${mt.youngest.model}) és a legidősebb (${mt.oldest.model}${mt.oldest.age_approx ? ', kb.' : ''}) átlagkora` },
+    ];
+    const rows = HP.brands_top10.rows.slice().sort((a, b) => a.avg_age_years - b.avg_age_years);
+    const max = Math.max(...rows.map(r => r.avg_age_years));
+    const young = rows[0], old = rows[rows.length - 1];
+    el.innerHTML = `${hpStale()}<div class="model-meta">${hpSource()}</div>
+      <div class="tier-grid">${tiles.map(t => `<div class="tier-card"><span class="t-fig tnum">${t.fig}<small>${t.suf}</small></span><span class="t-line">${t.label}</span></div>`).join('')}</div>
+      <div class="model-list">
+        <div class="model-row head"><span>#</span><span>Márka (a legfiatalabb kínálattól)</span><span></span><span style="text-align:right">Átlagkor</span></div>
+        ${rows.map((r, i) => listRow(i + 1, r.brand, `átlagár ${approx(r.avg_price_m, 1, r.price_approx)} M Ft`,
+            r.avg_age_years / max, `${approx(r.avg_age_years, 1, r.age_approx)} év`, '')).join('')}
+      </div>
+      <p class="used-concl">A hirdetett használt autók átlagosan <b>${fmtPlain(HP.brands_top10.avg_age_years, 1)} évesek</b>. A legfiatalabb kínálat ${art(young.brand)} <b>${young.brand}</b> márkáé (${approx(young.avg_age_years, 1, young.age_approx)} év), a legidősebb ${art(old.brand)} <b>${old.brand}</b> márkáé (${approx(old.avg_age_years, 1, old.age_approx)} év). A benzines autók átlagosan ${fmtPlain(fuel.benzin.avg_age_years - fuel.dizel.avg_age_years, 1)} évvel idősebbek a dízeleknél, de kevesebbet futottak.</p>`;
+  }
+  renderAges();
+
+  function renderPrices() {
+    const el = document.getElementById('prices-body');
+    if (!HP) { el.innerHTML = '<div class="collecting-note">Nincs feltöltött használtpiaci adat.</div>'; return; }
+    const fuel = Object.fromEntries(HP.fuel.map(f => [f.key, f]));
+    const tiles = [
+      { fig: fmtPlain(HP.avg_price_huf / 1e6, 2), suf: 'M Ft', label: `átlagos kínálati ár (egy éve ${fmtM(HP.avg_price_huf_prev_year)}, ${fmt(HP.avg_price_yoy_pct, 1)}%)` },
+      { fig: fmtPlain(fuel.hibrid.avg_price_huf / 1e6, 2), suf: 'M Ft', label: 'hibrid autók átlagára' },
+      { fig: fmtPlain(fuel.elektromos.avg_price_huf / 1e6, 2), suf: 'M Ft', label: 'elektromos autók átlagára' },
+      { fig: fmt(HP.diesel_vs_petrol_price_pct, 1), suf: '%', label: 'ennyivel drágább átlagosan a dízel a benzinesnél' },
+    ];
+    const MIX = [100, 70, 45, 25];
+    const bands = HP.price_bands_pct.map((b, i) => ({ ...b, color: `color-mix(in srgb, var(--accent) ${MIX[i]}%, var(--surface-2))`, ink: MIX[i] >= 60 ? 'var(--on-accent)' : 'var(--text-primary)' }));
+    const br = HP.brands_top10.rows.slice().sort((a, b) => b.avg_price_m - a.avg_price_m);
+    const maxP = br[0].avg_price_m;
+    const mt = HP.models_top10;
+    el.innerHTML = `${hpStale()}<div class="model-meta">${hpSource()}</div>
+      <div class="tier-grid">${tiles.map(t => `<div class="tier-card"><span class="t-fig tnum">${t.fig}<small>${t.suf}</small></span><span class="t-line">${t.label}</span></div>`).join('')}</div>
+      <div class="used-card">
+        <h3>A hirdetések árkategóriák szerint</h3>
+        <div class="band-bar" role="img" aria-label="${bands.map(b => `${b.label}: ${fmtPlain(b.pct, 1)}%`).join(', ')}">
+          ${bands.map(b => `<span style="width:${b.pct}%;background:${b.color};color:${b.ink}">${fmtPlain(b.pct, 0)}%</span>`).join('')}
+        </div>
+        <div class="band-legend">${bands.map(b => `<span><i style="background:${b.color}"></i>${b.label}: ${fmtPlain(b.pct, 1)}%</span>`).join('')}</div>
+        <p class="used-concl">A hirdetett autók <b>${fmtPlain(bands[0].pct + bands[1].pct, 1)}%-a 5 millió forint alatti</b>, és csak ${fmtPlain(bands[3].pct, 1)}%-uk drágább 10 milliónál.</p>
+      </div>
+      <h3 style="font-family:var(--f-display);font-size:18px;font-weight:600;margin:4px 0 10px;">Átlagár márkánként (a 10 leggyakoribb márka)</h3>
+      <div class="model-list">
+        <div class="model-row head"><span>#</span><span>Márka</span><span></span><span style="text-align:right">Átlagár</span></div>
+        ${br.map((r, i) => listRow(i + 1, r.brand, `átlagkor ${approx(r.avg_age_years, 1, r.age_approx)} év`,
+            r.avg_price_m / maxP, `${approx(r.avg_price_m, 1, r.price_approx)} M Ft`, '')).join('')}
+      </div>
+      <h3 style="font-family:var(--f-display);font-size:18px;font-weight:600;margin:22px 0 10px;">A 10 leggyakoribb használt modell</h3>
+      <div class="model-list">
+        <div class="model-row head"><span>#</span><span>Modell</span><span></span><span style="text-align:right">Egy éve</span></div>
+        ${mt.ranked.map(r => `<div class="model-row">
+            <span class="model-rank">${r.rank}${rankChg(r.rank, r.prev_rank)}</span>
+            <span class="model-name">${r.model}</span><span></span>
+            <span class="model-units">${r.prev_rank ? `${r.prev_rank}. hely` : 'nem volt a top 10-ben'}</span>
+          </div>`).join('')}
+      </div>
+      <p class="used-concl">A 10 leggyakoribb modell közül a legdrágább ${art(mt.highest_price.model)} <b>${mt.highest_price.model}</b> (${fmtM(mt.highest_price.avg_price_huf)} átlagár), a legolcsóbb ${art(mt.lowest_price.model)} <b>${mt.lowest_price.model}</b> (${fmtM(mt.lowest_price.avg_price_huf)}). Modellenkénti átlagárat a forrás csak a két szélső értékre közöl. Helyezés-változás: ${mt.previous_period} óta.</p>`;
+  }
+  renderPrices();
 
   // ---------- márka-mozgók (KSH első forgalomba helyezés, 4 negyedév vs. előző 4) ----------
   (function renderMovers() {

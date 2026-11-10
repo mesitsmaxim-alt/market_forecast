@@ -4,7 +4,7 @@
 
 A modell előrejelzéseinek automatikus invariáns- és konzisztencia-ellenőrzése (`validate_forecast.py`). CRITICAL hiba esetén a pipeline nem commitol és nem push-ol.
 
-## Fázis: pre — WARN (2026-11-10T10:23:15)
+## Fázis: pre — WARN (2026-11-10T11:08:56)
 
 | | Súlyosság | Ellenőrzés | Leírás |
 |---|---|---|---|
@@ -21,11 +21,12 @@ A modell előrejelzéseinek automatikus invariáns- és konzisztencia-ellenőrz�
 | ✅ | CRITICAL | `engine.alap_between` | minden szegmens alap pontszáma a pesszimista és az optimista között van |
 | ✅ | WARN | `sources.manual_stale` | a kézi forrásfájlok (akkuár, EV-vámok, CO2) a STALE_DAYS küszöbön belül frissültek |
 | ⚠️ | WARN | `sources.eafo_stale` | a töltőinfra-adat utolsó negyedéve 2026 Q2; a 2026 Q3 2026-09-30 óta lezárt — töltsd le újra az EAFO CSV-ket (data/raw_eafo/, majd import_eafo_charging.py) |
+| ✅ | WARN | `sources.hasznalt_piac_stale` | a data/hasznalt_piac.json a 2026. szeptember kiadványból való, 26 napja jelent meg (küszöb: 50 nap; újabb: ksh.hu/s/kiserleti-statisztika) |
 | ✅ | WARN | `sources.top_modellek_stale` | a data/top_modellek.json 5 napos (küszöb: 45 nap) |
 | ⚠️ | WARN | `backtest.fresh` | a backtest ma futott (generated: 2026-11-05) |
 | ✅ | WARN | `backtest.quality` | a backtest korrelációja nem negatív, a találati arány legalább 50% |
 
-## Fázis: post — PASS (2026-11-10T10:51:01)
+## Fázis: post — PASS (2026-11-10T11:08:56)
 
 | | Súlyosság | Ellenőrzés | Leírás |
 |---|---|---|---|

@@ -387,6 +387,65 @@ def build_brand_movers(f: dict) -> dict | None:
     }
 
 
+BRAND_RANK_N = 15
+# a KSH márkanevei a használtautó-kiadvány írásmódjára (a két forrás összekötéséhez)
+KSH_BRAND_DISPLAY = {"Skoda": "Škoda", "KIA": "Kia", "Mercedes": "Mercedes-Benz"}
+
+
+def build_brand_ranking() -> dict | None:
+    """Legkeresettebb márkák az első forgalomba helyezésekből (KSH, új és
+    használtan behozott autók): a legutóbbi 4 negyedév összege szerint, mert egy
+    negyedév zajos. A használtpiaci kínálat a hasznalt_piac.json-ból jön mellé."""
+    f = load_json("forgalomba.json")
+    quarters, brands = f["quarters"], f["brands"]
+    if len(quarters) < 8:
+        return None
+    total_now = sum(f["total"][-4:])
+    rows = []
+    for name, series in brands.items():
+        now, prev = sum(series[-4:]), sum(series[-8:-4])
+        rows.append({
+            "brand": KSH_BRAND_DISPLAY.get(name, name), "units": now, "last_quarter": series[-1],
+            "share_pct": round(now / total_now * 100, 2),
+            "change_pct": round((now / prev - 1) * 100, 1) if prev > 0 else None,
+        })
+    rows.sort(key=lambda r: -r["units"])
+    used = {}
+    if (DATA_DIR / "hasznalt_piac.json").exists():
+        used = {u["brand"]: u for u in load_json("hasznalt_piac.json")["brands_top10"]["rows"]}
+    for i, r in enumerate(rows, start=1):
+        r["rank"] = i
+        r["used"] = used.get(r["brand"])
+    return {
+        "window": f"{quarters[-4]} – {quarters[-1]}",
+        "last_quarter": quarters[-1],
+        "total_units": total_now,
+        "top_share_pct": round(sum(r["share_pct"] for r in rows[:BRAND_RANK_N]), 1),
+        "rows": rows[:BRAND_RANK_N],
+    }
+
+
+def build_hasznalt_piac() -> dict | None:
+    """Használtautó-kínálat (KSH–Használtautó.hu havi kiadvány, kézi bevitel):
+    árak, kor, márkák, modellek. A hirdetésszám-részesedést itt számoljuk."""
+    path = DATA_DIR / "hasznalt_piac.json"
+    if not path.exists():
+        return None
+    hp = load_json("hasznalt_piac.json")
+    total_ads = sum(x["ads"] for x in hp["fuel"])
+    for x in hp["fuel"]:
+        x["share_pct"] = round(x["ads"] / total_ads * 100, 1)
+    hp["total_ads"] = total_ads
+    hp["avg_price_yoy_pct"] = round((hp["avg_price_huf"] / hp["avg_price_huf_prev_year"] - 1) * 100, 1)
+    hp["age_days"] = (dt.date.today() - dt.date.fromisoformat(hp["published"])).days
+    prev = hp["models_top10"]["previous_rows"]
+    hp["models_top10"]["ranked"] = [
+        {"rank": i, "model": m, "prev_rank": (prev.index(m) + 1) if m in prev else None}
+        for i, m in enumerate(hp["models_top10"]["rows"], start=1)
+    ]
+    return hp
+
+
 def build_real_snapshot() -> dict:
     out = {}
 
@@ -748,6 +807,8 @@ def main():
         "method_changes": METHOD_CHANGES,
     }
     combined["top_modellek"] = build_top_modellek(combined["brand_summary"])
+    combined["markak"] = build_brand_ranking()
+    combined["hasznalt_piac"] = build_hasznalt_piac()
     combined["coverage"]["n_factors"] = len(combined["factors"])
     combined["methodology"] = build_methodology(combined["factors"])
     combined["changes"] = build_changes(run_history[-1] if run_history else None, combined)

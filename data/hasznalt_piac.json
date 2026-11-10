@@ -1,0 +1,50 @@
+{
+  "source": "KSH–Használtautó.hu kísérleti statisztika (kínálati adatok)",
+  "source_page": "https://ksh.hu/s/kiserleti-statisztika/kiadvanyok/hasznaltautohu-ksh-2026-szeptember/",
+  "period": "2026. szeptember",
+  "published": "2026-10-15",
+  "updated": "2026-11-10",
+  "note": "Kézi adatbevitel a havi kiadvány szövegéből (letölthető táblázat nincs). Kínálati adat: a Használtautó.hu hirdetései a hónap 6., 15. és 24. napján, duplikációk nélkül; az 1 évnél fiatalabb, 0 km-es és 50 000 Ft alatti autók nélkül. A márkánkénti hirdetésszámot a kiadvány csak tartományként közli, a modellenkénti árat és kort csak a szélső értékekre. Frissítés: az új havi kiadvány (Használtautó.hu – KSH, <hónap>) szövegéből, minden mezőt az új hónapra.",
+  "n_vehicles_approx": 125000,
+  "avg_price_huf": 5460000,
+  "avg_price_huf_prev_year": 5560000,
+  "price_bands_pct": [
+    {"label": "2,5 millió Ft alatt", "pct": 34.6},
+    {"label": "2,5–5 millió Ft", "pct": 29.3},
+    {"label": "5–10 millió Ft", "pct": 23.4},
+    {"label": "10 millió Ft felett", "pct": 12.6}
+  ],
+  "fuel": [
+    {"key": "benzin", "label": "Benzin", "ads": 59120, "avg_age_years": 13.3, "avg_km": 152000},
+    {"key": "dizel", "label": "Dízel", "ads": 52730, "avg_age_years": 12.3, "avg_km": 218000},
+    {"key": "hibrid", "label": "Hibrid", "ads": 6560, "avg_price_huf": 10450000},
+    {"key": "elektromos", "label": "Elektromos", "ads": 5880, "avg_price_huf": 11450000},
+    {"key": "egyeb", "label": "Egyéb", "ads": 260}
+  ],
+  "diesel_vs_petrol_price_pct": 1.6,
+  "brands_top10": {
+    "avg_age_years": 11.6,
+    "avg_price_huf": 5700000,
+    "rows": [
+      {"brand": "Volkswagen", "ads_min": 8500, "ads_max": 8900, "avg_age_years": 12.4, "avg_price_m": 4.8},
+      {"brand": "BMW", "ads_min": 6900, "ads_max": 7100, "avg_age_years": 11.0, "age_approx": true, "avg_price_m": 9.6},
+      {"brand": "Ford", "ads_min": 6700, "ads_max": 7200, "avg_age_years": 12.1, "avg_price_m": 3.9, "price_approx": true},
+      {"brand": "Mercedes-Benz", "ads_min": 6300, "ads_max": 6600, "avg_age_years": 12.0, "avg_price_m": 9.8},
+      {"brand": "Opel", "ads_min": 6200, "ads_max": 6500, "avg_age_years": 13.7, "avg_price_m": 2.6},
+      {"brand": "Audi", "ads_min": 5600, "ads_max": 5800, "avg_age_years": 11.7, "avg_price_m": 7.8},
+      {"brand": "Škoda", "ads_min": 4400, "ads_max": 4700, "avg_age_years": 9.7, "age_approx": true, "avg_price_m": 4.9},
+      {"brand": "Toyota", "ads_min": 4200, "ads_max": 4600, "avg_age_years": 11.2, "avg_price_m": 5.4},
+      {"brand": "Kia", "ads_min": 3000, "ads_max": 3200, "avg_age_years": 9.1, "age_approx": true, "avg_price_m": 5.1},
+      {"brand": "Renault", "ads_min": 3000, "ads_max": 3100, "avg_age_years": 12.9, "avg_price_m": 3.1}
+    ]
+  },
+  "models_top10": {
+    "rows": ["Škoda Octavia", "Ford Focus", "Audi A4", "Kia Ceed", "Audi A6", "Ford Mondeo", "Suzuki Swift", "Toyota Corolla", "Ford Fiesta", "Volkswagen Golf VII"],
+    "previous_period": "2025. szeptember",
+    "previous_rows": ["Ford Focus", "Škoda Octavia", "Audi A4", "Kia Ceed", "Suzuki Swift", "Audi A6", "Ford Mondeo", "Ford Fiesta", "Renault Megane", "Toyota Yaris"],
+    "highest_price": {"model": "Audi A6", "avg_price_huf": 6480000},
+    "lowest_price": {"model": "Ford Fiesta", "avg_price_huf": 1910000},
+    "youngest": {"model": "Toyota Corolla", "avg_age_years": 8.8},
+    "oldest": {"model": "Suzuki Swift", "avg_age_years": 16.5, "age_approx": true}
+  }
+}
