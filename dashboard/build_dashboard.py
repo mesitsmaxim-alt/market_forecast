@@ -33,6 +33,7 @@ from engine import (  # noqa: E402
     MOMENTUM_WEIGHT, MOMENTUM_WINDOW_YEARS, REG_MOMENTUM_WEIGHT,
 )
 from forecast import forecast_card, naive_forecast_card  # noqa: E402
+import ex_post  # noqa: E402
 
 DATA_DIR = ROOT / "data"
 HISTORY_PATH = DATA_DIR / "history" / "snapshots.jsonl"
@@ -747,6 +748,10 @@ def main():
     combined["coverage"]["n_factors"] = len(combined["factors"])
     combined["methodology"] = build_methodology(combined["factors"])
     combined["changes"] = build_changes(run_history[-1] if run_history else None, combined)
+    # a mai vetítések archiválása, majd a korábbiak összevetése a tényleges adattal
+    ex_post.archive_forecasts(combined)
+    combined["ex_post"] = ex_post.evaluate(today)
+    ex_post.OUT_PATH.write_text(json.dumps(combined["ex_post"], ensure_ascii=False, indent=2), encoding="utf-8")
 
     DATA_OUT_PATH.write_text(json.dumps(combined, ensure_ascii=False, indent=2), encoding="utf-8")
     append_history_snapshot(combined)

@@ -194,6 +194,11 @@
   h2{ font-size:13px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--text-secondary); margin:0; }
   .section-note{ font-size:13px; color:var(--text-muted); max-width:60ch; }
 
+  /* ---------- ex-post visszamérés ---------- */
+  .ep-head{ font-size:14px; line-height:1.55; margin:0 0 12px; max-width:80ch; }
+  .ep-foot{ font-size:13px; color:var(--text-secondary); line-height:1.5; margin:12px 0 0; max-width:80ch; }
+  .ep-table td.num{ text-align:right; white-space:nowrap; }
+
   /* ---------- fő üzenet (nyitóblokk) ---------- */
   .summary{
     background:var(--surface); border:1px solid var(--border); border-radius:16px; box-shadow:var(--shadow);
@@ -630,6 +635,14 @@
   <div class="scenario-fan" id="scenario-fan"></div>
 </section>
 
+<section id="ex-post">
+  <div class="section-head">
+    <h2>Mennyire talált a modell?</h2>
+    <span class="section-note">A dashboard korábban publikált vetítései a tényleges adattal összevetve, amint a célidőszak adata megjelenik. A naiv becslés a vetítés idején utolsó ismert érték („marad, ami volt”).</span>
+  </div>
+  <div id="ex-post-body"></div>
+</section>
+
 </div>
 
 <div class="tabpanel" data-tabpanel="news" hidden>
@@ -674,7 +687,7 @@
 
 <script id="dashboard-data" type="application/json">
 {
-  "generated": "2026-11-09",
+  "generated": "2026-11-10",
   "coverage": {
     "n_factors": 8,
     "n_calibrated": 5,
@@ -12174,6 +12187,64 @@
         "sentiment_mp": -12.9,
         "wage_yoy": 4.8
       }
+    },
+    {
+      "date": "2026-11-09",
+      "factors": {
+        "oil_price": 0.0,
+        "battery_cost": -8.0,
+        "charging_infra": 5.7,
+        "ev_tariffs": -1.0,
+        "co2_regulation": 14.9,
+        "financing_cost": 0.0,
+        "consumer_sentiment": 0.0,
+        "purchasing_power": 1.7
+      },
+      "drivetrain_summary": [
+        {
+          "key": "BEV",
+          "score": 0.1949
+        },
+        {
+          "key": "PHEV",
+          "score": 0.0941
+        },
+        {
+          "key": "HEV",
+          "score": 0.0804
+        },
+        {
+          "key": "ICE",
+          "score": -0.0943
+        }
+      ],
+      "brand_summary": [
+        {
+          "key": "kinai_belepo",
+          "score": 0.088
+        },
+        {
+          "key": "tomeggyarto",
+          "score": 0.0819
+        },
+        {
+          "key": "premium",
+          "score": 0.0786
+        },
+        {
+          "key": "budget",
+          "score": 0.0266
+        }
+      ],
+      "real_headline": {
+        "benzin": 633,
+        "dizel": 726,
+        "alapkamat": 5.5,
+        "eurhuf": 365.67,
+        "forgalomba_total": 78118,
+        "sentiment_mp": -12.9,
+        "wage_yoy": 4.8
+      }
     }
   ],
   "hirek": {
@@ -13132,9 +13203,192 @@
     }
   },
   "changes": {
-    "since": "2026-11-05",
+    "since": "2026-11-09",
     "items": [],
     "method_notes": []
+  },
+  "ex_post": {
+    "generated": "2026-11-10",
+    "summary": {
+      "n_resolved": 8,
+      "n_pending": 62,
+      "coverage": 0.75,
+      "n_banded": 8,
+      "n_linear": 8,
+      "linear_beats_naive": 2,
+      "next_by_card": {
+        "Benzin részesedése az állományban": "2026",
+        "Dízel részesedése az állományban": "2026",
+        "Elektromos részesedése az állományban": "2026",
+        "Hibrid részesedése az állományban": "2026",
+        "Euró/forint árfolyam": "2026. november",
+        "Fogyasztói bizalom": "2026. november",
+        "Új forgalomba helyezések (negyedév)": "2026. III. negyedév",
+        "Reáljövedelem változása": "2026",
+        "Reálkereset változása": "2026",
+        "Nyilvános töltőpontok": "2026. III. negyedév",
+        "Vásárlási szándék": "2026. november"
+      }
+    },
+    "resolved": [
+      {
+        "card": "fogyasztoi_bizalom",
+        "label": "Fogyasztói bizalom",
+        "unit": "pont",
+        "made": "2026-09-28",
+        "target": "2026. szeptember",
+        "step": 1,
+        "point": -11.982,
+        "lower": -18.109,
+        "upper": -5.854,
+        "naive_card": false,
+        "now_naive": true,
+        "actual": -3.4,
+        "error": 8.582,
+        "naive_error": -0.3,
+        "in_band": false
+      },
+      {
+        "card": "fogyasztoi_bizalom",
+        "label": "Fogyasztói bizalom",
+        "unit": "pont",
+        "made": "2026-09-28",
+        "target": "2026. október",
+        "step": 2,
+        "point": -11.41,
+        "lower": -17.538,
+        "upper": -5.282,
+        "naive_card": false,
+        "now_naive": true,
+        "actual": -4.9,
+        "error": 6.51,
+        "naive_error": -1.8,
+        "in_band": false
+      },
+      {
+        "card": "vasarlasi_szandek",
+        "label": "Vásárlási szándék",
+        "unit": "pont",
+        "made": "2026-09-28",
+        "target": "2026. szeptember",
+        "step": 1,
+        "point": -15.994,
+        "lower": -19.493,
+        "upper": -12.495,
+        "naive_card": false,
+        "now_naive": true,
+        "actual": -16.0,
+        "error": -0.006,
+        "naive_error": -4.2,
+        "in_band": true
+      },
+      {
+        "card": "vasarlasi_szandek",
+        "label": "Vásárlási szándék",
+        "unit": "pont",
+        "made": "2026-09-28",
+        "target": "2026. október",
+        "step": 2,
+        "point": -15.633,
+        "lower": -19.132,
+        "upper": -12.134,
+        "naive_card": false,
+        "now_naive": true,
+        "actual": -12.9,
+        "error": 2.733,
+        "naive_error": -1.1,
+        "in_band": true
+      },
+      {
+        "card": "eurhuf",
+        "label": "Euró/forint árfolyam",
+        "unit": "Ft",
+        "made": "2026-10-02",
+        "target": "2026. szeptember",
+        "step": 1,
+        "point": 361.835,
+        "lower": 353.988,
+        "upper": 369.682,
+        "naive_card": false,
+        "now_naive": true,
+        "actual": 365.05,
+        "error": 3.215,
+        "naive_error": 1.36,
+        "in_band": true
+      },
+      {
+        "card": "eurhuf",
+        "label": "Euró/forint árfolyam",
+        "unit": "Ft",
+        "made": "2026-10-02",
+        "target": "2026. október",
+        "step": 2,
+        "point": 359.62,
+        "lower": 351.773,
+        "upper": 367.467,
+        "naive_card": false,
+        "now_naive": true,
+        "actual": 365.67,
+        "error": 6.05,
+        "naive_error": 1.98,
+        "in_band": true
+      },
+      {
+        "card": "fogyasztoi_bizalom",
+        "label": "Fogyasztói bizalom",
+        "unit": "pont",
+        "made": "2026-10-02",
+        "target": "2026. október",
+        "step": 1,
+        "point": -10.556,
+        "lower": -16.822,
+        "upper": -4.29,
+        "naive_card": false,
+        "now_naive": true,
+        "actual": -4.9,
+        "error": 5.656,
+        "naive_error": -1.5,
+        "in_band": true
+      },
+      {
+        "card": "vasarlasi_szandek",
+        "label": "Vásárlási szándék",
+        "unit": "pont",
+        "made": "2026-10-02",
+        "target": "2026. október",
+        "step": 1,
+        "point": -15.88,
+        "lower": -19.311,
+        "upper": -12.45,
+        "naive_card": false,
+        "now_naive": true,
+        "actual": -12.9,
+        "error": 2.98,
+        "naive_error": 3.1,
+        "in_band": true
+      }
+    ],
+    "pending_count_by_card": {
+      "forgalomba": 2,
+      "toltoinfra": 8,
+      "vasarlasi_szandek": 15,
+      "fogyasztoi_bizalom": 15,
+      "eurhuf": 10,
+      "allomany_benzin": 2,
+      "allomany_dizel": 2,
+      "allomany_hibrid": 2,
+      "allomany_elektromos": 2,
+      "realkereset": 2,
+      "realjovedelem": 2
+    },
+    "directions": {
+      "resolved": [],
+      "pending_years": [
+        2026
+      ],
+      "last_data_year": 2025,
+      "n_snapshots": 8
+    }
   }
 }
 </script>
@@ -14005,6 +14259,49 @@
     el.innerHTML = `<div class="real-grid">${cards}</div>${breakNote}`;
   }
   renderRunHistory();
+
+  // ---------- előrejelzés fül: korábbi vetítések vs. tény ----------
+  function renderExPost() {
+    const ep = data.ex_post;
+    const el = document.getElementById('ex-post-body');
+    if (!ep) { el.innerHTML = ''; return; }
+    const s = ep.summary;
+    const dec = u => u === 'db' ? 0 : 1;
+    const v = (x, u) => u === 'db' ? fmtInt(x) : fmtPlain(x, dec(u));
+    let head;
+    if (!s.n_resolved) {
+      head = `Még egyik korábbi vetítés célidőszakának adata sem jelent meg — ${s.n_pending} célidőszak vár adatra.`;
+    } else {
+      head = `Eddig <b>${s.n_resolved} célidőszak</b> zárult le (${s.n_pending} még vár adatra). `
+        + (s.coverage != null ? `A sáv az esetek <b>${fmtPlain(s.coverage * 100, 0)}%-ában</b> fogta be a tényleges értéket. ` : '')
+        + (s.n_linear ? `A trendvetítés ${s.linear_beats_naive} esetben volt pontosabb a naiv becslésnél, ${s.n_linear - s.linear_beats_naive} esetben pontatlanabb.` : '');
+      const lin = ep.resolved.filter(x => !x.naive_card);
+      if (s.n_linear && s.linear_beats_naive < s.n_linear / 2 && lin.every(x => x.now_naive)) {
+        head += ` Ezért ezeknél a mutatóknál a dashboard ma már a naiv becslést mutatja.`;
+      }
+    }
+    const rows = ep.resolved.slice().reverse().map(x => `<tr>
+        <td>${x.label}</td><td class="mono">${x.made}</td><td>${x.target}</td>
+        <td class="mono num">${v(x.point, x.unit)}${x.lower != null ? `<span class="t-muted"> (${v(x.lower, x.unit)} – ${v(x.upper, x.unit)})</span>` : ''}</td>
+        <td class="mono num"><b>${v(x.actual, x.unit)}</b></td>
+        <td>${x.in_band == null ? '—' : `<span class="dirpill ${x.in_band ? 'good' : 'serious'}">${x.in_band ? 'sávban' : 'sávon kívül'}</span>`}</td>
+        <td>${x.naive_card ? '<span class="t-muted">naiv kártya</span>' : (Math.abs(x.error) < Math.abs(x.naive_error) ? 'igen' : 'nem')}</td>
+      </tr>`).join('');
+    const table = rows ? `<div class="src-table-wrap"><table class="src-table ep-table">
+        <thead><tr><th>Mutató</th><th>Vetítve</th><th>Célidőszak</th><th>Vetítés (sáv)</th><th>Tény</th><th>Sáv</th><th>Naivnál pontosabb?</th></tr></thead>
+        <tbody>${rows}</tbody></table></div>` : '';
+    const d = ep.directions;
+    const dirRes = d.resolved.length
+      ? `A hajtás-irányok közül ${d.resolved.filter(c => c.hit).length} / ${d.resolved.length} talált (az új autós részesedés tényleges változásához mérve).`
+      : `A hajtás-irányok (alap forgatókönyv) a ${d.pending_years.join(', ')}. évi új autós hajtás-részesedéssel mérhetők vissza (Eurostat, jelenleg ${d.last_data_year}-ig van adat) — amint megjelenik, itt látszik, mennyit talált a modell.`;
+    // célidőszak szerint csoportosítva: "2026. november: vásárlási szándék, …"
+    const byTarget = {};
+    Object.entries(s.next_by_card || {}).forEach(([l, t]) => { (byTarget[t] = byTarget[t] || []).push(lc(l)); });
+    const next = Object.entries(byTarget).map(([t, ls]) => `${/^\d{4}$/.test(t) ? `${t} (éves adat)` : t}: ${ls.join(', ')}`).join('; ');
+    el.innerHTML = `<p class="ep-head">${head}</p>${table}
+      <p class="ep-foot">${dirRes}${next ? ` Legközelebb ellenőrizhető: ${next}.` : ''}</p>`;
+  }
+  renderExPost();
 
   // ---------- history tab: raw sources, full time series ----------
   function renderHistoryReal() {

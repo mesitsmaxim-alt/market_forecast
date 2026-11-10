@@ -1,127 +1,16 @@
 {
-  "generated": "2026-11-09",
-  "status": "WARN",
+  "generated": "2026-11-10",
+  "status": "PASS",
   "stages": {
-    "pre": {
-      "status": "WARN",
-      "run_at": "2026-11-09T09:04:58",
-      "checks": [
-        {
-          "id": "factors.count",
-          "severity": "CRITICAL",
-          "ok": true,
-          "message": "8 tényező a config/factors.json-ban (elvárt: 8)",
-          "details": []
-        },
-        {
-          "id": "factors.values",
-          "severity": "CRITICAL",
-          "ok": true,
-          "message": "minden tényezőnek mindhárom forgatókönyv-értéke véges szám",
-          "details": []
-        },
-        {
-          "id": "factors.alap_between",
-          "severity": "CRITICAL",
-          "ok": true,
-          "message": "a tényezők alap értéke a pesszimista és az optimista között van",
-          "details": []
-        },
-        {
-          "id": "factors.band",
-          "severity": "CRITICAL",
-          "ok": true,
-          "message": "a tényező-sávok szimmetrikusak, és egyeznek a note-ban leírttal",
-          "details": []
-        },
-        {
-          "id": "segments.sensitivity_range",
-          "severity": "CRITICAL",
-          "ok": true,
-          "message": "az érzékenységek −1..+1 között, az évjárat-súlyok pozitívak",
-          "details": []
-        },
-        {
-          "id": "engine.count",
-          "severity": "CRITICAL",
-          "ok": true,
-          "message": "48 szegmens (elvárt: 48)",
-          "details": []
-        },
-        {
-          "id": "engine.values",
-          "severity": "CRITICAL",
-          "ok": true,
-          "message": "minden szegmens-pontszám véges szám",
-          "details": []
-        },
-        {
-          "id": "engine.score_range",
-          "severity": "CRITICAL",
-          "ok": true,
-          "message": "minden |pontszám| ≤ 2.0",
-          "details": []
-        },
-        {
-          "id": "engine.drivers_sum",
-          "severity": "CRITICAL",
-          "ok": true,
-          "message": "a tényezőnkénti hozzájárulások összege × évjárat-súly = pontszám",
-          "details": []
-        },
-        {
-          "id": "engine.momentum_cap",
-          "severity": "CRITICAL",
-          "ok": true,
-          "message": "momentum-tagok: hajtás ≤ ±0.15, márka ≤ ±0.1",
-          "details": []
-        },
-        {
-          "id": "engine.alap_between",
-          "severity": "CRITICAL",
-          "ok": true,
-          "message": "minden szegmens alap pontszáma a pesszimista és az optimista között van",
-          "details": []
-        },
-        {
-          "id": "sources.manual_stale",
-          "severity": "WARN",
-          "ok": true,
-          "message": "a kézi forrásfájlok (akkuár, EV-vámok, CO2) a STALE_DAYS küszöbön belül frissültek",
-          "details": []
-        },
-        {
-          "id": "sources.top_modellek_stale",
-          "severity": "WARN",
-          "ok": true,
-          "message": "a data/top_modellek.json 4 napos (küszöb: 45 nap)",
-          "details": []
-        },
-        {
-          "id": "backtest.fresh",
-          "severity": "WARN",
-          "ok": false,
-          "message": "a backtest ma futott (generated: 2026-11-05)",
-          "details": []
-        },
-        {
-          "id": "backtest.quality",
-          "severity": "WARN",
-          "ok": true,
-          "message": "a backtest korrelációja nem negatív, a találati arány legalább 50%",
-          "details": []
-        }
-      ]
-    },
     "post": {
       "status": "PASS",
-      "run_at": "2026-11-09T10:57:45",
+      "run_at": "2026-11-10T10:18:19",
       "checks": [
         {
           "id": "dashboard.fresh",
           "severity": "WARN",
           "ok": true,
-          "message": "a dashboard_data.json ma készült (generated: 2026-11-09)",
+          "message": "a dashboard_data.json ma készült (generated: 2026-11-10)",
           "details": []
         },
         {
@@ -219,7 +108,7 @@
           "id": "history.jumps",
           "severity": "WARN",
           "ok": true,
-          "message": "nincs szokatlan ugrás az előző napi futáshoz (2026-11-05) képest",
+          "message": "nincs szokatlan ugrás az előző napi futáshoz (2026-11-09) képest",
           "details": []
         },
         {

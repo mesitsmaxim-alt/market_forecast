@@ -194,6 +194,11 @@
   h2{ font-size:13px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--text-secondary); margin:0; }
   .section-note{ font-size:13px; color:var(--text-muted); max-width:60ch; }
 
+  /* ---------- ex-post visszamérés ---------- */
+  .ep-head{ font-size:14px; line-height:1.55; margin:0 0 12px; max-width:80ch; }
+  .ep-foot{ font-size:13px; color:var(--text-secondary); line-height:1.5; margin:12px 0 0; max-width:80ch; }
+  .ep-table td.num{ text-align:right; white-space:nowrap; }
+
   /* ---------- fő üzenet (nyitóblokk) ---------- */
   .summary{
     background:var(--surface); border:1px solid var(--border); border-radius:16px; box-shadow:var(--shadow);
@@ -628,6 +633,14 @@
     <span class="section-note">Ez a forgatókönyv-modell pesszimista/alap/optimista kimenete (kitettségi pontszám, pontban), mint előrejelzési tartomány — nem statisztikai extrapoláció.</span>
   </div>
   <div class="scenario-fan" id="scenario-fan"></div>
+</section>
+
+<section id="ex-post">
+  <div class="section-head">
+    <h2>Mennyire talált a modell?</h2>
+    <span class="section-note">A dashboard korábban publikált vetítései a tényleges adattal összevetve, amint a célidőszak adata megjelenik. A naiv becslés a vetítés idején utolsó ismert érték („marad, ami volt”).</span>
+  </div>
+  <div id="ex-post-body"></div>
 </section>
 
 </div>
@@ -1542,6 +1555,49 @@ __DASHBOARD_DATA__
     el.innerHTML = `<div class="real-grid">${cards}</div>${breakNote}`;
   }
   renderRunHistory();
+
+  // ---------- előrejelzés fül: korábbi vetítések vs. tény ----------
+  function renderExPost() {
+    const ep = data.ex_post;
+    const el = document.getElementById('ex-post-body');
+    if (!ep) { el.innerHTML = ''; return; }
+    const s = ep.summary;
+    const dec = u => u === 'db' ? 0 : 1;
+    const v = (x, u) => u === 'db' ? fmtInt(x) : fmtPlain(x, dec(u));
+    let head;
+    if (!s.n_resolved) {
+      head = `Még egyik korábbi vetítés célidőszakának adata sem jelent meg — ${s.n_pending} célidőszak vár adatra.`;
+    } else {
+      head = `Eddig <b>${s.n_resolved} célidőszak</b> zárult le (${s.n_pending} még vár adatra). `
+        + (s.coverage != null ? `A sáv az esetek <b>${fmtPlain(s.coverage * 100, 0)}%-ában</b> fogta be a tényleges értéket. ` : '')
+        + (s.n_linear ? `A trendvetítés ${s.linear_beats_naive} esetben volt pontosabb a naiv becslésnél, ${s.n_linear - s.linear_beats_naive} esetben pontatlanabb.` : '');
+      const lin = ep.resolved.filter(x => !x.naive_card);
+      if (s.n_linear && s.linear_beats_naive < s.n_linear / 2 && lin.every(x => x.now_naive)) {
+        head += ` Ezért ezeknél a mutatóknál a dashboard ma már a naiv becslést mutatja.`;
+      }
+    }
+    const rows = ep.resolved.slice().reverse().map(x => `<tr>
+        <td>${x.label}</td><td class="mono">${x.made}</td><td>${x.target}</td>
+        <td class="mono num">${v(x.point, x.unit)}${x.lower != null ? `<span class="t-muted"> (${v(x.lower, x.unit)} – ${v(x.upper, x.unit)})</span>` : ''}</td>
+        <td class="mono num"><b>${v(x.actual, x.unit)}</b></td>
+        <td>${x.in_band == null ? '—' : `<span class="dirpill ${x.in_band ? 'good' : 'serious'}">${x.in_band ? 'sávban' : 'sávon kívül'}</span>`}</td>
+        <td>${x.naive_card ? '<span class="t-muted">naiv kártya</span>' : (Math.abs(x.error) < Math.abs(x.naive_error) ? 'igen' : 'nem')}</td>
+      </tr>`).join('');
+    const table = rows ? `<div class="src-table-wrap"><table class="src-table ep-table">
+        <thead><tr><th>Mutató</th><th>Vetítve</th><th>Célidőszak</th><th>Vetítés (sáv)</th><th>Tény</th><th>Sáv</th><th>Naivnál pontosabb?</th></tr></thead>
+        <tbody>${rows}</tbody></table></div>` : '';
+    const d = ep.directions;
+    const dirRes = d.resolved.length
+      ? `A hajtás-irányok közül ${d.resolved.filter(c => c.hit).length} / ${d.resolved.length} talált (az új autós részesedés tényleges változásához mérve).`
+      : `A hajtás-irányok (alap forgatókönyv) a ${d.pending_years.join(', ')}. évi új autós hajtás-részesedéssel mérhetők vissza (Eurostat, jelenleg ${d.last_data_year}-ig van adat) — amint megjelenik, itt látszik, mennyit talált a modell.`;
+    // célidőszak szerint csoportosítva: "2026. november: vásárlási szándék, …"
+    const byTarget = {};
+    Object.entries(s.next_by_card || {}).forEach(([l, t]) => { (byTarget[t] = byTarget[t] || []).push(lc(l)); });
+    const next = Object.entries(byTarget).map(([t, ls]) => `${/^\d{4}$/.test(t) ? `${t} (éves adat)` : t}: ${ls.join(', ')}`).join('; ');
+    el.innerHTML = `<p class="ep-head">${head}</p>${table}
+      <p class="ep-foot">${dirRes}${next ? ` Legközelebb ellenőrizhető: ${next}.` : ''}</p>`;
+  }
+  renderExPost();
 
   // ---------- history tab: raw sources, full time series ----------
   function renderHistoryReal() {

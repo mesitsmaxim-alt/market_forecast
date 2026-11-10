@@ -19,6 +19,24 @@ validation_failed() {
 {
   echo "=== Piaci előrejelző pipeline indul: $(date) ==="
 
+  # A launchd-futás alvásból ébredve indulhat, amikor még nincs hálózat
+  # (2026-11-01: DNS-hiba a KSH-letöltésnél). Legfeljebb 10 percig várunk rá,
+  # utána minden curl-hívás a config/curl/.curlrc szerint újrapróbál.
+  export CURL_HOME="$PWD/config/curl"
+  echo "--- Hálózat ellenőrzése ---"
+  for i in $(seq 1 20); do
+    if curl -q -s -o /dev/null --max-time 10 https://www.ksh.hu/; then
+      echo "Hálózat elérhető."
+      break
+    fi
+    if [ "$i" -eq 20 ]; then
+      echo "A hálózat 10 perc után sem elérhető, a letöltések valószínűleg elbuknak."
+    else
+      echo "Nincs hálózat, újra 30 mp múlva ($i/20)..."
+      sleep 30
+    fi
+  done
+
   echo "--- Adatletöltés ---"
   "$PYTHON" fetchers/fetch_jarmuallomany.py
   "$PYTHON" fetchers/fetch_uj_hajtas.py

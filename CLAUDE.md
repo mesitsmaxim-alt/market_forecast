@@ -92,6 +92,14 @@ NOT scenario-dependent (they represent what's already happening, not a hypothesi
 The weights were deliberately reduced (from 0.4) after a quality review found momentum could
 dominate the scenario signal — see README.md "minőség ellenőrzés" section before changing them.
 
+HEV is the drivetrain most driven by momentum (~79% of its alap score, 2026-11-05 audit). It
+already has `oil_price` sensitivity 0.5, but the oil alap is 0 (see above), so its scenario part
+is small. A fuel-price LEVEL term was tested on 2026-11-10 and rejected: prior-year fuel price
+level vs. its 5-year average against next-year hybrid stock-share growth gave r = 0.28 (n = 18),
+which turns to r = −0.22 once the common trend is removed; new-car HEV data has only 3 years.
+The high price level already shows up in the observed momentum. The dashboard says when a label
+rests on momentum (`momentumSentence()`).
+
 ### Data-quality rules learned from the 2026-10-01 audit
 - **EAFO (manual export):** write the export day to `data/raw_eafo/export_date.txt`.
   `import_eafo_charging.py` drops every quarter/year that had not ended by then — EAFO exports the
@@ -104,6 +112,24 @@ dominate the scenario signal — see README.md "minőség ellenőrzés" section 
   only the current and the 1-year-ago columns are used (calibration, dashboard card, fuel report).
 - **Source count** on the dashboard/digest comes from `AUTOMATED_SOURCES` in
   `build_dashboard.py` — add new automated fetchers there.
+- **Network at launch:** `run_pipeline.sh` waits up to 10 minutes for the network (the
+  2026-11-01 run failed with a DNS error right after wake), and sets `CURL_HOME=config/curl` so
+  every curl call reads `config/curl/.curlrc` (3 retries, 20 s apart, `retry-all-errors`). A
+  manual `curl` outside the pipeline does not retry. New fetchers should use curl too.
+
+### Ex-post tracking (`ex_post.py`)
+Every dashboard build archives the published forecast cards (point, band, base period) to
+`data/history/forecasts.jsonl` (one set per day, a same-day rebuild replaces it) and then
+`evaluate()` compares every target period whose data has appeared since. Per (card, base
+period), the LAST published forecast counts. Output: `data/ex_post.json` and the
+`ex_post` key → "Mennyire talált a modell?" block on the Előrejelzés tab. Linear cards are also
+compared with the naive "stays where it was" value; naive cards obviously are not. Drivetrain
+directions (snapshots, |score| ≥ 5) are checked against the Eurostat new-car share change of
+the run's calendar year once `uj_hajtas.json` has it (2026 data: expected spring–summer 2027).
+The base-rate card is event-based and is not tracked. The Sept–Oct 2026 forecasts were
+backfilled from git (`python3 ex_post.py --backfill`, idempotent). First result (2026-11-10):
+8 resolved, band coverage 75%, the old linear sentiment/EUR-HUF trend beat the naive value in
+2 of 8 — consistent with switching those cards to naive. To add a card, extend `CARDS`.
 
 ### Live vs. frozen data: fuel prices
 `data/uzemanyagar_elo.json` (via `fetchers/fetch_uzemanyag_elo.py`, scraping holtankoljak.hu) is
