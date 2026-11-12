@@ -493,7 +493,9 @@
   .subtitle{ font-size:15.5px; }
   .status-pill, .theme-toggle{ border-radius:6px; }
   .status-pill{ background:var(--surface); }
-  .tabnav{ gap:4px; border-bottom:none; }
+  .tabnav{ gap:10px 28px; border-bottom:none; align-items:flex-end; }
+  .tabgroup{ display:flex; flex-wrap:wrap; align-items:center; gap:4px; }
+  .tabgroup-label{ flex-basis:100%; font-family:var(--f-data); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:4px; }
   .tabbtn{ font-family:var(--f-display); font-size:17px; font-weight:600; letter-spacing:.01em; padding:7px 14px; border-radius:6px; border-bottom:none; margin-bottom:0; }
   .tabbtn.active{ background:var(--accent); color:var(--on-accent); }
   .tabbtn:focus-visible, .theme-toggle:focus-visible{ outline:2px solid var(--marking); outline-offset:2px; }
@@ -541,6 +543,11 @@
     .m-table tr:last-child{ border-bottom:none; }
     .m-table td{ border-bottom:none; padding:0; }
     .m-table td.f{ grid-column:1 / -1; margin-bottom:2px; }
+    .tabnav{ flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; gap:18px; padding-bottom:4px; }
+    .tabnav::-webkit-scrollbar{ display:none; }
+    .tabgroup{ flex-wrap:nowrap; flex:none; }
+    .tabgroup-label{ flex-basis:auto; margin:0 4px 0 0; }
+    .tabbtn{ flex:none; white-space:nowrap; }
     .summary{ padding:18px 16px 16px; }
     .summary-grid{ grid-template-columns:repeat(2, minmax(0,1fr)); }
     .change-group{ grid-column: 1 / -1; }
@@ -558,15 +565,21 @@
   <button class="theme-toggle" id="theme-toggle" type="button"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 1a6 6 0 0 1 0 12z" fill="currentColor"/></svg> Téma</button>
 </header>
 
-<nav class="tabnav" id="tabnav">
-  <button class="tabbtn active" data-tab="overview" type="button">Áttekintés</button>
-  <button class="tabbtn" data-tab="history" type="button">Történet</button>
-  <button class="tabbtn" data-tab="forecast" type="button">Előrejelzés</button>
-  <button class="tabbtn" data-tab="news" type="button">Amit a piac mond</button>
-  <button class="tabbtn" data-tab="models" type="button">Legkeresettebb modellek</button>
-  <button class="tabbtn" data-tab="brands" type="button">Legkeresettebb márkák</button>
-  <button class="tabbtn" data-tab="ages" type="button">Évjáratok</button>
-  <button class="tabbtn" data-tab="prices" type="button">Használtautó-árak</button>
+<nav class="tabnav" id="tabnav" aria-label="Fülek">
+  <div class="tabgroup" role="group" aria-labelledby="tg-forecast">
+    <span class="tabgroup-label" id="tg-forecast">Előrejelzés</span>
+    <button class="tabbtn active" data-tab="overview" data-hash="attekintes" type="button">Áttekintés</button>
+    <button class="tabbtn" data-tab="forecast" data-hash="elorejelzes" type="button">Trendvetítés</button>
+    <button class="tabbtn" data-tab="history" data-hash="tortenet" type="button">Történet</button>
+  </div>
+  <div class="tabgroup" role="group" aria-labelledby="tg-market">
+    <span class="tabgroup-label" id="tg-market">Piac</span>
+    <button class="tabbtn" data-tab="models" data-hash="modellek" type="button">Modellek</button>
+    <button class="tabbtn" data-tab="brands" data-hash="markak" type="button">Márkák</button>
+    <button class="tabbtn" data-tab="ages" data-hash="evjaratok" type="button">Évjáratok</button>
+    <button class="tabbtn" data-tab="prices" data-hash="arak" type="button">Használtautó-árak</button>
+    <button class="tabbtn" data-tab="news" data-hash="hirek" type="button">Hírek</button>
+  </div>
 </nav>
 
 <div class="tabpanel" data-tabpanel="overview">
@@ -1373,7 +1386,7 @@ __DASHBOARD_DATA__
     delta: deltaTag(r.toltoinfra.total_series.at(-1), r.toltoinfra.total_series[0], ' db', true, 'az elmúlt 3 évben')
   });
   cards.push({
-    src: 'Központi Statisztikai Hivatal', title: 'Újonnan forgalomba helyezett személyautók száma',
+    src: 'Központi Statisztikai Hivatal', title: 'Első forgalomba helyezett személyautók száma (új és használtan behozott)',
     desc: 'Hány új (vagy újonnan Magyarországra hozott) személyautót helyeztek forgalomba az adott negyedévben — ez a piac legfrissebb, legmegbízhatóbb keresleti jelzése.',
     v: r.forgalomba.total_last, u: 'darab, az adott negyedévben',
     cap: `${r.forgalomba.last_quarter} — az egy évvel korábbi azonos negyedévhez képest: ${fmt(r.forgalomba.total_yoy)} százalék`,
@@ -1734,7 +1747,7 @@ __DASHBOARD_DATA__
       { src: 'Központi Statisztikai Hivatal', title: 'Dízel hajtás részesedése az állományban (teljes idősor)',
         series: r.jarmuallomany.fuel_shares_series.dizel,
         labels: [r.jarmuallomany.years_full[0], r.jarmuallomany.years_full.at(-1)] },
-      { src: 'Központi Statisztikai Hivatal', title: 'Újonnan forgalomba helyezett személyautók (teljes negyedéves idősor)',
+      { src: 'Központi Statisztikai Hivatal', title: 'Első forgalomba helyezett személyautók, új és használtan behozott (teljes negyedéves idősor)',
         series: r.forgalomba.total_series_full, labels: ['korábbi negyedévek', 'legutóbbi negyedév'] },
       { src: 'Magyar Nemzeti Bank', title: 'Jegybanki alapkamat (teljes idősor, minden kamatdöntés)',
         series: r.makro.alapkamat_series_full, labels: ['korábbi kamatdöntések', 'jelenlegi'] },
@@ -1765,7 +1778,7 @@ __DASHBOARD_DATA__
     const items = [
       { title: 'Euró/forint árfolyam', series: r.makro.eurhuf_series_full, fc: r.makro.eurhuf_forecast, unit: 'forint', d: 0 },
       { title: 'Jegybanki alapkamat', series: r.makro.alapkamat_series_full, fc: r.makro.alapkamat_forecast, unit: 'százalék', d: 2 },
-      { title: 'Újonnan forgalomba helyezett személyautók (negyedév)', series: r.forgalomba.total_series_full, fc: r.forgalomba.forecast, unit: 'darab', d: 0 },
+      { title: 'Első forgalomba helyezett személyautók, új és használtan behozott (negyedév)', series: r.forgalomba.total_series_full, fc: r.forgalomba.forecast, unit: 'darab', d: 0 },
       { title: 'Nyilvános töltőpontok száma', series: r.toltoinfra.total_series_full, fc: r.toltoinfra.forecast, unit: 'darab', d: 0 },
       { title: 'Vásárlási szándék', series: r.szentiment.mp_series_full, fc: r.szentiment.mp_forecast, unit: 'pont', d: 1 },
       { title: 'Fogyasztói bizalom', series: r.szentiment.cc_series_full, fc: r.szentiment.cc_forecast, unit: 'pont', d: 1 },
@@ -1958,6 +1971,21 @@ __DASHBOARD_DATA__
       <span class="model-units">${right}${rightSub ? `<span class="u-sub">${rightSub}</span>` : ''}</span>
     </div>`;
 
+  // havi idősor-táblázat a használtpiaci archívumból (újabb hónap felül);
+  // a hiányzó mező (korábbi kiadvány-összevetésből csak az átlagár ismert) „—”
+  const hpHistory = (cols, title) => {
+    const h = (HP.history || []).slice().reverse();
+    const cell = (v, f) => v == null ? '<span class="t-muted">—</span>' : f(v);
+    return `<div class="used-card">
+      <h3>${title}</h3>
+      <div class="src-table-wrap"><table class="src-table ep-table">
+        <thead><tr><th>Hónap</th>${cols.map(c => `<th>${c.label}</th>`).join('')}</tr></thead>
+        <tbody>${h.map(r => `<tr><td>${r.period}</td>${cols.map(c => `<td class="mono num">${cell(r[c.key], c.f)}</td>`).join('')}</tr>`).join('')}</tbody>
+      </table></div>
+      <p class="used-concl">Minden új havi kiadvánnyal bővül. A korábbi hónapok közül, ahol csak az átlagár ismert, az a későbbi kiadványok egy évvel korábbi összevetéséből származik.</p>
+    </div>`;
+  };
+
   function renderBrands() {
     const m = data.markak;
     const elNew = document.getElementById('brands-new-body');
@@ -2012,6 +2040,11 @@ __DASHBOARD_DATA__
         ${rows.map((r, i) => listRow(i + 1, r.brand, `átlagár ${approx(r.avg_price_m, 1, r.price_approx)} M Ft`,
             r.avg_age_years / max, `${approx(r.avg_age_years, 1, r.age_approx)} év`, '')).join('')}
       </div>
+      ${hpHistory([
+        { key: 'top10_avg_age_years', label: 'Átlagkor (top 10 márka)', f: v => `${fmtPlain(v, 1)} év` },
+        { key: 'benzin_age_years', label: 'Benzines', f: v => `${fmtPlain(v, 1)} év` },
+        { key: 'dizel_age_years', label: 'Dízel', f: v => `${fmtPlain(v, 1)} év` },
+      ], 'Havi alakulás')}
       <p class="used-concl">A hirdetett használt autók átlagosan <b>${fmtPlain(HP.brands_top10.avg_age_years, 1)} évesek</b>. A legfiatalabb kínálat ${art(young.brand)} <b>${young.brand}</b> márkáé (${approx(young.avg_age_years, 1, young.age_approx)} év), a legidősebb ${art(old.brand)} <b>${old.brand}</b> márkáé (${approx(old.avg_age_years, 1, old.age_approx)} év). A benzines autók átlagosan ${fmtPlain(fuel.benzin.avg_age_years - fuel.dizel.avg_age_years, 1)} évvel idősebbek a dízeleknél, de kevesebbet futottak.</p>`;
   }
   renderAges();
@@ -2041,6 +2074,12 @@ __DASHBOARD_DATA__
         <div class="band-legend">${bands.map(b => `<span><i style="background:${b.color}"></i>${b.label}: ${fmtPlain(b.pct, 1)}%</span>`).join('')}</div>
         <p class="used-concl">A hirdetett autók <b>${fmtPlain(bands[0].pct + bands[1].pct, 1)}%-a 5 millió forint alatti</b>, és csak ${fmtPlain(bands[3].pct, 1)}%-uk drágább 10 milliónál.</p>
       </div>
+      ${hpHistory([
+        { key: 'avg_price_huf', label: 'Átlagár', f: fmtM },
+        { key: 'hibrid_price_huf', label: 'Hibrid', f: fmtM },
+        { key: 'elektromos_price_huf', label: 'Elektromos', f: fmtM },
+        { key: 'under_5m_pct', label: '5 M Ft alatt', f: v => `${fmtPlain(v, 1)}%` },
+      ], 'Havi alakulás')}
       <h3 style="font-family:var(--f-display);font-size:18px;font-weight:600;margin:4px 0 10px;">Átlagár márkánként (a 10 leggyakoribb márka)</h3>
       <div class="model-list">
         <div class="model-row head"><span>#</span><span>Márka</span><span></span><span style="text-align:right">Átlagár</span></div>
@@ -2079,13 +2118,26 @@ __DASHBOARD_DATA__
   })();
 
   // ---------- tab switching ----------
+  // minden fülnek saját #link-je (pl. #arak), így egy nézet megosztható; az
+  // ismeretlen hash (pl. a #segments horgony) nem vált fület
+  function showTab(btn) {
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tabbtn').forEach(b => {
+      b.classList.toggle('active', b === btn);
+      b.setAttribute('aria-current', b === btn ? 'page' : 'false');
+    });
+    document.querySelectorAll('.tabpanel').forEach(p => { p.hidden = p.dataset.tabpanel !== tab; });
+    btn.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  }
+  const tabFromHash = () => document.querySelector(`.tabbtn[data-hash="${location.hash.slice(1)}"]`);
   document.querySelectorAll('.tabbtn').forEach(btn => {
     btn.addEventListener('click', () => {
-      const tab = btn.dataset.tab;
-      document.querySelectorAll('.tabbtn').forEach(b => b.classList.toggle('active', b === btn));
-      document.querySelectorAll('.tabpanel').forEach(p => { p.hidden = p.dataset.tabpanel !== tab; });
+      showTab(btn);
+      try { if (location.hash.slice(1) !== btn.dataset.hash) history.replaceState(null, '', '#' + btn.dataset.hash); } catch (e) { /* beágyazott nézetben tiltott lehet */ }
     });
   });
+  window.addEventListener('hashchange', () => { const b = tabFromHash(); if (b) showTab(b); });
+  { const b = tabFromHash(); if (b) showTab(b); }
 
   // ---------- theme toggle ----------
   const themeBtn = document.getElementById('theme-toggle');

@@ -86,8 +86,13 @@ NOT scenario-dependent (they represent what's already happening, not a hypothesi
   stock had become the single biggest BEV driver). The stock CAGR (`load_stock_momentum()`,
   `MOMENTUM_CAP_PCT = 50`) remains only as a fallback if `uj_hajtas.json` is missing; the driver
   label tells which one ran ("új autók részesedése" vs "KSH állomány").
-- `load_registration_momentum()` — brand_tier-level, from KSH quarterly new-registration YoY
+- `load_registration_momentum()` — brand_tier-level, from KSH quarterly FIRST-registration YoY
   (`data/forgalomba.json`), `REG_MOMENTUM_WEIGHT = 0.1`, capped at `REG_MOMENTUM_CAP_PCT = 40`.
+  KNOWN LIMITATION: sza0070 counts new AND used-imported cars together (~280k per 4 quarters vs.
+  ~170k new), so this momentum partly measures the used-import market. On 2026-11-12 no open,
+  downloadable new-only by-brand source was found (KSH has no split; Datahouse brand data is
+  press-only; the jarmuipar.hu Top 100 is by model, year-to-date, no prior-year comparison). Do not
+  label it "new registrations" anywhere.
 
 The weights were deliberately reduced (from 0.4) after a quality review found momentum could
 dominate the scenario signal — see README.md "minőség ellenőrzés" section before changing them.
@@ -313,6 +318,15 @@ mindkét számot mutatja, a "Mi változott?" és a futástörténet az egyszerű
   átlagkort mutat (márka, üzemanyag, szélső modellek). Elavulás: 50 nap a megjelenéstől (dashboard
   figyelmeztetés + `sources.hasznalt_piac_stale` WARN). Frissítéskor a hirdetésszám-részesedést a
   build számolja, ne írd be kézzel.
+  Új hónapnál a `period_key`-t (ÉÉÉÉ-HH) is írd át: a build a `data/history/hasznalt_piac.jsonl`-be
+  hónaponként egy sort archivál (azonos hónap felülíródik), ebből jön mindkét fül „Havi
+  alakulás” táblázata. A 2025-08/09 sorok csak átlagárat tartalmaznak (`partial`, a későbbi
+  kiadványok egy évvel korábbi összevetéséből), a 2026-08-as sort az augusztusi kiadvány
+  szövegéből vettük át.
+- **Navigáció:** a fülek két csoportban vannak (Előrejelzés / Piac), mindegyiknek `data-hash`
+  linkje van (`#attekintes`, `#elorejelzes`, `#tortenet`, `#modellek`, `#markak`, `#evjaratok`,
+  `#arak`, `#hirek`); az ismeretlen hash (pl. `#segments` horgony) nem vált fület. Mobilon a
+  fülsor egy sorban, vízszintesen görgethető. Új fülnél adj neki `data-hash`-t.
 
 ### Piaci hírek ("Amit a piac mond" fül) és legkeresettebb modellek
 - **Hírek** (`fetchers/fetch_hirek.py` → `data/hirek.json` → `hirek_report.py`): 3 magyar RSS-forrás

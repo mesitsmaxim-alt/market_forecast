@@ -99,7 +99,7 @@ def _actual_realjovedelem(key):
 
 # id: (felirat, egység, gyakoriság, vetítés kinyerése real-ből, (bázis-címke, bázis-érték) real-ből, tény-sor)
 CARDS = {
-    "forgalomba": ("Új forgalomba helyezések (negyedév)", "db", "Q",
+    "forgalomba": ("Első forgalomba helyezések (negyedév)", "db", "Q",
                    lambda r: r["forgalomba"]["forecast"],
                    lambda r: (quarter_idx(r["forgalomba"]["last_quarter"]), r["forgalomba"]["total_last"]),
                    _actual_forgalomba),

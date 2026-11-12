@@ -2,6 +2,7 @@
   "source": "KSH–Használtautó.hu kísérleti statisztika (kínálati adatok)",
   "source_page": "https://ksh.hu/s/kiserleti-statisztika/kiadvanyok/hasznaltautohu-ksh-2026-szeptember/",
   "period": "2026. szeptember",
+  "period_key": "2026-09",
   "published": "2026-10-15",
   "updated": "2026-11-10",
   "note": "Kézi adatbevitel a havi kiadvány szövegéből (letölthető táblázat nincs). Kínálati adat: a Használtautó.hu hirdetései a hónap 6., 15. és 24. napján, duplikációk nélkül; az 1 évnél fiatalabb, 0 km-es és 50 000 Ft alatti autók nélkül. A márkánkénti hirdetésszámot a kiadvány csak tartományként közli, a modellenkénti árat és kort csak a szélső értékekre. Frissítés: az új havi kiadvány (Használtautó.hu – KSH, <hónap>) szövegéből, minden mezőt az új hónapra.",

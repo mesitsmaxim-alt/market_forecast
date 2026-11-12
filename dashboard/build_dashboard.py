@@ -425,6 +425,39 @@ def build_brand_ranking() -> dict | None:
     }
 
 
+HASZNALT_HISTORY_PATH = DATA_DIR / "history" / "hasznalt_piac.jsonl"
+
+
+def archive_hasznalt_piac(hp: dict) -> list[dict]:
+    """A havi kiadvány fő mutatói hónaponként egy sorban (period_key szerint,
+    az újrafuttatás felülírja). Így a fülek idősort mutathatnak, bár a forrás
+    mindig csak az aktuális hónapot közli. Visszaadja a teljes, rendezett sort."""
+    fuel = {f["key"]: f for f in hp["fuel"]}
+    bands = hp["price_bands_pct"]
+    row = {
+        "period_key": hp["period_key"], "period": hp["period"],
+        "avg_price_huf": hp["avg_price_huf"],
+        "hibrid_price_huf": fuel["hibrid"].get("avg_price_huf"),
+        "elektromos_price_huf": fuel["elektromos"].get("avg_price_huf"),
+        "under_5m_pct": round(bands[0]["pct"] + bands[1]["pct"], 1),
+        "top10_avg_age_years": hp["brands_top10"]["avg_age_years"],
+        "benzin_age_years": fuel["benzin"].get("avg_age_years"),
+        "dizel_age_years": fuel["dizel"].get("avg_age_years"),
+        "benzin_km": fuel["benzin"].get("avg_km"), "dizel_km": fuel["dizel"].get("avg_km"),
+        "total_ads": hp["total_ads"], "source": hp["source_page"],
+    }
+    rows = {}
+    if HASZNALT_HISTORY_PATH.exists():
+        for line in HASZNALT_HISTORY_PATH.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                r = json.loads(line)
+                rows[r["period_key"]] = r
+    rows[row["period_key"]] = row
+    out = [rows[k] for k in sorted(rows)]
+    HASZNALT_HISTORY_PATH.write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in out), encoding="utf-8")
+    return out
+
+
 def build_hasznalt_piac() -> dict | None:
     """Használtautó-kínálat (KSH–Használtautó.hu havi kiadvány, kézi bevitel):
     árak, kor, márkák, modellek. A hirdetésszám-részesedést itt számoljuk."""
@@ -438,6 +471,7 @@ def build_hasznalt_piac() -> dict | None:
     hp["total_ads"] = total_ads
     hp["avg_price_yoy_pct"] = round((hp["avg_price_huf"] / hp["avg_price_huf_prev_year"] - 1) * 100, 1)
     hp["age_days"] = (dt.date.today() - dt.date.fromisoformat(hp["published"])).days
+    hp["history"] = archive_hasznalt_piac(hp)
     prev = hp["models_top10"]["previous_rows"]
     hp["models_top10"]["ranked"] = [
         {"rank": i, "model": m, "prev_rank": (prev.index(m) + 1) if m in prev else None}
@@ -689,7 +723,7 @@ REAL_HEADLINE_LABELS = {
     "dizel": ("Dízel ára", "Ft/l"),
     "alapkamat": ("Jegybanki alapkamat", "%"),
     "eurhuf": ("Euró/forint árfolyam", "Ft"),
-    "forgalomba_total": ("Új forgalomba helyezések (negyedév)", "db"),
+    "forgalomba_total": ("Első forgalomba helyezések (negyedév)", "db"),
     "sentiment_mp": ("Vásárlási szándék", "pont"),
     "wage_yoy": ("Reálkereset változása", "%"),
 }

@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-10",
+  "generated": "2026-11-12",
   "coverage": {
     "n_factors": 8,
     "n_calibrated": 5,
@@ -11557,6 +11557,64 @@
         "sentiment_mp": -12.9,
         "wage_yoy": 4.8
       }
+    },
+    {
+      "date": "2026-11-10",
+      "factors": {
+        "oil_price": 0.0,
+        "battery_cost": -8.0,
+        "charging_infra": 5.7,
+        "ev_tariffs": -1.0,
+        "co2_regulation": 14.9,
+        "financing_cost": 0.0,
+        "consumer_sentiment": 0.0,
+        "purchasing_power": 1.7
+      },
+      "drivetrain_summary": [
+        {
+          "key": "BEV",
+          "score": 0.1949
+        },
+        {
+          "key": "PHEV",
+          "score": 0.0941
+        },
+        {
+          "key": "HEV",
+          "score": 0.0804
+        },
+        {
+          "key": "ICE",
+          "score": -0.0943
+        }
+      ],
+      "brand_summary": [
+        {
+          "key": "kinai_belepo",
+          "score": 0.088
+        },
+        {
+          "key": "tomeggyarto",
+          "score": 0.0819
+        },
+        {
+          "key": "premium",
+          "score": 0.0786
+        },
+        {
+          "key": "budget",
+          "score": 0.0266
+        }
+      ],
+      "real_headline": {
+        "benzin": 633,
+        "dizel": 726,
+        "alapkamat": 5.5,
+        "eurhuf": 365.67,
+        "forgalomba_total": 78118,
+        "sentiment_mp": -12.9,
+        "wage_yoy": 4.8
+      }
     }
   ],
   "hirek": {
@@ -12580,6 +12638,7 @@
     "source": "KSH–Használtautó.hu kísérleti statisztika (kínálati adatok)",
     "source_page": "https://ksh.hu/s/kiserleti-statisztika/kiadvanyok/hasznaltautohu-ksh-2026-szeptember/",
     "period": "2026. szeptember",
+    "period_key": "2026-09",
     "published": "2026-10-15",
     "updated": "2026-11-10",
     "note": "Kézi adatbevitel a havi kiadvány szövegéből (letölthető táblázat nincs). Kínálati adat: a Használtautó.hu hirdetései a hónap 6., 15. és 24. napján, duplikációk nélkül; az 1 évnél fiatalabb, 0 km-es és 50 000 Ft alatti autók nélkül. A márkánkénti hirdetésszámot a kiadvány csak tartományként közli, a modellenkénti árat és kort csak a szélső értékekre. Frissítés: az új havi kiadvány (Használtautó.hu – KSH, <hónap>) szövegéből, minden mezőt az új hónapra.",
@@ -12821,7 +12880,53 @@
     },
     "total_ads": 124550,
     "avg_price_yoy_pct": -1.8,
-    "age_days": 26
+    "age_days": 28,
+    "history": [
+      {
+        "period_key": "2025-08",
+        "period": "2025. augusztus",
+        "avg_price_huf": 5500000,
+        "partial": true,
+        "source": "a 2026. augusztusi kiadvány egy évvel korábbi összevetéséből"
+      },
+      {
+        "period_key": "2025-09",
+        "period": "2025. szeptember",
+        "avg_price_huf": 5560000,
+        "partial": true,
+        "source": "a 2026. szeptemberi kiadvány egy évvel korábbi összevetéséből"
+      },
+      {
+        "period_key": "2026-08",
+        "period": "2026. augusztus",
+        "avg_price_huf": 5520000,
+        "hibrid_price_huf": 10560000,
+        "elektromos_price_huf": 11420000,
+        "under_5m_pct": 63.8,
+        "top10_avg_age_years": 11.6,
+        "benzin_age_years": 13.5,
+        "dizel_age_years": 12.3,
+        "benzin_km": 153000,
+        "dizel_km": 219000,
+        "total_ads": 114740,
+        "source": "https://ksh.hu/s/en/experimental-statistics/publications/hasznaltautohu-hcso-august-2026/"
+      },
+      {
+        "period_key": "2026-09",
+        "period": "2026. szeptember",
+        "avg_price_huf": 5460000,
+        "hibrid_price_huf": 10450000,
+        "elektromos_price_huf": 11450000,
+        "under_5m_pct": 63.9,
+        "top10_avg_age_years": 11.6,
+        "benzin_age_years": 13.3,
+        "dizel_age_years": 12.3,
+        "benzin_km": 152000,
+        "dizel_km": 218000,
+        "total_ads": 124550,
+        "source": "https://ksh.hu/s/kiserleti-statisztika/kiadvanyok/hasznaltautohu-ksh-2026-szeptember/"
+      }
+    ]
   },
   "methodology": {
     "factors": [
@@ -12969,12 +13074,12 @@
     }
   },
   "changes": {
-    "since": "2026-11-09",
+    "since": "2026-11-10",
     "items": [],
     "method_notes": []
   },
   "ex_post": {
-    "generated": "2026-11-10",
+    "generated": "2026-11-12",
     "summary": {
       "n_resolved": 8,
       "n_pending": 62,
@@ -12989,7 +13094,7 @@
         "Hibrid részesedése az állományban": "2026",
         "Euró/forint árfolyam": "2026. november",
         "Fogyasztói bizalom": "2026. november",
-        "Új forgalomba helyezések (negyedév)": "2026. III. negyedév",
+        "Első forgalomba helyezések (negyedév)": "2026. III. negyedév",
         "Reáljövedelem változása": "2026",
         "Reálkereset változása": "2026",
         "Nyilvános töltőpontok": "2026. III. negyedév",
