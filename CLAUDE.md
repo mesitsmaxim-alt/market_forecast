@@ -134,7 +134,11 @@ the run's calendar year once `uj_hajtas.json` has it (2026 data: expected spring
 The base-rate card is event-based and is not tracked. The Sept–Oct 2026 forecasts were
 backfilled from git (`python3 ex_post.py --backfill`, idempotent). First result (2026-11-10):
 8 resolved, band coverage 75%, the old linear sentiment/EUR-HUF trend beat the naive value in
-2 of 8 — consistent with switching those cards to naive. To add a card, extend `CARDS`.
+2 of 8 — consistent with switching those cards to naive. Second baseline (2026-11-19): "marad
+a tavalyi ütem" (drift = base value + step × average change over the last 12 months / 4
+quarters / 1 year, `DRIFT_SPAN`; skipped for realkereset/realjovedelem, which are already rates,
+`DRIFT_SKIP`). Summary keys `card_beats_drift`, `naive_beats_drift`, `n_drift`; first result:
+naive beat drift 7/8. To add a card, extend `CARDS`.
 
 ### Live vs. frozen data: fuel prices
 `data/uzemanyagar_elo.json` (via `fetchers/fetch_uzemanyag_elo.py`, scraping holtankoljak.hu) is
@@ -428,6 +432,12 @@ mindkét számot mutatja, a "Mi változott?" és a futástörténet az egyszerű
     filters false alarms and writes `reports/validacio_audit_<date>.md`;
   - it never fixes, publishes or pushes;
   - it is meant to be run manually before publishing the dashboard.
+- **Monthly cloud audit** (claude.ai routine `trig_01MhJP9moXoTzKjoz7NGRoJN`, "Autópiaci
+  előrejelző – havi audit", 3rd of every month 08:00 UTC, sonnet): clones the public repo,
+  runs `validate_forecast.py --stage all`, recomputes factors, reviews ex-post, sources and
+  visible copy, and returns a report in the run session only. Read-only: no commit, push,
+  PR, issue or publish; no connectors. It sees only what is pushed, so it audits the last
+  pushed pipeline run (the 1st of the month). Manage at https://claude.ai/code/routines.
 
 ## Report/file naming convention
 `reports/` filenames are prefixed by report type: `riport_` (scenario-based), `szegmens_riport_`,

@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-12",
+  "generated": "2026-11-19",
   "summary": {
     "n_resolved": 8,
     "n_pending": 62,
@@ -7,6 +7,9 @@
     "n_banded": 8,
     "n_linear": 8,
     "linear_beats_naive": 2,
+    "n_drift": 8,
+    "card_beats_drift": 4,
+    "naive_beats_drift": 7,
     "next_by_card": {
       "Benzin részesedése az állományban": "2026",
       "Dízel részesedése az állományban": "2026",
@@ -37,7 +40,9 @@
       "actual": -3.4,
       "error": 8.582,
       "naive_error": -0.3,
-      "in_band": false
+      "drift_error": -2.308,
+      "in_band": false,
+      "drift": -1.092
     },
     {
       "card": "fogyasztoi_bizalom",
@@ -54,7 +59,9 @@
       "actual": -4.9,
       "error": 6.51,
       "naive_error": -1.8,
-      "in_band": false
+      "drift_error": -5.817,
+      "in_band": false,
+      "drift": 0.917
     },
     {
       "card": "vasarlasi_szandek",
@@ -71,7 +78,9 @@
       "actual": -16.0,
       "error": -0.006,
       "naive_error": -4.2,
-      "in_band": true
+      "drift_error": -5.333,
+      "in_band": true,
+      "drift": -10.667
     },
     {
       "card": "vasarlasi_szandek",
@@ -88,7 +97,9 @@
       "actual": -12.9,
       "error": 2.733,
       "naive_error": -1.1,
-      "in_band": true
+      "drift_error": -3.367,
+      "in_band": true,
+      "drift": -9.533
     },
     {
       "card": "eurhuf",
@@ -105,7 +116,9 @@
       "actual": 365.05,
       "error": 3.215,
       "naive_error": 1.36,
-      "in_band": true
+      "drift_error": 4.106,
+      "in_band": true,
+      "drift": 360.944
     },
     {
       "card": "eurhuf",
@@ -122,7 +135,9 @@
       "actual": 365.67,
       "error": 6.05,
       "naive_error": 1.98,
-      "in_band": true
+      "drift_error": 7.472,
+      "in_band": true,
+      "drift": 358.198
     },
     {
       "card": "fogyasztoi_bizalom",
@@ -139,7 +154,9 @@
       "actual": -4.9,
       "error": 5.656,
       "naive_error": -1.5,
-      "in_band": true
+      "drift_error": -3.275,
+      "in_band": true,
+      "drift": -1.625
     },
     {
       "card": "vasarlasi_szandek",
@@ -156,7 +173,9 @@
       "actual": -12.9,
       "error": 2.98,
       "naive_error": 3.1,
-      "in_band": true
+      "drift_error": 2.642,
+      "in_band": true,
+      "drift": -15.542
     }
   ],
   "pending_count_by_card": {
@@ -178,6 +197,6 @@
       2026
     ],
     "last_data_year": 2025,
-    "n_snapshots": 8
+    "n_snapshots": 9
   }
 }

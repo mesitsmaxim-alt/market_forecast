@@ -1,4 +1,4 @@
-# Backtesting — 2026-11-05
+# Backtesting — 2026-11-19
 
 A `config/segments.json`-ban kézzel megadott érzékenységi együtthatók visszamérése valós, történeti adaton. **Csak 4 a 8 tényezőből tesztelhető** (finanszírozási költség, vásárlóerő, fogyasztói szándék, üzemanyagár — az utóbbi az Eurostat HICP-üzemanyagindexéből) — ehhez van elég hosszú, éves bontású valós idősorunk. A többi tényezőhöz (akkumulátorár, töltőinfra, EV-vám, CO2-szabályozás) nincs elég hosszú visszamenő adat a projektben, ezért ez a backtest **a modell egy részét, nem az egészét** validálja.
 

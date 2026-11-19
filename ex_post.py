@@ -5,7 +5,7 @@ tényleges adattal vetjük össze.
   és sávjait a data/history/forecasts.jsonl-be írja (célidőszakkal együtt).
 - evaluate(): a jelenlegi data/*.json alapján megnézi, melyik célidőszak adata
   jelent meg azóta, és összeveti a vetítéssel és a naiv becsléssel ("marad, ami
-  volt"). A hajtás-irányokat (snapshots.jsonl) az Eurostat új autós részesedésével
+  volt"), valamint a "marad a tavalyi ütem" szabállyal (drift). A hajtás-irányokat (snapshots.jsonl) az Eurostat új autós részesedésével
   veti össze, amint a célév adata megvan.
 - python3 ex_post.py --backfill: a korábbi futások vetítéseit a git-történetből
   (dashboard/dashboard_data.json) tölti vissza. Egyszer kellett, idempotens.
@@ -29,6 +29,11 @@ HU_MONTHS = ["január", "február", "március", "április", "május", "június",
              "augusztus", "szeptember", "október", "november", "december"]
 ROMAN = {"I": 1, "II": 2, "III": 3, "IV": 4}
 NEUTRAL_PTS = 5  # a dashboard semleges sávja (engine.classify ±0,05)
+# Második viszonyítási pont: "marad a tavalyi ütem" (drift) - a bázisérték az
+# utolsó 12 havi / 4 negyedéves / 1 éves átlagos változással továbbvíve. A
+# reálkereset/-jövedelem eleve változási ráta, ott ez értelmetlen, kimarad.
+DRIFT_SPAN = {"M": 12, "Q": 4, "Y": 1}
+DRIFT_SKIP = {"realkereset", "realjovedelem"}
 
 
 # ---------- időszak-címkék egységesítése (egész index) ----------
@@ -263,7 +268,12 @@ def evaluate(today: str | None = None) -> dict:
                 a = act[target]
                 item.update({"actual": a, "error": round(a - point, 3),
                              "naive_error": round(a - r["base_value"], 3),
+                             "drift_error": None,
                              "in_band": None if lo is None else (lo <= a <= hi)})
+                k = DRIFT_SPAN[freq]
+                if cid not in DRIFT_SKIP and base - k in act:
+                    drift = r["base_value"] + step * (r["base_value"] - act[base - k]) / k
+                    item.update({"drift": round(drift, 3), "drift_error": round(a - drift, 3)})
                 resolved.append(item)
             else:
                 pending.append({**item, "_idx": target})
@@ -277,6 +287,13 @@ def evaluate(today: str | None = None) -> dict:
         "n_linear": len(linear),
         "linear_beats_naive": sum(abs(x["error"]) < abs(x["naive_error"]) for x in linear),
     }
+    # a publikált kártya (lineáris vagy naiv) és a naiv becslés is a "tavalyi ütem" szabályhoz mérve
+    drifted = [x for x in resolved if x["drift_error"] is not None]
+    summary.update({
+        "n_drift": len(drifted),
+        "card_beats_drift": sum(abs(x["error"]) < abs(x["drift_error"]) for x in drifted),
+        "naive_beats_drift": sum(abs(x["naive_error"]) < abs(x["drift_error"]) for x in drifted),
+    })
     # kártyánként a legkorábbi még nyitott célidőszak (pending már időrendben van)
     next_by_card: dict[str, str] = {}
     for p in sorted(pending, key=lambda x: (x["card"], x["_idx"])):
@@ -299,7 +316,9 @@ def main():
     OUT_PATH.write_text(json.dumps(res, ensure_ascii=False, indent=2), encoding="utf-8")
     s = res["summary"]
     print(f"Ex-post: {s['n_resolved']} lezárt, {s['n_pending']} függő célidőszak; "
-          f"sávlefedettség {s['coverage']}; lineáris jobb a naivnál {s['linear_beats_naive']}/{s['n_linear']}")
+          f"sávlefedettség {s['coverage']}; lineáris jobb a naivnál {s['linear_beats_naive']}/{s['n_linear']}; "
+          f"kártya jobb a tavalyi ütemnél {s['card_beats_drift']}/{s['n_drift']}, "
+          f"naiv jobb a tavalyi ütemnél {s['naive_beats_drift']}/{s['n_drift']}")
 
 
 if __name__ == "__main__":

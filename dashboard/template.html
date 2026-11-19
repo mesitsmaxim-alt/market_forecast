@@ -1707,6 +1707,9 @@ __DASHBOARD_DATA__
       if (s.n_linear && s.linear_beats_naive < s.n_linear / 2 && lin.every(x => x.now_naive)) {
         head += ` Ezért ezeknél a mutatóknál a dashboard ma már a naiv becslést mutatja.`;
       }
+      if (s.n_drift) {
+        head += ` Egy másik egyszerű szabályhoz, a „marad a tavalyi ütem” feltevéshez mérve a naiv becslés ${s.naive_beats_drift} / ${s.n_drift} esetben volt pontosabb.`;
+      }
     }
     const rows = ep.resolved.slice().reverse().map(x => `<tr>
         <td>${x.label}</td><td class="mono">${x.made}</td><td>${x.target}</td>
